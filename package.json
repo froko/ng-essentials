@@ -1,23 +1,63 @@
 {
-  "name": "ng-essentials",
+  "name": "@froko/ng-essentials",
   "version": "0.0.0",
-  "description": "A blank schematics",
-  "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "test": "npm run build && jasmine src/**/*_spec.js"
-  },
+  "description": "An essentials schematics for new Angular applications",
   "keywords": [
     "schematics"
   ],
-  "author": "",
+  "author": "Patrick Ineichen <github@frokonet.ch>",
+  "repository": "git@github.com:froko/ng-essentials.git",
   "license": "MIT",
   "schematics": "./src/collection.json",
-  "dependencies": {
-    "@angular-devkit/core": "^0.7.1",
-    "@angular-devkit/schematics": "^0.7.1",
-    "@types/jasmine": "^2.6.0",
-    "@types/node": "^8.0.31",
-    "jasmine": "^2.8.0",
-    "typescript": "^2.5.2"
+  "scripts": {
+    "prebuild": "yarn schema2ts && yarn verify",
+    "build": "tsc -p tsconfig.json",
+    "test": "jest --watch",
+    "clean": "rimraf src/**/*.d.ts src/**/*.js src/**/*.js.map",
+    "lint": "tslint --project tsconfig.json --format codeFrame --fix",
+    "format": "prettier --write \"src/**/*{.ts,.js,.json}\"",
+    "format:check": "prettier --list-different \"src/**/*{.ts,.js,.json}\"",
+    "format:fix": "pretty-quick --staged",
+    "verify": "yarn format && yarn lint && jest --bail",
+    "schema2ts": "node scripts/generate-schema-defs.js",
+    "precommit": "run-s format:fix lint"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/|_)(test|spec))\\.(tsx?)$",
+    "testPathIgnorePatterns": [
+      "<rootDir>/.*/(files|jest|cypress|testcafe)",
+      "<rootDir>/node_modules/"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx"
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@angular-devkit/core": "0.7.2",
+    "@angular-devkit/schematics": "0.7.2",
+    "@types/jest": "22.2.0",
+    "@types/node": "8.10.3",
+    "chalk": "2.4.1",
+    "glob": "7.1.2",
+    "husky": "0.14.3",
+    "jest": "22.4.2",
+    "json-schema-to-typescript": "5.5.0",
+    "npm-run-all": "4.1.3",
+    "prettier": "1.14.0",
+    "pretty-quick": "1.6.0",
+    "rimraf": "2.6.2",
+    "ts-jest": "22.4.1",
+    "tslint": "5.11.0",
+    "tslint-config-prettier": "1.14.0",
+    "tslint-config-standard": "7.1.0",
+    "typescript": "2.7.2"
   }
 }

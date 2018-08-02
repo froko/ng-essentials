@@ -1,0 +1,12 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint-config-standard", "tslint-config-prettier"],
+  "linterOptions": {
+    "exclude": ["src/*/files/**/*", "src/*/jest/**/*", "src/*/cypress/**/*", "src/*/testcafe/**/*"]
+  },
+  "jsRules": {},
+  "rules": {
+    "no-non-null-assertion": true
+  },
+  "rulesDirectory": []
+}

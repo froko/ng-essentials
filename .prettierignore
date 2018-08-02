@@ -1,0 +1,7 @@
+src/**/files/**/*
+src/**/jest/**/*
+src/**/cypress/**/*
+src/**/testcafe/**/*
+*.map
+package-lock.json
+yarn-lock.json
