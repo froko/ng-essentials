@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "SchematicsNgEssentials",
+  "title": "Ng Essentials Options",
+  "type": "object",
+  "properties": {
+    "jest": {
+      "type": "boolean",
+      "description": "Include jest",
+      "default": false
+    },
+    "cypress": {
+      "type": "boolean",
+      "description": "Include cypress",
+      "default": false
+    },
+    "testcafe": {
+      "type": "boolean",
+      "description": "Include testcafe",
+      "default": false
+    }
+  }
+}

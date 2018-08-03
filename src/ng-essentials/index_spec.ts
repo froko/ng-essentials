@@ -7,8 +7,8 @@ const collectionPath = path.join(__dirname, '../collection.json');
 describe('ng-essentials', () => {
   it('works', () => {
     const runner = new SchematicTestRunner('schematics', collectionPath);
-    const tree = runner.runSchematic('ng-essentials', {}, Tree.empty());
+    const tree = runner.runSchematic('ng-add', {}, Tree.empty());
 
-    expect(tree.files).toEqual([]);
+    expect(tree.files).toEqual(['/.npmrc', '/.prettierrc']);
   });
 });

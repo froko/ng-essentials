@@ -1,9 +1,23 @@
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 
-// You don't have to export the function as default. You can also have more than one rule factory
-// per file.
-export function ngEssentials(): Rule {
+import { NgEssentialsOptions } from './schema';
+
+import { addKarma } from './karma';
+import { addJest } from './jest';
+import { addCypress } from './cypress';
+import { addEssentials } from './essentials';
+import { runNpmPackageInstall } from './utils';
+
+export default function(options: NgEssentialsOptions): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-    return tree;
+    const rule = chain([
+      addKarma(options),
+      addJest(options),
+      addCypress(options),
+      addEssentials(),
+      runNpmPackageInstall()
+    ]);
+
+    return rule(tree, _context);
   };
 }
