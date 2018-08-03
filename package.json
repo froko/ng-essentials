@@ -13,7 +13,7 @@
     "prebuild": "yarn schema2ts && yarn verify",
     "build": "tsc -p tsconfig.json",
     "test": "jest --watch",
-    "clean": "rimraf src/**/*.d.ts src/**/*.js src/**/*.js.map",
+    "clean": "rimraf src/**/*.js src/**/*.js.map",
     "lint": "tslint --project tsconfig.json --format codeFrame --fix",
     "format": "prettier --write \"src/**/*{.ts,.js,.json}\"",
     "format:check": "prettier --list-different \"src/**/*{.ts,.js,.json}\"",

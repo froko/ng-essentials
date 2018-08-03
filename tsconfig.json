@@ -6,8 +6,10 @@
     "target": "es2015",
     "module": "commonjs",
     "moduleResolution": "node",
+    "noImplicitAny": false,
     "strict": true,
     "strictFunctionTypes": false,
+    "strictNullChecks": false,
     "noEmitOnError": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
@@ -18,5 +20,5 @@
     "noUnusedParameters": true
   },
   "include": ["src/**/*"],
-  "exclude": ["src/*/files/**/*", "src/*/jest/**/*", "src/*/cypress/**/*", "src/*/testcafe/**/*"]
+  "exclude": ["src/***/files/**/*", "src/**/jest/**/*", "src/**/cypress/**/*", "src/**/testcafe/**/*"]
 }
