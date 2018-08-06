@@ -1,4 +1,8 @@
-import { Rule, chain } from '@angular-devkit/schematics';
+import { Rule, chain, Tree, SchematicsException } from '@angular-devkit/schematics';
+import { addProviderToModule } from '@schematics/angular/utility/ast-utils';
+import { InsertChange } from '@schematics/angular/utility/change';
+
+import * as ts from 'typescript';
 
 import {
   removeEndToEndTestNodeFromAngularJson,
@@ -52,6 +56,78 @@ export function addEssentials(): Rule {
     addScriptToPackageJson('format:fix', 'pretty-quick --staged'),
     addScriptToPackageJson('precommit', 'run-s format:fix lint'),
     editTsLintConfigJson(),
+    updateDevelopmentEnvironmentFile(),
+    updateProductionEnvironmentFile(),
+    addEnvProvidersToAppModule(),
     copyConfigFiles('./files')
   ]);
+}
+
+function updateDevelopmentEnvironmentFile(): Rule {
+  return (host: Tree) => {
+    host.overwrite(
+      './src/environments/environment.ts',
+      `
+      const providers: any[] = [
+        { provide: 'environment', useValue: 'Development' },
+        { provide: 'baseUrl', useValue: 'http://localhost:3000' }
+      ];
+
+      export const ENV_PROVIDERS = providers;
+
+      export const environment = {
+        production: false
+      };
+    `
+    );
+
+    return host;
+  };
+}
+
+function updateProductionEnvironmentFile(): Rule {
+  return (host: Tree) => {
+    host.overwrite(
+      './src/environments/environment.prod.ts',
+      `
+      const providers: any[] = [
+        { provide: 'environment', useValue: 'Production' },
+        { provide: 'baseUrl', useValue: 'http://localhost:3000' }
+      ];
+      
+      export const ENV_PROVIDERS = providers;
+      
+      export const environment = {
+        production: true
+      };
+    `
+    );
+
+    return host;
+  };
+}
+
+function addEnvProvidersToAppModule(): Rule {
+  return (host: Tree) => {
+    const modulePath = './src/app/app.module.ts';
+    const text = host.read(modulePath);
+
+    if (!text) {
+      throw new SchematicsException(`File ${modulePath} does not exist.`);
+    }
+
+    const sourceText = text.toString('utf-8');
+    const source = ts.createSourceFile(modulePath, sourceText, ts.ScriptTarget.Latest, true);
+    const changes = addProviderToModule(source, modulePath, 'ENV_PROVIDERS', '../environments/environment');
+
+    const recorder = host.beginUpdate(modulePath);
+    for (const change of changes) {
+      if (change instanceof InsertChange) {
+        recorder.insertLeft(change.pos, change.toAdd);
+      }
+    }
+    host.commitUpdate(recorder);
+
+    return host;
+  };
 }

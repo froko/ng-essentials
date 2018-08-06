@@ -32,6 +32,14 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
+"@schematics/angular@0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-0.7.2.tgz#f51f9391519050aabd43752cb97c28d878d69990"
+  dependencies:
+    "@angular-devkit/core" "0.7.2"
+    "@angular-devkit/schematics" "0.7.2"
+    typescript ">=2.6.2 <2.8"
+
 "@types/cli-color@^0.3.29":
   version "0.3.29"
   resolved "https://registry.yarnpkg.com/@types/cli-color/-/cli-color-0.3.29.tgz#c83a71fe02c8c7e1ccec048dd6a2458d1f6c96ea"
@@ -3584,7 +3592,7 @@ type-check@~0.3.2:
   dependencies:
     prelude-ls "~1.1.2"
 
-typescript@2.7.2:
+typescript@2.7.2, "typescript@>=2.6.2 <2.8":
   version "2.7.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.7.2.tgz#2d615a1ef4aee4f574425cdff7026edf81919836"
 

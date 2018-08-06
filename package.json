@@ -39,7 +39,9 @@
       "jsx"
     ]
   },
-  "dependencies": {},
+  "dependencies": {
+    "@schematics/angular": "0.7.2"
+  },
   "devDependencies": {
     "@angular-devkit/core": "0.7.2",
     "@angular-devkit/schematics": "0.7.2",
