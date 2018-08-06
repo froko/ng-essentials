@@ -3,6 +3,7 @@ src/**/*.js
 src/**/*.js.map
 src/**/*.d.ts
 !src/ng-essentials/jest/src/index.d.ts
+!src/ng-essentials/testcafe/testcafe/index.e2e-spec.js
 
 # IDEs
 .idea/
