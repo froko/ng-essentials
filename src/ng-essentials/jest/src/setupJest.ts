@@ -1,5 +1,4 @@
 import 'jest-preset-angular';
-import './setupTestBed';
 
 Error.stackTraceLimit = 2;
 

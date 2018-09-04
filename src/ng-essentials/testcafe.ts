@@ -9,7 +9,7 @@ export function addTestcafe(options: NgEssentialsOptions): Rule {
   }
 
   return chain([
-    addPackageToPackageJson('devDependencies', 'testcafe', '0.21.0'),
+    addPackageToPackageJson('devDependencies', 'testcafe', '0.22.0'),
     addPackageToPackageJson('devDependencies', 'testcafe-angular-selectors', '0.3.0'),
     addPackageToPackageJson('devDependencies', 'testcafe-live', '0.1.3'),
     addScriptToPackageJson('testcafe', 'testcafe-live chrome testcafe/*.e2e-spec.js'),

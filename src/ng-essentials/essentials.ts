@@ -16,7 +16,7 @@ import {
 } from './utils';
 
 export function addEssentials(): Rule {
-  const ANGULAR_VERSION = '6.1.1';
+  const ANGULAR_VERSION = '6.1.6';
 
   return chain([
     removeEndToEndTestNodeFromAngularJson(),
@@ -34,20 +34,21 @@ export function addEssentials(): Rule {
     addPackageToPackageJson('dependencies', '@angular/platform-browser-dynamic', ANGULAR_VERSION),
     addPackageToPackageJson('dependencies', '@angular/router', ANGULAR_VERSION),
     addPackageToPackageJson('dependencies', 'core-js', '2.5.7'),
-    addPackageToPackageJson('dependencies', 'rxjs', '6.2.2'),
-    addPackageToPackageJson('devDependencies', '@angular-devkit/build-angular', '0.7.2'),
-    addPackageToPackageJson('devDependencies', '@angular/cli', ANGULAR_VERSION),
+    addPackageToPackageJson('dependencies', 'rxjs', '6.3.1'),
+    addPackageToPackageJson('devDependencies', '@angular-devkit/build-angular', '0.7.5'),
+    addPackageToPackageJson('devDependencies', '@angular/cli', '6.1.5'),
     addPackageToPackageJson('devDependencies', '@angular/compiler-cli', ANGULAR_VERSION),
     addPackageToPackageJson('devDependencies', '@angular/language-service', ANGULAR_VERSION),
-    addPackageToPackageJson('devDependencies', 'codelyzer', '4.4.2'),
-    addPackageToPackageJson('devDependencies', 'ts-node', '7.0.0'),
+    addPackageToPackageJson('devDependencies', '@types/node', '10.9.4'),
+    addPackageToPackageJson('devDependencies', 'codelyzer', '4.4.4'),
+    addPackageToPackageJson('devDependencies', 'ts-node', '7.0.1'),
     addPackageToPackageJson('devDependencies', 'tslint', '5.11.0'),
     addPackageToPackageJson('devDependencies', 'typescript', '2.9.2'),
     addPackageToPackageJson('devDependencies', 'husky', '0.14.3'),
     addPackageToPackageJson('devDependencies', 'npm-run-all', '4.1.3'),
-    addPackageToPackageJson('devDependencies', 'prettier', '1.14.0'),
+    addPackageToPackageJson('devDependencies', 'prettier', '1.14.2'),
     addPackageToPackageJson('devDependencies', 'pretty-quick', '1.6.0'),
-    addPackageToPackageJson('devDependencies', 'tslint-config-prettier', '1.14.0'),
+    addPackageToPackageJson('devDependencies', 'tslint-config-prettier', '1.15.0'),
     addScriptToPackageJson('format', 'prettier --write "src/{app,environments,assets}/**/*{.ts,.js,.json,.css,.scss}"'),
     addScriptToPackageJson(
       'format:check',
