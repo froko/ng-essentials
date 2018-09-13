@@ -14,7 +14,7 @@ import {
 } from './utils';
 
 export function addJest(options: NgEssentialsOptions): Rule {
-  if (!options.jest) {
+  if (!options.jest || !options.firstRun) {
     return chain([]);
   }
 
@@ -30,9 +30,9 @@ export function addJest(options: NgEssentialsOptions): Rule {
     removePackageFromPackageJson('devDependencies', 'karma-coverage-istanbul-reporter'),
     removePackageFromPackageJson('devDependencies', 'karma-jasmine'),
     removePackageFromPackageJson('devDependencies', 'karma-jasmine-html-reporter'),
-    addPackageToPackageJson('devDependencies', '@babel/core', '7.0.0-beta.56'),
-    addPackageToPackageJson('devDependencies', '@types/jest', '23.3.1'),
-    addPackageToPackageJson('devDependencies', 'jest', '23.4.2'),
+    addPackageToPackageJson('devDependencies', '@babel/core', '7.0.1'),
+    addPackageToPackageJson('devDependencies', '@types/jest', '23.3.2'),
+    addPackageToPackageJson('devDependencies', 'jest', '23.6.0'),
     addPackageToPackageJson('devDependencies', 'jest-preset-angular', '6.0.0'),
     addNodeToPackageJson('jest', {
       testURL: 'http://localhost/',

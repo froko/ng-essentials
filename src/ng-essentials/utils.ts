@@ -8,10 +8,12 @@ import {
   Tree,
   url
 } from '@angular-devkit/schematics';
-
 import { strings } from '@angular-devkit/core';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
+import { NgEssentialsOptions } from './schema';
+
+const NG_ESSENTIALS = '@froko/ng-essentials';
 const PACKAGE_JSON = 'package.json';
 const TSLINT_JSON = 'tslint.json';
 const ANGULAR_JSON = 'angular.json';
@@ -91,7 +93,7 @@ export function addPackageToPackageJson(type: string, pkg: string, version: stri
   };
 }
 
-export function removeScriptFromPackageJson(key: string) {
+export function removeScriptFromPackageJson(key: string): Rule {
   return (host: Tree, _: SchematicContext) => {
     if (!host.exists(PACKAGE_JSON)) {
       return host;
@@ -114,7 +116,7 @@ export function removeScriptFromPackageJson(key: string) {
   };
 }
 
-export function addScriptToPackageJson(key: string, command: string) {
+export function addScriptToPackageJson(key: string, command: string): Rule {
   return (host: Tree, _: SchematicContext) => {
     if (!host.exists(PACKAGE_JSON)) {
       return host;
@@ -143,7 +145,7 @@ export function addScriptToPackageJson(key: string, command: string) {
   };
 }
 
-export function addNodeToPackageJson(key: string, item: any) {
+export function addNodeToPackageJson(key: string, item: any): Rule {
   return (host: Tree, _: SchematicContext) => {
     if (!host.exists(PACKAGE_JSON)) {
       return host;
@@ -210,7 +212,7 @@ export function editTsLintConfigJson(): Rule {
   };
 }
 
-export function removeEndToEndTestNodeFromAngularJson() {
+export function removeEndToEndTestNodeFromAngularJson(): Rule {
   return (host: Tree, _: SchematicContext) => {
     if (!host.exists(ANGULAR_JSON)) {
       return host;
@@ -231,7 +233,7 @@ export function removeEndToEndTestNodeFromAngularJson() {
   };
 }
 
-export function removeTestNodeFromAngularJson() {
+export function removeTestNodeFromAngularJson(): Rule {
   return (host: Tree, _: SchematicContext) => {
     if (!host.exists(ANGULAR_JSON)) {
       return host;
@@ -241,9 +243,57 @@ export function removeTestNodeFromAngularJson() {
     const angularJson = JSON.parse(sourceText);
     const defaultProject = angularJson['defaultProject'];
 
-    if (angularJson['projects'][defaultProject]['architect']['test']) {
-      delete angularJson['projects'][defaultProject]['architect']['test'];
+    if (angularJson['projects'][defaultProject]['targets']['test']) {
+      delete angularJson['projects'][defaultProject]['targets']['test'];
     }
+
+    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
+
+    return host;
+  };
+}
+
+export function readNgEssentialsOptionsFromAngularJson(host: Tree, options: NgEssentialsOptions): NgEssentialsOptions {
+  options.firstRun = true;
+
+  if (!host.exists(ANGULAR_JSON)) {
+    return options;
+  }
+
+  const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+  const angularJson = JSON.parse(sourceText);
+  const defaultProject = angularJson['defaultProject'];
+  const optionsFromAngularJson = angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS];
+
+  if (optionsFromAngularJson) {
+    options.firstRun = false;
+    options.jest = optionsFromAngularJson.jest;
+    options.cypress = optionsFromAngularJson.cypress;
+    options.testcafe = optionsFromAngularJson.testcafe;
+  }
+
+  return options;
+}
+
+export function addNgEssentialsToAngularJson(options: NgEssentialsOptions): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!host.exists(ANGULAR_JSON)) {
+      return host;
+    }
+
+    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+    const angularJson = JSON.parse(sourceText);
+    const defaultProject = angularJson['defaultProject'];
+
+    if (angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS]) {
+      return host;
+    }
+
+    angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS] = {
+      jest: options.jest ? options.jest.valueOf() : false,
+      cypress: options.cypress ? options.cypress.valueOf() : false,
+      testcafe: options.testcafe ? options.testcafe.valueOf() : false
+    };
 
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
 
