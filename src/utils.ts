@@ -11,12 +11,11 @@ import {
 import { strings } from '@angular-devkit/core';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
-import { NgEssentialsOptions } from './schema';
+export const NG_ESSENTIALS = '@froko/ng-essentials';
+export const PACKAGE_JSON = 'package.json';
+export const ANGULAR_JSON = 'angular.json';
 
-const NG_ESSENTIALS = '@froko/ng-essentials';
-const PACKAGE_JSON = 'package.json';
 const TSLINT_JSON = 'tslint.json';
-const ANGULAR_JSON = 'angular.json';
 const TSCONFIGAPP_JSON = './src/tsconfig.app.json';
 const TSCONFIGSPEC_JSON = './src/tsconfig.spec.json';
 
@@ -32,11 +31,13 @@ export function removeAutomaticUpdateSymbols(): Rule {
     for (const index in packageJson.dependencies) {
       packageJson.dependencies[index] = packageJson.dependencies[index].replace('^', '');
       packageJson.dependencies[index] = packageJson.dependencies[index].replace('~', '');
+      packageJson.dependencies[index] = packageJson.dependencies[index].replace('>=', '');
     }
 
     for (const index in packageJson.devDependencies) {
       packageJson.devDependencies[index] = packageJson.devDependencies[index].replace('^', '');
       packageJson.devDependencies[index] = packageJson.devDependencies[index].replace('~', '');
+      packageJson.devDependencies[index] = packageJson.devDependencies[index].replace('>=', '');
     }
 
     host.overwrite(PACKAGE_JSON, JSON.stringify(packageJson, null, 2));
@@ -84,6 +85,29 @@ export function addPackageToPackageJson(type: string, pkg: string, version: stri
     }
 
     if (!packageJson[type][pkg][version]) {
+      packageJson[type][pkg] = version;
+    }
+
+    host.overwrite(PACKAGE_JSON, JSON.stringify(packageJson, null, 2));
+
+    return host;
+  };
+}
+
+export function updatePackageInPackageJson(type: string, pkg: string, version: string): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!host.exists(PACKAGE_JSON)) {
+      return host;
+    }
+
+    const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
+    const packageJson = JSON.parse(sourceText);
+
+    if (!packageJson[type]) {
+      packageJson[type] = {};
+    }
+
+    if (packageJson[type][pkg]) {
       packageJson[type][pkg] = version;
     }
 
@@ -212,6 +236,23 @@ export function editTsLintConfigJson(): Rule {
   };
 }
 
+export function addDefaultSchematicsToAngularJson(): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!host.exists(ANGULAR_JSON)) {
+      return host;
+    }
+
+    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+    const angularJson = JSON.parse(sourceText);
+
+    angularJson['cli']['defaultCollection'] = NG_ESSENTIALS;
+
+    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
+
+    return host;
+  };
+}
+
 export function removeEndToEndTestNodeFromAngularJson(): Rule {
   return (host: Tree, _: SchematicContext) => {
     if (!host.exists(ANGULAR_JSON)) {
@@ -233,7 +274,7 @@ export function removeEndToEndTestNodeFromAngularJson(): Rule {
   };
 }
 
-export function removeTestNodeFromAngularJson(): Rule {
+export function switchToJestBuilderInAngularJson(): Rule {
   return (host: Tree, _: SchematicContext) => {
     if (!host.exists(ANGULAR_JSON)) {
       return host;
@@ -243,57 +284,13 @@ export function removeTestNodeFromAngularJson(): Rule {
     const angularJson = JSON.parse(sourceText);
     const defaultProject = angularJson['defaultProject'];
 
-    if (angularJson['projects'][defaultProject]['targets']['test']) {
-      delete angularJson['projects'][defaultProject]['targets']['test'];
+    if (angularJson['projects'][defaultProject]['targets']['test']['builder']) {
+      angularJson['projects'][defaultProject]['targets']['test']['builder'] = '@angular-builders/jest:run';
     }
 
-    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
-
-    return host;
-  };
-}
-
-export function readNgEssentialsOptionsFromAngularJson(host: Tree, options: NgEssentialsOptions): NgEssentialsOptions {
-  options.firstRun = true;
-
-  if (!host.exists(ANGULAR_JSON)) {
-    return options;
-  }
-
-  const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
-  const angularJson = JSON.parse(sourceText);
-  const defaultProject = angularJson['defaultProject'];
-  const optionsFromAngularJson = angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS];
-
-  if (optionsFromAngularJson) {
-    options.firstRun = false;
-    options.jest = optionsFromAngularJson.jest;
-    options.cypress = optionsFromAngularJson.cypress;
-    options.testcafe = optionsFromAngularJson.testcafe;
-  }
-
-  return options;
-}
-
-export function addNgEssentialsToAngularJson(options: NgEssentialsOptions): Rule {
-  return (host: Tree, _: SchematicContext) => {
-    if (!host.exists(ANGULAR_JSON)) {
-      return host;
+    if (angularJson['projects'][defaultProject]['targets']['test']['options']) {
+      angularJson['projects'][defaultProject]['targets']['test']['options'] = {};
     }
-
-    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
-    const angularJson = JSON.parse(sourceText);
-    const defaultProject = angularJson['defaultProject'];
-
-    if (angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS]) {
-      return host;
-    }
-
-    angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS] = {
-      jest: options.jest ? options.jest.valueOf() : false,
-      cypress: options.cypress ? options.cypress.valueOf() : false,
-      testcafe: options.testcafe ? options.testcafe.valueOf() : false
-    };
 
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
 
@@ -314,7 +311,7 @@ export function editTsConfigAppJson(): Rule {
       tsconfigJson['exclude'] = [];
     }
 
-    tsconfigJson['exclude'] = ['index.d.ts', 'setupJest.ts', 'setupTestBed.ts', '**/*.spec.ts'];
+    tsconfigJson['exclude'] = ['**/*.spec.ts'];
 
     host.overwrite(TSCONFIGAPP_JSON, JSON.stringify(tsconfigJson, null, 2));
 

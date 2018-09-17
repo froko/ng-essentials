@@ -1,11 +1,12 @@
-import { Rule, chain, Tree, SchematicsException } from '@angular-devkit/schematics';
+import { Rule, chain, Tree, SchematicsException, SchematicContext } from '@angular-devkit/schematics';
 import { addProviderToModule } from '@schematics/angular/utility/ast-utils';
 import { InsertChange } from '@schematics/angular/utility/change';
 
 import * as ts from 'typescript';
 
+import { NgEssentialsOptions } from './schema';
 import {
-  addNgEssentialsToAngularJson,
+  addDefaultSchematicsToAngularJson,
   removeEndToEndTestNodeFromAngularJson,
   removePackageFromPackageJson,
   removeScriptFromPackageJson,
@@ -13,18 +14,28 @@ import {
   addPackageToPackageJson,
   addScriptToPackageJson,
   editTsLintConfigJson,
-  copyConfigFiles
-} from './utils';
-import { NgEssentialsOptions } from './schema';
+  copyConfigFiles,
+  updatePackageInPackageJson,
+  ANGULAR_JSON,
+  NG_ESSENTIALS
+} from '../utils';
 
 export function addEssentials(options: NgEssentialsOptions): Rule {
   if (!options.firstRun) {
-    return chain([]);
+    return chain([
+      removeAutomaticUpdateSymbols(),
+      updatePackageInPackageJson('devDependencies', '@angular-devkit/build-angular', '0.8.2'),
+      updatePackageInPackageJson('devDependencies', '@angular-devkit/build-ng-packagr', '0.8.2'),
+      updatePackageInPackageJson('devDependencies', 'ng-packagr', '4.1.1'),
+      updatePackageInPackageJson('devDependencies', 'tsickle', '0.32.1'),
+      updatePackageInPackageJson('devDependencies', 'tslib', '1.9.3')
+    ]);
   }
 
   const ANGULAR_VERSION = '6.1.7';
 
   return chain([
+    addDefaultSchematicsToAngularJson(),
     addNgEssentialsToAngularJson(options),
     removeEndToEndTestNodeFromAngularJson(),
     removePackageFromPackageJson('devDependencies', '@types/jasminewd2'),
@@ -43,9 +54,10 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
     addPackageToPackageJson('dependencies', 'core-js', '2.5.7'),
     addPackageToPackageJson('dependencies', 'rxjs', '6.3.2'),
     addPackageToPackageJson('devDependencies', '@angular-devkit/build-angular', '0.8.1'),
-    addPackageToPackageJson('devDependencies', '@angular/cli', '6.2.1'),
+    addPackageToPackageJson('devDependencies', '@angular/cli', '6.2.2'),
     addPackageToPackageJson('devDependencies', '@angular/compiler-cli', ANGULAR_VERSION),
     addPackageToPackageJson('devDependencies', '@angular/language-service', ANGULAR_VERSION),
+    addPackageToPackageJson('devDependencies', NG_ESSENTIALS, '1.0.0'),
     addPackageToPackageJson('devDependencies', '@types/node', '10.9.4'),
     addPackageToPackageJson('devDependencies', 'codelyzer', '4.4.4'),
     addPackageToPackageJson('devDependencies', 'ts-node', '7.0.1'),
@@ -56,11 +68,13 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
     addPackageToPackageJson('devDependencies', 'prettier', '1.14.2'),
     addPackageToPackageJson('devDependencies', 'pretty-quick', '1.6.0'),
     addPackageToPackageJson('devDependencies', 'tslint-config-prettier', '1.15.0'),
-    addScriptToPackageJson('format', 'prettier --write "src/{app,environments,assets}/**/*{.ts,.js,.json,.css,.scss}"'),
-    addScriptToPackageJson(
-      'format:check',
-      'prettier --list-different "src/{app,environments,assets}/**/*{.ts,.js,.json,.css,.scss}"'
-    ),
+    updatePackageInPackageJson('devDependencies', '@angular-devkit/build-angular', '0.8.2'),
+    updatePackageInPackageJson('devDependencies', '@angular-devkit/build-ng-packagr', '0.8.2'),
+    updatePackageInPackageJson('devDependencies', 'ng-packagr', '4.1.1'),
+    updatePackageInPackageJson('devDependencies', 'tsickle', '0.32.1'),
+    updatePackageInPackageJson('devDependencies', 'tslib', '1.9.3'),
+    addScriptToPackageJson('format', 'prettier --write "{src,lib}/**/*{.ts,.js,.json,.css,.scss}"'),
+    addScriptToPackageJson('format:check', 'prettier --list-different "{src,lib}/**/*{.ts,.js,.json,.css,.scss}"'),
     addScriptToPackageJson('format:fix', 'pretty-quick --staged'),
     addScriptToPackageJson('precommit', 'run-s format:fix lint'),
     editTsLintConfigJson(),
@@ -69,6 +83,34 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
     addEnvProvidersToAppModule(),
     copyConfigFiles('./files')
   ]);
+}
+
+function addNgEssentialsToAngularJson(options: NgEssentialsOptions): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!host.exists(ANGULAR_JSON)) {
+      return host;
+    }
+
+    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+    const angularJson = JSON.parse(sourceText);
+    const defaultProject = angularJson['defaultProject'];
+
+    if (angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS]) {
+      return host;
+    }
+
+    angularJson['projects'][defaultProject]['schematics']['collection'] = NG_ESSENTIALS;
+
+    angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS] = {
+      jest: options.jest ? options.jest.valueOf() : false,
+      cypress: options.cypress ? options.cypress.valueOf() : false,
+      testcafe: options.testcafe ? options.testcafe.valueOf() : false
+    };
+
+    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
+
+    return host;
+  };
 }
 
 function updateDevelopmentEnvironmentFile(): Rule {

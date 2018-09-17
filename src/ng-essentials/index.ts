@@ -7,7 +7,7 @@ import { addJest } from './jest';
 import { addCypress } from './cypress';
 import { addTestcafe } from './testcafe';
 import { addEssentials } from './essentials';
-import { readNgEssentialsOptionsFromAngularJson, runNpmPackageInstall } from './utils';
+import { runNpmPackageInstall, ANGULAR_JSON, NG_ESSENTIALS } from '../utils';
 
 export default function(options: NgEssentialsOptions): Rule {
   return (tree: Tree, _context: SchematicContext) => {
@@ -24,4 +24,26 @@ export default function(options: NgEssentialsOptions): Rule {
 
     return rule(tree, _context);
   };
+}
+
+function readNgEssentialsOptionsFromAngularJson(host: Tree, options: NgEssentialsOptions): NgEssentialsOptions {
+  options.firstRun = true;
+
+  if (!host.exists(ANGULAR_JSON)) {
+    return options;
+  }
+
+  const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+  const angularJson = JSON.parse(sourceText);
+  const defaultProject = angularJson['defaultProject'];
+  const optionsFromAngularJson = angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS];
+
+  if (optionsFromAngularJson) {
+    options.firstRun = false;
+    options.jest = optionsFromAngularJson.jest;
+    options.cypress = optionsFromAngularJson.cypress;
+    options.testcafe = optionsFromAngularJson.testcafe;
+  }
+
+  return options;
 }

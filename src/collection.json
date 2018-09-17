@@ -1,9 +1,17 @@
 {
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "extends": ["@schematics/angular"],
   "schematics": {
     "ng-add": {
-      "description": "Tweaks an existing Angular with better defaults",
-      "factory": "./ng-essentials/index"
+      "description": "Adds better defaults to an existing Angular application.",
+      "factory": "./ng-essentials/index",
+      "schema": "./ng-essentials/schema.json"
+    },
+    "library": {
+      "description": "Generate a library project for Angular.",
+      "aliases": ["lib"],
+      "factory": "./library/index",
+      "schema": "./library/schema.json"
     }
   }
 }
