@@ -284,12 +284,12 @@ export function switchToJestBuilderInAngularJson(): Rule {
     const angularJson = JSON.parse(sourceText);
     const defaultProject = angularJson['defaultProject'];
 
-    if (angularJson['projects'][defaultProject]['targets']['test']['builder']) {
-      angularJson['projects'][defaultProject]['targets']['test']['builder'] = '@angular-builders/jest:run';
+    if (angularJson['projects'][defaultProject]['architect']['test']['builder']) {
+      angularJson['projects'][defaultProject]['architect']['test']['builder'] = '@angular-builders/jest:run';
     }
 
-    if (angularJson['projects'][defaultProject]['targets']['test']['options']) {
-      angularJson['projects'][defaultProject]['targets']['test']['options'] = {};
+    if (angularJson['projects'][defaultProject]['architect']['test']['options']) {
+      angularJson['projects'][defaultProject]['architect']['test']['options'] = {};
     }
 
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
