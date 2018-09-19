@@ -6,7 +6,10 @@ import {
   NG_ESSENTIALS,
   deleteFile,
   removeAutomaticUpdateSymbols,
-  updatePackageInPackageJson
+  updatePackageInPackageJson,
+  editTsConfigLibJson,
+  editTsConfigSpecJson,
+  editTsLintConfigJsonForLibrary
 } from '../utils';
 
 export default function(options: LibraryOptionsSchema): Rule {
@@ -22,7 +25,11 @@ export default function(options: LibraryOptionsSchema): Rule {
         updatePackageInPackageJson('devDependencies', 'ng-packagr', '4.1.1'),
         updatePackageInPackageJson('devDependencies', 'tsickle', '0.32.1'),
         updatePackageInPackageJson('devDependencies', 'tslib', '1.9.3'),
-        hasJest ? deleteFile(`projects/${options.name}/karma.conf.js`) : noop()
+        editTsLintConfigJsonForLibrary(`projects/${options.name}`),
+        hasJest ? deleteFile(`projects/${options.name}/karma.conf.js`) : noop(),
+        hasJest ? deleteFile(`projects/${options.name}/src/test.ts`) : noop(),
+        hasJest ? editTsConfigLibJson(`projects/${options.name}`) : noop(),
+        hasJest ? editTsConfigSpecJson(`projects/${options.name}`) : noop()
       ]);
     }
   ]);

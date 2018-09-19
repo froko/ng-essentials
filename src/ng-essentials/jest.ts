@@ -33,6 +33,6 @@ export function addJest(options: NgEssentialsOptions): Rule {
     addPackageToPackageJson('devDependencies', 'jest', '23.6.0'),
     switchToJestBuilderInAngularJson(),
     editTsConfigAppJson(),
-    editTsConfigSpecJson()
+    editTsConfigSpecJson('src')
   ]);
 }

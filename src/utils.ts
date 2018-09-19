@@ -17,7 +17,6 @@ export const ANGULAR_JSON = 'angular.json';
 
 const TSLINT_JSON = 'tslint.json';
 const TSCONFIGAPP_JSON = './src/tsconfig.app.json';
-const TSCONFIGSPEC_JSON = './src/tsconfig.spec.json';
 
 export function removeAutomaticUpdateSymbols(): Rule {
   return (host: Tree, _: SchematicContext) => {
@@ -236,6 +235,29 @@ export function editTsLintConfigJson(): Rule {
   };
 }
 
+export function editTsLintConfigJsonForLibrary(path: string): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!host.exists(`${path}/tslint.json`)) {
+      return host;
+    }
+
+    const sourceText = host.read(`${path}/tslint.json`).toString('utf-8');
+    const tslintJson = JSON.parse(sourceText);
+
+    if (!tslintJson['rules']) {
+      tslintJson['rules'] = [];
+    }
+
+    if (!tslintJson['rules']['no-implicit-dependencies']) {
+      tslintJson['rules']['no-implicit-dependencies'] = false;
+    }
+
+    host.overwrite(`${path}/tslint.json`, JSON.stringify(tslintJson, null, 2));
+
+    return host;
+  };
+}
+
 export function addDefaultSchematicsToAngularJson(): Rule {
   return (host: Tree, _: SchematicContext) => {
     if (!host.exists(ANGULAR_JSON)) {
@@ -304,6 +326,29 @@ export function switchToJestBuilderInAngularJson(): Rule {
   };
 }
 
+export function switchToJestBuilderInAngularJsonForLibrary(libraryName: string): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!host.exists(ANGULAR_JSON)) {
+      return host;
+    }
+
+    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+    const angularJson = JSON.parse(sourceText);
+
+    if (angularJson['projects'][libraryName]['architect']['test']['builder']) {
+      angularJson['projects'][libraryName]['architect']['test']['builder'] = '@angular-builders/jest:run';
+    }
+
+    if (angularJson['projects'][libraryName]['architect']['test']['options']) {
+      angularJson['projects'][libraryName]['architect']['test']['options'] = {};
+    }
+
+    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
+
+    return host;
+  };
+}
+
 export function editTsConfigAppJson(): Rule {
   return (host: Tree, _: SchematicContext) => {
     if (!host.exists(TSCONFIGAPP_JSON)) {
@@ -325,13 +370,34 @@ export function editTsConfigAppJson(): Rule {
   };
 }
 
-export function editTsConfigSpecJson(): Rule {
+export function editTsConfigLibJson(path: string): Rule {
   return (host: Tree, _: SchematicContext) => {
-    if (!host.exists(TSCONFIGSPEC_JSON)) {
+    if (!host.exists(`${path}/tsconfig.lib.json`)) {
       return host;
     }
 
-    const sourceText = host.read(TSCONFIGSPEC_JSON).toString('utf-8');
+    const sourceText = host.read(`${path}/tsconfig.lib.json`).toString('utf-8');
+    const tsconfigJson = JSON.parse(sourceText);
+
+    if (!tsconfigJson['exclude']) {
+      tsconfigJson['exclude'] = [];
+    }
+
+    tsconfigJson['exclude'] = ['**/*.spec.ts'];
+
+    host.overwrite(`${path}/tsconfig.lib.json`, JSON.stringify(tsconfigJson, null, 2));
+
+    return host;
+  };
+}
+
+export function editTsConfigSpecJson(path: string): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!host.exists(`${path}/tsconfig.spec.json`)) {
+      return host;
+    }
+
+    const sourceText = host.read(`${path}/tsconfig.spec.json`).toString('utf-8');
     const tsconfigJson = JSON.parse(sourceText);
 
     if (tsconfigJson['files']) {
@@ -350,7 +416,7 @@ export function editTsConfigSpecJson(): Rule {
 
     tsconfigJson['compilerOptions']['module'] = 'commonjs';
 
-    host.overwrite(TSCONFIGSPEC_JSON, JSON.stringify(tsconfigJson, null, 2));
+    host.overwrite(`${path}/tsconfig.spec.json`, JSON.stringify(tsconfigJson, null, 2));
 
     return host;
   };
