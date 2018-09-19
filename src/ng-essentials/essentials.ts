@@ -22,14 +22,7 @@ import {
 
 export function addEssentials(options: NgEssentialsOptions): Rule {
   if (!options.firstRun) {
-    return chain([
-      removeAutomaticUpdateSymbols(),
-      updatePackageInPackageJson('devDependencies', '@angular-devkit/build-angular', '0.8.2'),
-      updatePackageInPackageJson('devDependencies', '@angular-devkit/build-ng-packagr', '0.8.2'),
-      updatePackageInPackageJson('devDependencies', 'ng-packagr', '4.1.1'),
-      updatePackageInPackageJson('devDependencies', 'tsickle', '0.32.1'),
-      updatePackageInPackageJson('devDependencies', 'tslib', '1.9.3')
-    ]);
+    return chain([]);
   }
 
   const ANGULAR_VERSION = '6.1.7';
@@ -57,7 +50,6 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
     addPackageToPackageJson('devDependencies', '@angular/cli', '6.2.2'),
     addPackageToPackageJson('devDependencies', '@angular/compiler-cli', ANGULAR_VERSION),
     addPackageToPackageJson('devDependencies', '@angular/language-service', ANGULAR_VERSION),
-    addPackageToPackageJson('devDependencies', NG_ESSENTIALS, '1.0.0'),
     addPackageToPackageJson('devDependencies', '@types/node', '10.9.4'),
     addPackageToPackageJson('devDependencies', 'codelyzer', '4.4.4'),
     addPackageToPackageJson('devDependencies', 'ts-node', '7.0.1'),
@@ -68,11 +60,6 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
     addPackageToPackageJson('devDependencies', 'prettier', '1.14.2'),
     addPackageToPackageJson('devDependencies', 'pretty-quick', '1.6.0'),
     addPackageToPackageJson('devDependencies', 'tslint-config-prettier', '1.15.0'),
-    updatePackageInPackageJson('devDependencies', '@angular-devkit/build-angular', '0.8.2'),
-    updatePackageInPackageJson('devDependencies', '@angular-devkit/build-ng-packagr', '0.8.2'),
-    updatePackageInPackageJson('devDependencies', 'ng-packagr', '4.1.1'),
-    updatePackageInPackageJson('devDependencies', 'tsickle', '0.32.1'),
-    updatePackageInPackageJson('devDependencies', 'tslib', '1.9.3'),
     addScriptToPackageJson('format', 'prettier --write "{src,lib}/**/*{.ts,.js,.json,.css,.scss}"'),
     addScriptToPackageJson('format:check', 'prettier --list-different "{src,lib}/**/*{.ts,.js,.json,.css,.scss}"'),
     addScriptToPackageJson('format:fix', 'pretty-quick --staged'),

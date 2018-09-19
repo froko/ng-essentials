@@ -245,7 +245,13 @@ export function addDefaultSchematicsToAngularJson(): Rule {
     const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
     const angularJson = JSON.parse(sourceText);
 
-    angularJson['cli']['defaultCollection'] = NG_ESSENTIALS;
+    if (!angularJson['cli']) {
+      angularJson['cli'] = {};
+    }
+
+    if (!angularJson['cli']['defaultCollection']) {
+      angularJson['cli']['defaultCollection'] = NG_ESSENTIALS;
+    }
 
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
 
