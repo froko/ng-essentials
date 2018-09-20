@@ -31,7 +31,7 @@ export default function(options: LibraryOptionsSchema): Rule {
         hasJest ? deleteFile(`projects/${options.name}/src/test.ts`) : noop(),
         hasJest ? editTsConfigLibJson(`projects/${options.name}`) : noop(),
         hasJest ? editTsConfigSpecJson(`projects/${options.name}`) : noop(),
-        hasJest ? switchToJestBuilderInAngularJsonForLibrary(options.name) : noop()
+        hasJest ? switchToJestBuilderInAngularJsonForLibrary(`${options.name}`) : noop()
       ]);
     }
   ]);

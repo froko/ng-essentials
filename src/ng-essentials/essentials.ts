@@ -86,8 +86,6 @@ function addNgEssentialsToAngularJson(options: NgEssentialsOptions): Rule {
       return host;
     }
 
-    angularJson['projects'][defaultProject]['schematics']['collection'] = NG_ESSENTIALS;
-
     angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS] = {
       jest: options.jest ? options.jest.valueOf() : false,
       cypress: options.cypress ? options.cypress.valueOf() : false,
