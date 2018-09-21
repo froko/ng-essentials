@@ -2,6 +2,7 @@ import { Rule, chain } from '@angular-devkit/schematics';
 
 import { NgEssentialsOptions } from './schema';
 
+import { testcafe } from '../versions';
 import { addPackageToPackageJson, addScriptToPackageJson, copyConfigFiles } from '../utils';
 
 export function addTestcafe(options: NgEssentialsOptions): Rule {
@@ -10,9 +11,9 @@ export function addTestcafe(options: NgEssentialsOptions): Rule {
   }
 
   return chain([
-    addPackageToPackageJson('devDependencies', 'testcafe', '0.22.0'),
-    addPackageToPackageJson('devDependencies', 'testcafe-angular-selectors', '0.3.0'),
-    addPackageToPackageJson('devDependencies', 'testcafe-live', '0.1.3'),
+    addPackageToPackageJson('devDependencies', 'testcafe', testcafe.testcafeVersion),
+    addPackageToPackageJson('devDependencies', 'testcafe-angular-selectors', testcafe.angularSelectorsVersion),
+    addPackageToPackageJson('devDependencies', 'testcafe-live', testcafe.liveVersion),
     addScriptToPackageJson('testcafe', 'testcafe-live chrome testcafe/*.e2e-spec.js'),
     addScriptToPackageJson(
       'testcafe:ci',

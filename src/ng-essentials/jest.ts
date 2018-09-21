@@ -3,6 +3,7 @@ import { Rule, chain, Tree, SchematicContext } from '@angular-devkit/schematics'
 import { NgEssentialsOptions } from './schema';
 
 import { TSCONFIGAPP_JSON, ANGULAR_JSON } from '../constants';
+import { jest } from '../versions';
 import { deleteFile, removePackageFromPackageJson, addPackageToPackageJson, editTsConfigSpecJson } from '../utils';
 
 export function addJest(options: NgEssentialsOptions): Rule {
@@ -21,11 +22,11 @@ export function addJest(options: NgEssentialsOptions): Rule {
     removePackageFromPackageJson('devDependencies', 'karma-coverage-istanbul-reporter'),
     removePackageFromPackageJson('devDependencies', 'karma-jasmine'),
     removePackageFromPackageJson('devDependencies', 'karma-jasmine-html-reporter'),
-    addPackageToPackageJson('devDependencies', '@angular-builders/jest', '1.2.2'),
-    addPackageToPackageJson('devDependencies', '@types/jest', '23.3.2'),
-    addPackageToPackageJson('devDependencies', 'babel-core', '6.26.3'),
-    addPackageToPackageJson('devDependencies', 'babel-jest', '23.6.0'),
-    addPackageToPackageJson('devDependencies', 'jest', '23.6.0'),
+    addPackageToPackageJson('devDependencies', '@angular-builders/jest', jest.jestBuilderVersion),
+    addPackageToPackageJson('devDependencies', '@types/jest', jest.jestTypeVersion),
+    addPackageToPackageJson('devDependencies', 'babel-core', jest.babelCoreVersion),
+    addPackageToPackageJson('devDependencies', 'babel-jest', jest.babelJestVersion),
+    addPackageToPackageJson('devDependencies', 'jest', jest.jestVersion),
     switchToJestBuilderInAngularJson(),
     editTsConfigAppJson(),
     editTsConfigSpecJson('src')

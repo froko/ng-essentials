@@ -6,7 +6,8 @@ import * as ts from 'typescript';
 
 import { NgEssentialsOptions } from './schema';
 
-import { ANGULAR_JSON, TSLINT_JSON, NG_ESSENTIALS } from '../constants';
+import { ANGULAR_JSON, NG_ESSENTIALS, TSLINT_JSON } from '../constants';
+import { essentials } from '../versions';
 import {
   removePackageFromPackageJson,
   removeScriptFromPackageJson,
@@ -21,8 +22,6 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
     return chain([]);
   }
 
-  const ANGULAR_VERSION = '6.1.7';
-
   return chain([
     addDefaultSchematicsToAngularJson(),
     addNgEssentialsToAngularJson(options),
@@ -31,31 +30,31 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
     removePackageFromPackageJson('devDependencies', 'protractor'),
     removeScriptFromPackageJson('e2e'),
     removeAutomaticUpdateSymbols(),
-    addPackageToPackageJson('dependencies', '@angular/animations', ANGULAR_VERSION),
-    addPackageToPackageJson('dependencies', '@angular/common', ANGULAR_VERSION),
-    addPackageToPackageJson('dependencies', '@angular/compiler', ANGULAR_VERSION),
-    addPackageToPackageJson('dependencies', '@angular/core', ANGULAR_VERSION),
-    addPackageToPackageJson('dependencies', '@angular/forms', ANGULAR_VERSION),
-    addPackageToPackageJson('dependencies', '@angular/http', ANGULAR_VERSION),
-    addPackageToPackageJson('dependencies', '@angular/platform-browser', ANGULAR_VERSION),
-    addPackageToPackageJson('dependencies', '@angular/platform-browser-dynamic', ANGULAR_VERSION),
-    addPackageToPackageJson('dependencies', '@angular/router', ANGULAR_VERSION),
-    addPackageToPackageJson('dependencies', 'core-js', '2.5.7'),
-    addPackageToPackageJson('dependencies', 'rxjs', '6.3.2'),
-    addPackageToPackageJson('devDependencies', '@angular-devkit/build-angular', '0.8.1'),
-    addPackageToPackageJson('devDependencies', '@angular/cli', '6.2.2'),
-    addPackageToPackageJson('devDependencies', '@angular/compiler-cli', ANGULAR_VERSION),
-    addPackageToPackageJson('devDependencies', '@angular/language-service', ANGULAR_VERSION),
-    addPackageToPackageJson('devDependencies', '@types/node', '10.9.4'),
-    addPackageToPackageJson('devDependencies', 'codelyzer', '4.4.4'),
-    addPackageToPackageJson('devDependencies', 'ts-node', '7.0.1'),
-    addPackageToPackageJson('devDependencies', 'tslint', '5.11.0'),
-    addPackageToPackageJson('devDependencies', 'typescript', '2.9.2'),
-    addPackageToPackageJson('devDependencies', 'husky', '0.14.3'),
-    addPackageToPackageJson('devDependencies', 'npm-run-all', '4.1.3'),
-    addPackageToPackageJson('devDependencies', 'prettier', '1.14.2'),
-    addPackageToPackageJson('devDependencies', 'pretty-quick', '1.6.0'),
-    addPackageToPackageJson('devDependencies', 'tslint-config-prettier', '1.15.0'),
+    addPackageToPackageJson('dependencies', '@angular/animations', essentials.angularVersion),
+    addPackageToPackageJson('dependencies', '@angular/common', essentials.angularVersion),
+    addPackageToPackageJson('dependencies', '@angular/compiler', essentials.angularVersion),
+    addPackageToPackageJson('dependencies', '@angular/core', essentials.angularVersion),
+    addPackageToPackageJson('dependencies', '@angular/forms', essentials.angularVersion),
+    addPackageToPackageJson('dependencies', '@angular/http', essentials.angularVersion),
+    addPackageToPackageJson('dependencies', '@angular/platform-browser', essentials.angularVersion),
+    addPackageToPackageJson('dependencies', '@angular/platform-browser-dynamic', essentials.angularVersion),
+    addPackageToPackageJson('dependencies', '@angular/router', essentials.angularVersion),
+    addPackageToPackageJson('dependencies', 'core-js', essentials.coreJsVersion),
+    addPackageToPackageJson('dependencies', 'rxjs', essentials.rxjsVersion),
+    addPackageToPackageJson('devDependencies', '@angular-devkit/build-angular', essentials.buildAngularVersion),
+    addPackageToPackageJson('devDependencies', '@angular/cli', essentials.cliVersion),
+    addPackageToPackageJson('devDependencies', '@angular/compiler-cli', essentials.angularVersion),
+    addPackageToPackageJson('devDependencies', '@angular/language-service', essentials.angularVersion),
+    addPackageToPackageJson('devDependencies', '@types/node', essentials.nodeVersion),
+    addPackageToPackageJson('devDependencies', 'codelyzer', essentials.codelizerVersion),
+    addPackageToPackageJson('devDependencies', 'ts-node', essentials.tsNodeVersion),
+    addPackageToPackageJson('devDependencies', 'tslint', essentials.tsLintVersion),
+    addPackageToPackageJson('devDependencies', 'typescript', essentials.typescriptVersion),
+    addPackageToPackageJson('devDependencies', 'husky', essentials.huskyVersion),
+    addPackageToPackageJson('devDependencies', 'npm-run-all', essentials.npmRunAllVersion),
+    addPackageToPackageJson('devDependencies', 'prettier', essentials.prettierVersion),
+    addPackageToPackageJson('devDependencies', 'pretty-quick', essentials.prettyQuickVersion),
+    addPackageToPackageJson('devDependencies', 'tslint-config-prettier', essentials.tsLintConfigPrettierVersion),
     addScriptToPackageJson('format', 'prettier --write "{src,lib}/**/*{.ts,.js,.json,.css,.scss}"'),
     addScriptToPackageJson('format:check', 'prettier --list-different "{src,lib}/**/*{.ts,.js,.json,.css,.scss}"'),
     addScriptToPackageJson('format:fix', 'pretty-quick --staged'),

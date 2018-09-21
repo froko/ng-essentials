@@ -2,6 +2,7 @@ import { Rule, chain } from '@angular-devkit/schematics';
 
 import { NgEssentialsOptions } from './schema';
 
+import { cypress } from '../versions';
 import { addPackageToPackageJson, addScriptToPackageJson, copyConfigFiles } from '../utils';
 
 export function addCypress(options: NgEssentialsOptions): Rule {
@@ -10,8 +11,8 @@ export function addCypress(options: NgEssentialsOptions): Rule {
   }
 
   return chain([
-    addPackageToPackageJson('devDependencies', 'concurrently', '4.0.1'),
-    addPackageToPackageJson('devDependencies', 'cypress', '3.1.0'),
+    addPackageToPackageJson('devDependencies', 'concurrently', cypress.concurrentlyVersion),
+    addPackageToPackageJson('devDependencies', 'cypress', cypress.cypressVersion),
     addScriptToPackageJson('cypress', 'concurrently "ng serve" "cypress open"'),
     copyConfigFiles('./cypress')
   ]);

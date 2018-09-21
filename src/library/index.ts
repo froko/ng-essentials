@@ -1,3 +1,4 @@
+import { dasherize } from '@angular-devkit/core/src/utils/strings';
 import { SchematicContext, Tree, chain, Rule, externalSchematic, noop } from '@angular-devkit/schematics';
 
 import { LibraryOptionsSchema } from './schema';
@@ -10,25 +11,26 @@ import {
   editTsConfigLibJson,
   editTsConfigSpecJson
 } from '../utils';
+import { library } from '../versions';
 
 export default function(options: LibraryOptionsSchema): Rule {
   return chain([
     externalSchematic('@schematics/angular', 'library', options),
     (tree: Tree, _context: SchematicContext) => {
       const hasJest = findJestOptionInAngularJson(tree);
+      const dasherizedLibraryName = dasherize(options.name.valueOf());
 
       return chain([
         removeAutomaticUpdateSymbols(),
-        addPackageToPackageJson('devDependencies', '@angular-devkit/build-angular', '0.8.2'),
-        addPackageToPackageJson('devDependencies', '@angular-devkit/build-ng-packagr', '0.8.2'),
-        addPackageToPackageJson('devDependencies', 'ng-packagr', '4.1.1'),
-        addPackageToPackageJson('devDependencies', 'tsickle', '0.32.1'),
-        addPackageToPackageJson('devDependencies', 'tslib', '1.9.3'),
-        editTsLintConfigJsonForLibrary(`projects/${options.name}`),
-        hasJest ? deleteFile(`projects/${options.name}/karma.conf.js`) : noop(),
-        hasJest ? deleteFile(`projects/${options.name}/src/test.ts`) : noop(),
-        hasJest ? editTsConfigLibJson(`projects/${options.name}`) : noop(),
-        hasJest ? editTsConfigSpecJson(`projects/${options.name}`) : noop(),
+        addPackageToPackageJson('devDependencies', '@angular-devkit/build-ng-packagr', library.buildNgPackagrVersion),
+        addPackageToPackageJson('devDependencies', 'ng-packagr', library.ngPackagrVersion),
+        addPackageToPackageJson('devDependencies', 'tsickle', library.tsickleVersion),
+        addPackageToPackageJson('devDependencies', 'tslib', library.tslibVersion),
+        editTsLintConfigJsonForLibrary(`projects/${dasherizedLibraryName}`),
+        hasJest ? deleteFile(`projects/${dasherizedLibraryName}/karma.conf.js`) : noop(),
+        hasJest ? deleteFile(`projects/${dasherizedLibraryName}/src/test.ts`) : noop(),
+        hasJest ? editTsConfigLibJson(`projects/${dasherizedLibraryName}`) : noop(),
+        hasJest ? editTsConfigSpecJson(`projects/${dasherizedLibraryName}`) : noop(),
         hasJest ? switchToJestBuilderInAngularJsonForLibrary(`${options.name}`) : noop()
       ]);
     }
