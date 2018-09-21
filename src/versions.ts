@@ -1,6 +1,6 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '6.1.7',
+  angularVersion: '6.1.8',
 
   // core-js
   coreJsVersion: '2.5.7',
@@ -15,7 +15,7 @@ export const essentials = {
   cliVersion: '6.2.2',
 
   // @types/node
-  nodeVersion: '10.9.4',
+  nodeVersion: '10.10.1',
 
   // codelizer
   codelizerVersion: '4.4.4',
@@ -36,13 +36,33 @@ export const essentials = {
   npmRunAllVersion: '4.1.3',
 
   // prettier
-  prettierVersion: '1.14.2',
+  prettierVersion: '1.14.3',
 
   // pretty-quick
-  prettyQuickVersion: '1.6.0',
+  prettyQuickVersion: '1.7.0',
 
   // tslint-config-prettier
   tsLintConfigPrettierVersion: '1.15.0'
+};
+
+export const karma = {
+  // @types/jasmine
+  jasmineTypeVersion: '2.8.8',
+
+  // jasmine-core
+  jasmineCoreVersion: '3.2.1',
+
+  // karma
+  karmaVersion: '3.0.0',
+
+  // karma-coverage-istanbul-reporter
+  coverageReporterVersion: '2.0.4',
+
+  // karma-jasmine
+  karmaJasmineVersion: '1.1.2',
+
+  // karma-jasmine-html-reporter
+  htmlReporterVersion: '1.3.1'
 };
 
 export const jest = {

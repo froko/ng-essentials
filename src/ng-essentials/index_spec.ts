@@ -5,7 +5,7 @@ import { createAppModule } from '@schematics/angular/utility/test/create-app-mod
 import * as path from 'path';
 
 import { ANGULAR_JSON, PACKAGE_JSON, TSLINT_JSON, TSCONFIGAPP_JSON } from '../constants';
-import { essentials, jest, cypress, testcafe } from '../versions';
+import { essentials, jest, cypress, testcafe, karma } from '../versions';
 
 const collectionPath = path.join(__dirname, '../collection.json');
 
@@ -155,7 +155,16 @@ describe('ng-essentials', () => {
       });
 
       it('updates jasmine packages in package.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain('"jasmine-core": "3.2.1"');
+        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@types/jasmine": "${karma.jasmineTypeVersion}"`);
+        expect(tree.readContent(PACKAGE_JSON)).toContain(`"jasmine-core": "${karma.jasmineCoreVersion}"`);
+        expect(tree.readContent(PACKAGE_JSON)).toContain(`"karma": "${karma.karmaVersion}"`);
+        expect(tree.readContent(PACKAGE_JSON)).toContain(
+          `"karma-coverage-istanbul-reporter": "${karma.coverageReporterVersion}"`
+        );
+        expect(tree.readContent(PACKAGE_JSON)).toContain(`"karma-jasmine": "${karma.karmaJasmineVersion}"`);
+        expect(tree.readContent(PACKAGE_JSON)).toContain(
+          `"karma-jasmine-html-reporter": "${karma.htmlReporterVersion}"`
+        );
       });
     });
 
