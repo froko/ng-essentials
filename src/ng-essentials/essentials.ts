@@ -5,19 +5,15 @@ import { InsertChange } from '@schematics/angular/utility/change';
 import * as ts from 'typescript';
 
 import { NgEssentialsOptions } from './schema';
+
+import { ANGULAR_JSON, TSLINT_JSON, NG_ESSENTIALS } from '../constants';
 import {
-  addDefaultSchematicsToAngularJson,
-  removeEndToEndTestNodeFromAngularJson,
   removePackageFromPackageJson,
   removeScriptFromPackageJson,
   removeAutomaticUpdateSymbols,
   addPackageToPackageJson,
   addScriptToPackageJson,
-  editTsLintConfigJson,
-  copyConfigFiles,
-  updatePackageInPackageJson,
-  ANGULAR_JSON,
-  NG_ESSENTIALS
+  copyConfigFiles
 } from '../utils';
 
 export function addEssentials(options: NgEssentialsOptions): Rule {
@@ -68,8 +64,31 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
     updateDevelopmentEnvironmentFile(),
     updateProductionEnvironmentFile(),
     addEnvProvidersToAppModule(),
-    copyConfigFiles('./files')
+    copyConfigFiles('./essentials')
   ]);
+}
+
+function addDefaultSchematicsToAngularJson(): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!host.exists(ANGULAR_JSON)) {
+      return host;
+    }
+
+    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+    const angularJson = JSON.parse(sourceText);
+
+    if (!angularJson['cli']) {
+      angularJson['cli'] = {};
+    }
+
+    if (!angularJson['cli']['defaultCollection']) {
+      angularJson['cli']['defaultCollection'] = NG_ESSENTIALS;
+    }
+
+    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
+
+    return host;
+  };
 }
 
 function addNgEssentialsToAngularJson(options: NgEssentialsOptions): Rule {
@@ -93,6 +112,77 @@ function addNgEssentialsToAngularJson(options: NgEssentialsOptions): Rule {
     };
 
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
+
+    return host;
+  };
+}
+
+function removeEndToEndTestNodeFromAngularJson(): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!host.exists(ANGULAR_JSON)) {
+      return host;
+    }
+
+    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+    const angularJson = JSON.parse(sourceText);
+    const defaultProject = angularJson['defaultProject'];
+    const e2eTestProject = defaultProject + '-e2e';
+
+    if (angularJson['projects'][e2eTestProject]) {
+      delete angularJson['projects'][e2eTestProject];
+    }
+
+    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
+
+    return host;
+  };
+}
+
+function editTsLintConfigJson(): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!host.exists(TSLINT_JSON)) {
+      return host;
+    }
+
+    const sourceText = host.read(TSLINT_JSON).toString('utf-8');
+    const tslintJson = JSON.parse(sourceText);
+
+    if (!tslintJson['extends']) {
+      tslintJson['extends'] = [];
+    }
+
+    tslintJson['extends'] = ['tslint:latest', 'tslint-config-prettier'];
+
+    if (!tslintJson['rules']) {
+      tslintJson['rules'] = {};
+    }
+
+    const obsoloete = [
+      'eofline',
+      'import-spacing',
+      'indent',
+      'max-line-length',
+      'no-trailing-whitespace',
+      'one-line',
+      'quotemark',
+      'semicolon',
+      'typedef-whitespace',
+      'whitespace'
+    ];
+
+    tslintJson['rules'] = {
+      ...Object.keys(tslintJson['rules'])
+        .filter(key => !obsoloete.includes(key))
+        .reduce((obj, key) => {
+          obj[key] = tslintJson['rules'][key];
+          return obj;
+        }, {}),
+      ['jsdoc-format']: false,
+      ['no-implicit-dependencies']: [true, 'dev'],
+      ['no-submodule-imports']: false
+    };
+
+    host.overwrite(TSLINT_JSON, JSON.stringify(tslintJson, null, 2));
 
     return host;
   };

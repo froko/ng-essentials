@@ -1,6 +1,7 @@
 import { Rule, chain } from '@angular-devkit/schematics';
 
 import { NgEssentialsOptions } from './schema';
+
 import { addPackageToPackageJson } from '../utils';
 
 export function addKarma(options: NgEssentialsOptions): Rule {

@@ -1,6 +1,7 @@
 import { Rule, chain } from '@angular-devkit/schematics';
 
 import { NgEssentialsOptions } from './schema';
+
 import { addPackageToPackageJson, addScriptToPackageJson, copyConfigFiles } from '../utils';
 
 export function addCypress(options: NgEssentialsOptions): Rule {
