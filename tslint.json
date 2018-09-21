@@ -6,7 +6,8 @@
   },
   "jsRules": {},
   "rules": {
-    "no-non-null-assertion": false
+    "no-non-null-assertion": false,
+    "strict-type-predicates": false
   },
   "rulesDirectory": []
 }
