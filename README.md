@@ -26,8 +26,18 @@ The above command does the following:
 
 _ng-essentials_ comes with some configuration switches to add even more value:
 
-- `--jest` removes testing functionality with `jasmine` and `karma` and replaces it with [jest](https://jestjs.io/). Please note that `ng test` won't work anymore. Use `npm test` or `yarn test` instead.
+- `--jest` removes testing functionality with `jasmine` and `karma` and replaces it with [jest](https://jestjs.io/) using [@angular-builders/jest](https://github.com/meltedspark/angular-builders).
 
 - `--cypress` adds e2e testing functionality with [Cypress.io](https://www.cypress.io/). Please note that `ng e2e` won't work anymore. Use `npm run cypress` or `yarn cypress` instead.
 
 - `--testcafe` adds e2e testing functionality with [Testcafe](https://devexpress.github.io/testcafe/). Please note that `ng e2e` won't work anymore. Use `npm run testcafe` or `yarn testcafe` instead.
+
+#### Adding a new library with jest support
+
+This schematic enhances the creation of a new library when the schematic was previously installed with the `--jest` option. By running
+
+```bash
+ng generate lib myAwesomeLib
+```
+
+it will delete the karma/jasmine configuration and add jest support for the new library as well.
