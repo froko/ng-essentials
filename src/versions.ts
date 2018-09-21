@@ -9,10 +9,10 @@ export const essentials = {
   rxjsVersion: '6.3.2',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.8.2',
+  buildAngularVersion: '0.8.3',
 
   // @angular/cli
-  cliVersion: '6.2.2',
+  cliVersion: '6.2.3',
 
   // @types/node
   nodeVersion: '10.10.1',
