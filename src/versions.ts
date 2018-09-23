@@ -79,7 +79,10 @@ export const jest = {
   babelJestVersion: '23.6.0',
 
   // jest
-  jestVersion: '23.6.0'
+  jestVersion: '23.6.0',
+
+  // jest-preset-angular
+  angularPresetVersion: '6.0.1'
 };
 
 export const cypress = {

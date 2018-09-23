@@ -4,6 +4,7 @@ import { SchematicContext, Tree, chain, Rule, externalSchematic, noop } from '@a
 import { LibraryOptionsSchema } from './schema';
 
 import { ANGULAR_JSON, NG_ESSENTIALS } from '../constants';
+import { library } from '../versions';
 import {
   removeAutomaticUpdateSymbols,
   addPackageToPackageJson,
@@ -11,7 +12,6 @@ import {
   editTsConfigLibJson,
   editTsConfigSpecJson
 } from '../utils';
-import { library } from '../versions';
 
 export default function(options: LibraryOptionsSchema): Rule {
   return chain([
@@ -19,6 +19,7 @@ export default function(options: LibraryOptionsSchema): Rule {
     (tree: Tree, _context: SchematicContext) => {
       const hasJest = findJestOptionInAngularJson(tree);
       const dasherizedLibraryName = dasherize(options.name.valueOf());
+      const defaultProjectName = findDefaultProjectNameInAngularJson(tree);
 
       return chain([
         removeAutomaticUpdateSymbols(),
@@ -26,12 +27,13 @@ export default function(options: LibraryOptionsSchema): Rule {
         addPackageToPackageJson('devDependencies', 'ng-packagr', library.ngPackagrVersion),
         addPackageToPackageJson('devDependencies', 'tsickle', library.tsickleVersion),
         addPackageToPackageJson('devDependencies', 'tslib', library.tslibVersion),
-        editTsLintConfigJsonForLibrary(`projects/${dasherizedLibraryName}`),
-        hasJest ? deleteFile(`projects/${dasherizedLibraryName}/karma.conf.js`) : noop(),
-        hasJest ? deleteFile(`projects/${dasherizedLibraryName}/src/test.ts`) : noop(),
-        hasJest ? editTsConfigLibJson(`projects/${dasherizedLibraryName}`) : noop(),
-        hasJest ? editTsConfigSpecJson(`projects/${dasherizedLibraryName}`) : noop(),
-        hasJest ? switchToJestBuilderInAngularJsonForLibrary(`${options.name}`) : noop()
+        editTsLintConfigJsonForLibrary(`${defaultProjectName}/${dasherizedLibraryName}`),
+        hasJest ? deleteFile(`${defaultProjectName}/${dasherizedLibraryName}/karma.conf.js`) : noop(),
+        hasJest ? deleteFile(`${defaultProjectName}/${dasherizedLibraryName}/src/test.ts`) : noop(),
+        hasJest ? editTsConfigLibJson(`${defaultProjectName}/${dasherizedLibraryName}`) : noop(),
+        hasJest ? editTsConfigSpecJson(`${defaultProjectName}/${dasherizedLibraryName}`) : noop(),
+        hasJest ? switchToJestBuilderInAngularJsonForLibrary(`${options.name}`) : noop(),
+        hasJest ? updateJestConfig(defaultProjectName) : noop()
       ]);
     }
   ]);
@@ -52,6 +54,18 @@ function findJestOptionInAngularJson(host: Tree): boolean {
   }
 
   return false;
+}
+
+function findDefaultProjectNameInAngularJson(host: Tree): string {
+  if (!host.exists(ANGULAR_JSON)) {
+    return 'projects';
+  }
+
+  const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+  const angularJson = JSON.parse(sourceText);
+  const defaulProjectName = angularJson['newProjectRoot'];
+
+  return defaulProjectName ? defaulProjectName : 'projects';
 }
 
 function editTsLintConfigJsonForLibrary(path: string): Rule {
@@ -95,6 +109,21 @@ function switchToJestBuilderInAngularJsonForLibrary(libraryName: string): Rule {
     }
 
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
+
+    return host;
+  };
+}
+
+function updateJestConfig(defaultProjectName: string): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    host.overwrite(
+      './jest.config.js',
+      `module.exports = {
+  preset: 'jest-preset-angular',
+  roots: ['src', '${defaultProjectName}'],
+  setupTestFrameworkScriptFile: '<rootDir>/src/setup-jest.ts'
+};`
+    );
 
     return host;
   };

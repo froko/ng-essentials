@@ -148,10 +148,13 @@ describe('ng-essentials', () => {
         expect(tree.readContent('src/app/app.module.ts')).toContain('providers: [ENV_PROVIDERS]');
       });
 
+      it('adds launch.json with debug option for karma', () => {
+        expect(tree.readContent('/.vscode/launch.json')).toContain('"url": "http://localhost:9876/debug.html"');
+      });
+
       it('adds essentials files', () => {
         expect(tree.files).toContain('/.npmrc');
         expect(tree.files).toContain('/.prettierrc');
-        expect(tree.files).toContain('/.vscode/launch.json');
       });
 
       it('updates jasmine packages in package.json', () => {
@@ -195,6 +198,7 @@ describe('ng-essentials', () => {
         expect(tree.readContent(PACKAGE_JSON)).toContain(`"babel-core": "${jest.babelCoreVersion}"`);
         expect(tree.readContent(PACKAGE_JSON)).toContain(`"babel-jest": "${jest.babelJestVersion}"`);
         expect(tree.readContent(PACKAGE_JSON)).toContain(`"jest": "${jest.jestVersion}"`);
+        expect(tree.readContent(PACKAGE_JSON)).toContain(`"jest-preset-angular": "${jest.angularPresetVersion}"`);
       });
 
       it('switches to jest builder in angular.json', () => {
@@ -211,6 +215,17 @@ describe('ng-essentials', () => {
 
         expect(tree.readContent('/src/tsconfig.spec.json')).toContain('jest');
         expect(tree.readContent('/src/tsconfig.spec.json')).toContain('commonjs');
+      });
+
+      it('adds launch.json with debug option for jest', () => {
+        expect(tree.readContent('/.vscode/launch.json')).toContain(
+          '"program": "${workspaceFolder}/node_modules/jest/bin/jest"'
+        );
+      });
+
+      it('adds jest files', () => {
+        expect(tree.files).toContain('/jest.config.js');
+        expect(tree.files).toContain('/src/setup-jest.ts');
       });
     });
 

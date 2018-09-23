@@ -4,7 +4,13 @@ import { NgEssentialsOptions } from './schema';
 
 import { TSCONFIGAPP_JSON, ANGULAR_JSON } from '../constants';
 import { jest } from '../versions';
-import { deleteFile, removePackageFromPackageJson, addPackageToPackageJson, editTsConfigSpecJson } from '../utils';
+import {
+  deleteFile,
+  removePackageFromPackageJson,
+  addPackageToPackageJson,
+  editTsConfigSpecJson,
+  copyConfigFiles
+} from '../utils';
 
 export function addJest(options: NgEssentialsOptions): Rule {
   if (!options.jest || !options.firstRun) {
@@ -27,13 +33,16 @@ export function addJest(options: NgEssentialsOptions): Rule {
     addPackageToPackageJson('devDependencies', 'babel-core', jest.babelCoreVersion),
     addPackageToPackageJson('devDependencies', 'babel-jest', jest.babelJestVersion),
     addPackageToPackageJson('devDependencies', 'jest', jest.jestVersion),
+    addPackageToPackageJson('devDependencies', 'jest-preset-angular', jest.angularPresetVersion),
     switchToJestBuilderInAngularJson(),
     editTsConfigAppJson(),
-    editTsConfigSpecJson('src')
+    editTsConfigSpecJson('src'),
+    createLaunchJson(),
+    copyConfigFiles('jest')
   ]);
 }
 
-export function switchToJestBuilderInAngularJson(): Rule {
+function switchToJestBuilderInAngularJson(): Rule {
   return (host: Tree, _: SchematicContext) => {
     if (!host.exists(ANGULAR_JSON)) {
       return host;
@@ -57,7 +66,7 @@ export function switchToJestBuilderInAngularJson(): Rule {
   };
 }
 
-export function editTsConfigAppJson(): Rule {
+function editTsConfigAppJson(): Rule {
   return (host: Tree, _: SchematicContext) => {
     if (!host.exists(TSCONFIGAPP_JSON)) {
       return host;
@@ -70,9 +79,40 @@ export function editTsConfigAppJson(): Rule {
       tsconfigJson['exclude'] = [];
     }
 
-    tsconfigJson['exclude'] = ['**/*.spec.ts'];
+    tsconfigJson['exclude'] = ['**/*.spec.ts', 'setup-jest.ts'];
 
     host.overwrite(TSCONFIGAPP_JSON, JSON.stringify(tsconfigJson, null, 2));
+
+    return host;
+  };
+}
+
+function createLaunchJson(): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    host.create(
+      './.vscode/launch.json',
+      `{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ng serve",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:4200/#",
+      "webRoot": "\${workspaceFolder}"
+    },
+    {
+      "name": "ng test",
+      "type": "node",
+      "request": "launch",
+      "program": "\${workspaceFolder}/node_modules/jest/bin/jest",
+      "args": ["--runInBand"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    }
+  ]
+}`
+    );
 
     return host;
   };

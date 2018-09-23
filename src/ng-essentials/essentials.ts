@@ -63,6 +63,7 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
     updateDevelopmentEnvironmentFile(),
     updateProductionEnvironmentFile(),
     addEnvProvidersToAppModule(),
+    createLaunchJson(options),
     copyConfigFiles('./essentials')
   ]);
 }
@@ -251,6 +252,37 @@ function addEnvProvidersToAppModule(): Rule {
       }
     }
     host.commitUpdate(recorder);
+
+    return host;
+  };
+}
+
+function createLaunchJson(options: NgEssentialsOptions): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!options.jest) {
+      host.create(
+        './.vscode/launch.json',
+        `{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ng serve",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:4200/#",
+      "webRoot": "\${workspaceFolder}"
+    },
+    {
+      "name": "ng test",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:9876/debug.html",
+      "webRoot": "\${workspaceFolder}"
+    }
+  ]
+}`
+      );
+    }
 
     return host;
   };
