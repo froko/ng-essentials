@@ -2,7 +2,7 @@
   "defaultSeverity": "error",
   "extends": ["tslint-config-standard", "tslint-config-prettier"],
   "linterOptions": {
-    "exclude": ["src/**/essentials/**/*", "src/**/cypress/**/*", "src/**/testcafe/**/*"]
+    "exclude": ["src/**/essentials/**/*", "src/**/jest/**/*", "src/**/cypress/**/*", "src/**/testcafe/**/*"]
   },
   "jsRules": {},
   "rules": {

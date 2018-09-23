@@ -1,4 +1,5 @@
 src/**/essentials/**/*
+src/**/jest/**/*
 src/**/cypress/**/*
 src/**/testcafe/**/*
 *.map
