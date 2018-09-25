@@ -179,7 +179,8 @@ function editTsLintConfigJson(): Rule {
         }, {}),
       ['jsdoc-format']: false,
       ['no-implicit-dependencies']: [true, 'dev'],
-      ['no-submodule-imports']: false
+      ['no-submodule-imports']: false,
+      ['interface-name']: [true, 'never-prefix']
     };
 
     host.overwrite(TSLINT_JSON, JSON.stringify(tslintJson, null, 2));
