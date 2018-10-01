@@ -1,21 +1,21 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '6.1.8',
+  angularVersion: '6.1.9',
 
   // core-js
   coreJsVersion: '2.5.7',
 
   // rxjs
-  rxjsVersion: '6.3.2',
+  rxjsVersion: '6.3.3',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.8.3',
+  buildAngularVersion: '0.8.4',
 
   // @angular/cli
-  cliVersion: '6.2.3',
+  cliVersion: '6.2.4',
 
   // @types/node
-  nodeVersion: '10.10.1',
+  nodeVersion: '10.11.3',
 
   // codelizer
   codelizerVersion: '4.4.4',
@@ -30,7 +30,7 @@ export const essentials = {
   typescriptVersion: '2.9.2',
 
   // husky
-  huskyVersion: '0.14.3',
+  huskyVersion: '1.1.0',
 
   // npm-run-all
   npmRunAllVersion: '4.1.3',
