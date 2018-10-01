@@ -20,7 +20,9 @@
     "format:fix": "pretty-quick --staged",
     "verify": "yarn format && yarn lint && jest --bail",
     "schema2ts": "node scripts/generate-schema-defs.js",
-    "precommit": "run-s format:fix lint"
+    "precommit": "run-s format:fix lint",
+    "preversion": "npm run build",
+    "postversion": "git push && git push --tags"
   },
   "jest": {
     "testEnvironment": "node",
