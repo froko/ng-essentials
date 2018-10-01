@@ -6,7 +6,7 @@ import * as ts from 'typescript';
 
 import { NgEssentialsOptions } from './schema';
 
-import { ANGULAR_JSON, NG_ESSENTIALS, TSLINT_JSON } from '../constants';
+import { ANGULAR_JSON, NG_ESSENTIALS, TSLINT_JSON, PACKAGE_JSON } from '../constants';
 import { essentials } from '../versions';
 import {
   removePackageFromPackageJson,
@@ -58,7 +58,7 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
     addScriptToPackageJson('format', 'prettier --write "{src,lib}/**/*{.ts,.js,.json,.css,.scss}"'),
     addScriptToPackageJson('format:check', 'prettier --list-different "{src,lib}/**/*{.ts,.js,.json,.css,.scss}"'),
     addScriptToPackageJson('format:fix', 'pretty-quick --staged'),
-    addScriptToPackageJson('precommit', 'run-s format:fix lint'),
+    addHuskyConfigToPackageJson(),
     editTsLintConfigJson(),
     updateDevelopmentEnvironmentFile(),
     updateProductionEnvironmentFile(),
@@ -133,6 +133,29 @@ function removeEndToEndTestNodeFromAngularJson(): Rule {
     }
 
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
+
+    return host;
+  };
+}
+
+function addHuskyConfigToPackageJson(): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!host.exists(PACKAGE_JSON)) {
+      return host;
+    }
+
+    const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
+    const packageJson = JSON.parse(sourceText);
+
+    if (!packageJson['husky']) {
+      packageJson['husky'] = {
+        hooks: {
+          'pre-commit': 'run-s format:fix lint'
+        }
+      };
+    }
+
+    host.overwrite(PACKAGE_JSON, JSON.stringify(packageJson, null, 2));
 
     return host;
   };

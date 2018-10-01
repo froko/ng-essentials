@@ -108,7 +108,11 @@ describe('ng-essentials', () => {
         expect(tree.readContent(PACKAGE_JSON)).toContain('format');
         expect(tree.readContent(PACKAGE_JSON)).toContain('format:check');
         expect(tree.readContent(PACKAGE_JSON)).toContain('format:fix');
-        expect(tree.readContent(PACKAGE_JSON)).toContain('precommit');
+      });
+
+      it('adds husky config in package.json', () => {
+        expect(tree.readContent(PACKAGE_JSON)).toContain('hooks');
+        expect(tree.readContent(PACKAGE_JSON)).toContain('"pre-commit": "run-s format:fix lint"');
       });
 
       it('updates global tslint.json', () => {
