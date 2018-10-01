@@ -11,9 +11,9 @@ export function addCypress(options: NgEssentialsOptions): Rule {
   }
 
   return chain([
-    addPackageToPackageJson('devDependencies', 'concurrently', cypress.concurrentlyVersion),
     addPackageToPackageJson('devDependencies', 'cypress', cypress.cypressVersion),
-    addScriptToPackageJson('cypress', 'concurrently "ng serve" "cypress open"'),
+    addScriptToPackageJson('cypress', 'run-p start cypress:open'),
+    addScriptToPackageJson('cypress:open', 'cypress open'),
     copyConfigFiles('./cypress')
   ]);
 }

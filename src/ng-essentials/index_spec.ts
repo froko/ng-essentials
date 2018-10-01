@@ -242,8 +242,12 @@ describe('ng-essentials', () => {
       });
 
       it('adds cypress packages to packages.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"concurrently": "${cypress.concurrentlyVersion}"`);
         expect(tree.readContent(PACKAGE_JSON)).toContain(`"cypress": "${cypress.cypressVersion}"`);
+      });
+
+      it('adds cypress script to package.json', () => {
+        expect(tree.readContent(PACKAGE_JSON)).toContain(`"cypress": "run-p start cypress:open"`);
+        expect(tree.readContent(PACKAGE_JSON)).toContain(`"cypress:open": "cypress open"`);
       });
 
       it('adds cypress files', () => {

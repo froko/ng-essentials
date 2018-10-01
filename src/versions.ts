@@ -86,9 +86,6 @@ export const jest = {
 };
 
 export const cypress = {
-  // concurrently
-  concurrentlyVersion: '4.0.1',
-
   // cypress
   cypressVersion: '3.1.0'
 };
