@@ -251,6 +251,7 @@ describe('ng-essentials', () => {
       });
 
       it('adds cypress files', () => {
+        expect(tree.files).toContain('/cypress/tsconfig.json');
         expect(tree.files).toContain('/cypress/fixtures/example.json');
         expect(tree.files).toContain('/cypress/integration/spec.js');
         expect(tree.files).toContain('/cypress/plugins/index.js');
