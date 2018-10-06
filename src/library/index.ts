@@ -32,6 +32,7 @@ export default function(options: LibraryOptionsSchema): Rule {
         hasJest ? deleteFile(`${defaultProjectName}/${dasherizedLibraryName}/src/test.ts`) : noop(),
         hasJest ? editTsConfigLibJson(`${defaultProjectName}/${dasherizedLibraryName}`) : noop(),
         hasJest ? editTsConfigSpecJson(`${defaultProjectName}/${dasherizedLibraryName}`) : noop(),
+        hasJest ? addJestConfigInLibraryFolder(defaultProjectName, dasherizedLibraryName) : noop(),
         hasJest ? switchToJestBuilderInAngularJsonForLibrary(`${options.name}`) : noop(),
         hasJest ? updateJestConfig(defaultProjectName) : noop()
       ]);
@@ -86,6 +87,22 @@ function editTsLintConfigJsonForLibrary(path: string): Rule {
     }
 
     host.overwrite(`${path}/tslint.json`, JSON.stringify(tslintJson, null, 2));
+
+    return host;
+  };
+}
+
+function addJestConfigInLibraryFolder(
+  defaultProjectName: string,
+  dasherizedLibraryName: string): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    host.create(
+      `${defaultProjectName}/${dasherizedLibraryName}/jest.config.js`,
+      `module.exports = {
+  preset: 'jest-preset-angular',
+  setupTestFrameworkScriptFile: '<rootDir>/src/setup-jest.ts'
+};`
+    );
 
     return host;
   };

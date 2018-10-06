@@ -94,6 +94,10 @@ describe('library', () => {
       expect(tree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).toContain('commonjs');
     });
 
+    it('adds jest config file in library folder', () => {
+      expect(tree.files).toContain(`/libs/${dasherizedLibraryName}/jest.config.js`);
+    });
+
     it('switches to jest builder in angular.json', () => {
       expect(tree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
     });
