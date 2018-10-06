@@ -15,10 +15,10 @@ export const essentials = {
   cliVersion: '6.2.4',
 
   // @types/node
-  nodeVersion: '10.11.3',
+  nodeVersion: '10.11.4',
 
   // codelizer
-  codelizerVersion: '4.4.4',
+  codelizerVersion: '4.5.0',
 
   // ts-node
   tsNodeVersion: '7.0.1',
@@ -30,7 +30,7 @@ export const essentials = {
   typescriptVersion: '2.9.2',
 
   // husky
-  huskyVersion: '1.1.0',
+  huskyVersion: '1.1.1',
 
   // npm-run-all
   npmRunAllVersion: '4.1.3',
@@ -47,7 +47,7 @@ export const essentials = {
 
 export const karma = {
   // @types/jasmine
-  jasmineTypeVersion: '2.8.8',
+  jasmineTypeVersion: '2.8.9',
 
   // jasmine-core
   jasmineCoreVersion: '3.2.1',
@@ -67,10 +67,10 @@ export const karma = {
 
 export const jest = {
   // @angular-builders/jest
-  jestBuilderVersion: '1.2.2',
+  jestBuilderVersion: '1.2.5',
 
   // @types/jest
-  jestTypeVersion: '23.3.2',
+  jestTypeVersion: '23.3.3',
 
   // babel-core
   babelCoreVersion: '6.26.3',
