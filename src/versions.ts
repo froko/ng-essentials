@@ -1,6 +1,6 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '6.1.9',
+  angularVersion: '6.1.10',
 
   // core-js
   coreJsVersion: '2.5.7',
@@ -9,13 +9,13 @@ export const essentials = {
   rxjsVersion: '6.3.3',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.8.4',
+  buildAngularVersion: '0.8.5',
 
   // @angular/cli
-  cliVersion: '6.2.4',
+  cliVersion: '6.2.5',
 
   // @types/node
-  nodeVersion: '10.11.4',
+  nodeVersion: '10.11.7',
 
   // codelizer
   codelizerVersion: '4.5.0',
@@ -30,7 +30,7 @@ export const essentials = {
   typescriptVersion: '2.9.2',
 
   // husky
-  huskyVersion: '1.1.1',
+  huskyVersion: '1.1.2',
 
   // npm-run-all
   npmRunAllVersion: '4.1.3',
@@ -39,7 +39,7 @@ export const essentials = {
   prettierVersion: '1.14.3',
 
   // pretty-quick
-  prettyQuickVersion: '1.7.0',
+  prettyQuickVersion: '1.8.0',
 
   // tslint-config-prettier
   tsLintConfigPrettierVersion: '1.15.0'
@@ -70,7 +70,7 @@ export const jest = {
   jestBuilderVersion: '1.2.5',
 
   // @types/jest
-  jestTypeVersion: '23.3.3',
+  jestTypeVersion: '23.3.5',
 
   // babel-core
   babelCoreVersion: '6.26.3',
