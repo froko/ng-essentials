@@ -159,6 +159,7 @@ describe('ng-essentials', () => {
       it('adds essentials files', () => {
         expect(tree.files).toContain('/.npmrc');
         expect(tree.files).toContain('/.prettierrc');
+        expect(tree.files).toContain('/.vscode/settings.json');
       });
 
       it('updates jasmine packages in package.json', () => {
