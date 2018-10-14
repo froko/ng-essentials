@@ -92,9 +92,7 @@ function editTsLintConfigJsonForLibrary(path: string): Rule {
   };
 }
 
-function addJestConfigInLibraryFolder(
-  defaultProjectName: string,
-  dasherizedLibraryName: string): Rule {
+function addJestConfigInLibraryFolder(defaultProjectName: string, dasherizedLibraryName: string): Rule {
   return (host: Tree, _: SchematicContext) => {
     host.create(
       `${defaultProjectName}/${dasherizedLibraryName}/jest.config.js`,
