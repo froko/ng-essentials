@@ -1,6 +1,6 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '6.1.10',
+  angularVersion: '7.0.1',
 
   // core-js
   coreJsVersion: '2.5.7',
@@ -9,13 +9,13 @@ export const essentials = {
   rxjsVersion: '6.3.3',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.8.5',
+  buildAngularVersion: '0.10.3',
 
   // @angular/cli
-  cliVersion: '6.2.5',
+  cliVersion: '7.0.3',
 
   // @types/node
-  nodeVersion: '10.11.7',
+  nodeVersion: '10.12.0',
 
   // codelizer
   codelizerVersion: '4.5.0',
@@ -27,7 +27,7 @@ export const essentials = {
   tsLintVersion: '5.11.0',
 
   // typescript
-  typescriptVersion: '2.9.2',
+  typescriptVersion: '3.1.3',
 
   // husky
   huskyVersion: '1.1.2',
@@ -50,10 +50,10 @@ export const karma = {
   jasmineTypeVersion: '2.8.9',
 
   // jasmine-core
-  jasmineCoreVersion: '3.2.1',
+  jasmineCoreVersion: '2.99.1',
 
   // karma
-  karmaVersion: '3.0.0',
+  karmaVersion: '3.1.1',
 
   // karma-coverage-istanbul-reporter
   coverageReporterVersion: '2.0.4',
@@ -62,7 +62,7 @@ export const karma = {
   karmaJasmineVersion: '1.1.2',
 
   // karma-jasmine-html-reporter
-  htmlReporterVersion: '1.3.1'
+  htmlReporterVersion: '0.2.2'
 };
 
 export const jest = {
@@ -92,7 +92,7 @@ export const cypress = {
 
 export const testcafe = {
   // testcafe
-  testcafeVersion: '0.22.0',
+  testcafeVersion: '0.23.0',
 
   // testcafe-angular-selectors
   angularSelectorsVersion: '0.3.0',
