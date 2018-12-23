@@ -55,12 +55,6 @@ describe('library', () => {
       expect(tree.readContent(PACKAGE_JSON)).toContain(`"tsickle": "${library.tsickleVersion}"`);
       expect(tree.readContent(PACKAGE_JSON)).toContain(`"tslib": "${library.tslibVersion}"`);
     });
-
-    it('adds "no-implicit-dependencies" option to TsLint config of library', () => {
-      expect(tree.readContent(`/libs/${dasherizedLibraryName}/tslint.json`)).toContain(
-        '"no-implicit-dependencies": false'
-      );
-    });
   });
 
   describe('when creating a new library with jest option', () => {

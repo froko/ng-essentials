@@ -23,11 +23,10 @@ export default function(options: LibraryOptionsSchema): Rule {
 
       return chain([
         removeAutomaticUpdateSymbols(),
+        addPackageToPackageJson('dependencies', 'tslib', library.tslibVersion),
         addPackageToPackageJson('devDependencies', '@angular-devkit/build-ng-packagr', library.buildNgPackagrVersion),
         addPackageToPackageJson('devDependencies', 'ng-packagr', library.ngPackagrVersion),
         addPackageToPackageJson('devDependencies', 'tsickle', library.tsickleVersion),
-        addPackageToPackageJson('devDependencies', 'tslib', library.tslibVersion),
-        editTsLintConfigJsonForLibrary(`${defaultProjectName}/${dasherizedLibraryName}`),
         hasJest ? deleteFile(`${defaultProjectName}/${dasherizedLibraryName}/karma.conf.js`) : noop(),
         hasJest ? deleteFile(`${defaultProjectName}/${dasherizedLibraryName}/src/test.ts`) : noop(),
         hasJest ? editTsConfigLibJson(`${defaultProjectName}/${dasherizedLibraryName}`) : noop(),
@@ -67,29 +66,6 @@ function findDefaultProjectNameInAngularJson(host: Tree): string {
   const defaulProjectName = angularJson['newProjectRoot'];
 
   return defaulProjectName ? defaulProjectName : 'projects';
-}
-
-function editTsLintConfigJsonForLibrary(path: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
-    if (!host.exists(`${path}/tslint.json`)) {
-      return host;
-    }
-
-    const sourceText = host.read(`${path}/tslint.json`).toString('utf-8');
-    const tslintJson = JSON.parse(sourceText);
-
-    if (!tslintJson['rules']) {
-      tslintJson['rules'] = [];
-    }
-
-    if (!tslintJson['rules']['no-implicit-dependencies']) {
-      tslintJson['rules']['no-implicit-dependencies'] = false;
-    }
-
-    host.overwrite(`${path}/tslint.json`, JSON.stringify(tslintJson, null, 2));
-
-    return host;
-  };
 }
 
 function addJestConfigInLibraryFolder(defaultProjectName: string, dasherizedLibraryName: string): Rule {

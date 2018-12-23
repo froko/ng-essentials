@@ -201,7 +201,7 @@ function editTsLintConfigJson(): Rule {
           return obj;
         }, {}),
       ['jsdoc-format']: false,
-      ['no-implicit-dependencies']: [true, 'dev'],
+      ['no-implicit-dependencies']: false,
       ['no-submodule-imports']: false,
       ['interface-name']: [true, 'never-prefix']
     };

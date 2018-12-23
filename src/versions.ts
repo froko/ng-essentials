@@ -1,21 +1,21 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '7.1.1',
+  angularVersion: '7.1.4',
 
   // core-js
-  coreJsVersion: '2.5.7',
+  coreJsVersion: '2.6.1',
 
   // rxjs
   rxjsVersion: '6.3.3',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.11.1',
+  buildAngularVersion: '0.11.4',
 
   // @angular/cli
-  cliVersion: '7.1.1',
+  cliVersion: '7.1.4',
 
   // @types/node
-  nodeVersion: '10.12.12',
+  nodeVersion: '10.12.18',
 
   // codelizer
   codelizerVersion: '4.5.0',
@@ -24,13 +24,13 @@ export const essentials = {
   tsNodeVersion: '7.0.1',
 
   // tslint
-  tsLintVersion: '5.11.0',
+  tsLintVersion: '5.12.0',
 
   // typescript
   typescriptVersion: '3.1.3',
 
   // husky
-  huskyVersion: '1.2.0',
+  huskyVersion: '1.2.1',
 
   // npm-run-all
   npmRunAllVersion: '4.1.5',
@@ -67,7 +67,7 @@ export const karma = {
 
 export const jest = {
   // @angular-builders/jest
-  jestBuilderVersion: '7.1.1',
+  jestBuilderVersion: '7.1.2',
 
   // @types/jest
   jestTypeVersion: '23.3.10',
@@ -92,10 +92,10 @@ export const cypress = {
 
 export const testcafe = {
   // testcafe
-  testcafeVersion: '0.23.2',
+  testcafeVersion: '0.23.3',
 
   // testcafe-angular-selectors
-  angularSelectorsVersion: '0.3.0',
+  angularSelectorsVersion: '0.3.1',
 
   // testcafe-live
   liveVersion: '0.1.4'
@@ -103,10 +103,10 @@ export const testcafe = {
 
 export const library = {
   // @angular-devkit/build-ng-packagr
-  buildNgPackagrVersion: '0.11.0',
+  buildNgPackagrVersion: '0.11.4',
 
   // ng-packagr
-  ngPackagrVersion: '4.2.1',
+  ngPackagrVersion: '4.4.5',
 
   // tsickle
   tsickleVersion: '0.34.0',
