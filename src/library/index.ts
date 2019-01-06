@@ -10,7 +10,8 @@ import {
   addPackageToPackageJson,
   deleteFile,
   editTsConfigLibJson,
-  editTsConfigSpecJson
+  editTsConfigSpecJson,
+  findDefaultProjectNameInAngularJson
 } from '../utils';
 
 export default function(options: LibraryOptionsSchema): Rule {
@@ -54,18 +55,6 @@ function findJestOptionInAngularJson(host: Tree): boolean {
   }
 
   return false;
-}
-
-function findDefaultProjectNameInAngularJson(host: Tree): string {
-  if (!host.exists(ANGULAR_JSON)) {
-    return 'projects';
-  }
-
-  const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
-  const angularJson = JSON.parse(sourceText);
-  const defaulProjectName = angularJson['newProjectRoot'];
-
-  return defaulProjectName ? defaulProjectName : 'projects';
 }
 
 function addJestConfigInLibraryFolder(defaultProjectName: string, dasherizedLibraryName: string): Rule {

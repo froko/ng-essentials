@@ -19,6 +19,11 @@
       "description": "Include testcafe",
       "default": false
     },
+    "wallaby": {
+      "type": "boolean",
+      "description": "Include wallaby.js support",
+      "default": false
+    },
     "firstRun": {
       "type": "boolean",
       "description": "Indicates the first run of this schematic",

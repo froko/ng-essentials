@@ -11,7 +11,7 @@ import {
 import { strings } from '@angular-devkit/core';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
-import { PACKAGE_JSON } from './constants';
+import { PACKAGE_JSON, ANGULAR_JSON } from './constants';
 
 export function removeAutomaticUpdateSymbols(): Rule {
   return (host: Tree, _: SchematicContext) => {
@@ -161,6 +161,18 @@ export function addScriptToPackageJson(key: string, command: string): Rule {
 
     return host;
   };
+}
+
+export function findDefaultProjectNameInAngularJson(host: Tree): string {
+  if (!host.exists(ANGULAR_JSON)) {
+    return 'projects';
+  }
+
+  const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+  const angularJson = JSON.parse(sourceText);
+  const defaulProjectName = angularJson['newProjectRoot'];
+
+  return defaulProjectName ? defaulProjectName : 'projects';
 }
 
 export function editTsConfigLibJson(path: string): Rule {

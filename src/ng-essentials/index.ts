@@ -2,6 +2,7 @@ import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics'
 
 import { NgEssentialsOptions } from './schema';
 
+import { addWallaby } from './wallaby';
 import { addKarma } from './karma';
 import { addJest } from './jest';
 import { addCypress } from './cypress';
@@ -16,6 +17,7 @@ export default function(options: NgEssentialsOptions): Rule {
     options = readNgEssentialsOptionsFromAngularJson(tree, options);
 
     const rule = chain([
+      addWallaby(options),
       addKarma(options),
       addJest(options),
       addCypress(options),
@@ -45,6 +47,7 @@ function readNgEssentialsOptionsFromAngularJson(host: Tree, options: NgEssential
     options.jest = optionsFromAngularJson.jest;
     options.cypress = optionsFromAngularJson.cypress;
     options.testcafe = optionsFromAngularJson.testcafe;
+    options.wallaby = optionsFromAngularJson.wallaby;
   }
 
   return options;

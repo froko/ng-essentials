@@ -5,7 +5,7 @@ import { createAppModule } from '@schematics/angular/utility/test/create-app-mod
 import * as path from 'path';
 
 import { ANGULAR_JSON, PACKAGE_JSON, TSLINT_JSON, TSCONFIGAPP_JSON } from '../constants';
-import { essentials, jest, cypress, testcafe, karma } from '../versions';
+import { essentials, jest, cypress, testcafe, karma, wallaby } from '../versions';
 
 const collectionPath = path.join(__dirname, '../collection.json');
 
@@ -282,6 +282,49 @@ describe('ng-essentials', () => {
         expect(tree.files).toContain('/testcafe/index.e2e-spec.js');
       });
     });
+
+    describe('with wallaby option', () => {
+      let tree: UnitTestTree;
+
+      beforeEach(() => {
+        const runner = new SchematicTestRunner('schematics', collectionPath);
+        tree = runner.runSchematic('ng-add', { wallaby: true }, appTree);
+      });
+
+      it('adds wallaby packages to packages.json', () => {
+        expect(tree.readContent(PACKAGE_JSON)).toContain(
+          `"angular2-template-loader": "${wallaby.angularTemplateLoader}"`
+        );
+        expect(tree.readContent(PACKAGE_JSON)).toContain(`"wallaby-webpack": "${wallaby.wallabyWebpack}"`);
+      });
+
+      it('adds wallaby.js file with jasmine support', () => {
+        expect(tree.files).toContain('/wallaby.js');
+        expect(tree.readContent('/wallaby.js')).toContain('jasmine');
+      });
+
+      it('adds wallaby test file', () => {
+        expect(tree.files).toContain('/src/wallabyTest.ts');
+      });
+    });
+
+    describe('with wallaby and jest option', () => {
+      let tree: UnitTestTree;
+
+      beforeEach(() => {
+        const runner = new SchematicTestRunner('schematics', collectionPath);
+        tree = runner.runSchematic('ng-add', { wallaby: true, jest: true }, appTree);
+      });
+
+      it('adds wallaby packages to packages.json', () => {
+        expect(tree.readContent(PACKAGE_JSON)).toContain(`"ngx-wallaby-jest": "${wallaby.wallabyJest}"`);
+      });
+
+      it('adds wallaby.js file with jasmine support', () => {
+        expect(tree.files).toContain('/wallaby.js');
+        expect(tree.readContent('/wallaby.js')).toContain('jest');
+      });
+    });
   });
 
   describe('when running for a subsequent time', () => {
@@ -339,6 +382,15 @@ describe('ng-essentials', () => {
       it('does not add testcafe files', () => {
         expect(tree.files).not.toContain('/testcafe/index.e2e-spec.js');
       });
+
+      it('does not add wallaby packages to packages.json', () => {
+        expect(tree.readContent(PACKAGE_JSON)).not.toContain('wallaby');
+      });
+
+      it('does not add wallaby files', () => {
+        expect(tree.files).not.toContain('/wallaby.js');
+        expect(tree.files).not.toContain('/src/wallabyTest.ts');
+      });
     });
   });
 });
@@ -377,7 +429,8 @@ function createAngularJsonForSubsequentRun(tree: UnitTestTree): UnitTestTree {
             "@froko/ng-essentials": {
               "jest": true,
               "cypress": true,
-              "testcafe": true
+              "testcafe": true,
+              "wallaby": true
             }
           },
           "architect": {

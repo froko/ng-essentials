@@ -101,6 +101,17 @@ export const testcafe = {
   liveVersion: '0.1.4'
 };
 
+export const wallaby = {
+  // angular2-template-loader
+  angularTemplateLoader: '0.6.2',
+
+  // wallaby-webpack
+  wallabyWebpack: '3.9.13',
+
+  // ngx-wallaby-jest
+  wallabyJest: '0.0.1'
+};
+
 export const library = {
   // @angular-devkit/build-ng-packagr
   buildNgPackagrVersion: '0.11.4',

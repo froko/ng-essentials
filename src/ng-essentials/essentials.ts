@@ -108,7 +108,8 @@ function addNgEssentialsToAngularJson(options: NgEssentialsOptions): Rule {
     angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS] = {
       jest: options.jest ? options.jest.valueOf() : false,
       cypress: options.cypress ? options.cypress.valueOf() : false,
-      testcafe: options.testcafe ? options.testcafe.valueOf() : false
+      testcafe: options.testcafe ? options.testcafe.valueOf() : false,
+      wallaby: options.wallaby ? options.wallaby.valueOf() : false
     };
 
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
@@ -243,9 +244,9 @@ function updateProductionEnvironmentFile(): Rule {
         { provide: 'environment', useValue: 'Production' },
         { provide: 'baseUrl', useValue: 'http://localhost:3000' }
       ];
-      
+
       export const ENV_PROVIDERS = providers;
-      
+
       export const environment = {
         production: true
       };
