@@ -1,18 +1,18 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '7.1.4',
+  angularVersion: '7.2.1',
 
   // core-js
-  coreJsVersion: '2.6.1',
+  coreJsVersion: '2.6.2',
 
   // rxjs
   rxjsVersion: '6.3.3',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.11.4',
+  buildAngularVersion: '0.12.0',
 
   // @angular/cli
-  cliVersion: '7.1.4',
+  cliVersion: '7.2.2',
 
   // @types/node
   nodeVersion: '10.12.18',
@@ -24,22 +24,22 @@ export const essentials = {
   tsNodeVersion: '7.0.1',
 
   // tslint
-  tsLintVersion: '5.12.0',
+  tsLintVersion: '5.12.1',
 
   // typescript
-  typescriptVersion: '3.1.3',
+  typescriptVersion: '3.2.4',
 
   // husky
-  huskyVersion: '1.2.1',
+  huskyVersion: '1.3.1',
 
   // npm-run-all
   npmRunAllVersion: '4.1.5',
 
   // prettier
-  prettierVersion: '1.15.3',
+  prettierVersion: '1.16.0',
 
   // pretty-quick
-  prettyQuickVersion: '1.8.0',
+  prettyQuickVersion: '1.10.0',
 
   // tslint-config-prettier
   tsLintConfigPrettierVersion: '1.17.0'
@@ -67,10 +67,10 @@ export const karma = {
 
 export const jest = {
   // @angular-builders/jest
-  jestBuilderVersion: '7.1.2',
+  jestBuilderVersion: '7.2.1',
 
   // @types/jest
-  jestTypeVersion: '23.3.10',
+  jestTypeVersion: '23.3.13',
 
   // babel-core
   babelCoreVersion: '6.26.3',
@@ -87,7 +87,7 @@ export const jest = {
 
 export const cypress = {
   // cypress
-  cypressVersion: '3.1.3'
+  cypressVersion: '3.1.4'
 };
 
 export const testcafe = {
