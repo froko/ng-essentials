@@ -41,3 +41,14 @@ ng generate lib myAwesomeLib
 ```
 
 it will delete the karma/jasmine configuration and add jest support for the new library as well.
+
+#### Adding a new application with jest support
+
+This schematic enhances the creation of a new application when the schematic was previously installed with the `--jest` option. By running
+
+```bash
+ng generate app myAwesomeApp
+```
+
+it will delete the karma/jasmine configuration and add jest support for the new application as well.
+Keep in mind that there is no more e2e support for `protractor`. So remove the `e2e` folder of the new application since it has no value anymore.
