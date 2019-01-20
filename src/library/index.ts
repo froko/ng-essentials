@@ -9,7 +9,6 @@ import {
   removeAutomaticUpdateSymbols,
   addPackageToPackageJson,
   deleteFile,
-  editTsConfigLibJson,
   editTsConfigSpecJson,
   findDefaultProjectNameInAngularJson
 } from '../utils';
@@ -55,6 +54,27 @@ function findJestOptionInAngularJson(host: Tree): boolean {
   }
 
   return false;
+}
+
+function editTsConfigLibJson(path: string): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!host.exists(`${path}/tsconfig.lib.json`)) {
+      return host;
+    }
+
+    const sourceText = host.read(`${path}/tsconfig.lib.json`).toString('utf-8');
+    const tsconfigJson = JSON.parse(sourceText);
+
+    if (!tsconfigJson['exclude']) {
+      tsconfigJson['exclude'] = [];
+    }
+
+    tsconfigJson['exclude'] = ['**/*.spec.ts'];
+
+    host.overwrite(`${path}/tsconfig.lib.json`, JSON.stringify(tsconfigJson, null, 2));
+
+    return host;
+  };
 }
 
 function addJestConfigInLibraryFolder(defaultProjectName: string, dasherizedLibraryName: string): Rule {

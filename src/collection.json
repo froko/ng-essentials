@@ -12,6 +12,12 @@
       "aliases": ["lib"],
       "factory": "./library/index",
       "schema": "./library/schema.json"
+    },
+    "application": {
+      "description": "Generate an application project for Angular.",
+      "aliases": ["app"],
+      "factory": "./application/index",
+      "schema": "./application/schema.json"
     }
   }
 }
