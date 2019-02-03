@@ -53,7 +53,6 @@ describe('library', () => {
       );
       expect(tree.readContent(PACKAGE_JSON)).toContain(`"ng-packagr": "${library.ngPackagrVersion}"`);
       expect(tree.readContent(PACKAGE_JSON)).toContain(`"tsickle": "${library.tsickleVersion}"`);
-      expect(tree.readContent(PACKAGE_JSON)).toContain(`"tslib": "${library.tslibVersion}"`);
     });
   });
 

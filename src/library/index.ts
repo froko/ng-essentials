@@ -23,7 +23,6 @@ export default function(options: LibraryOptionsSchema): Rule {
 
       return chain([
         removeAutomaticUpdateSymbols(),
-        addPackageToPackageJson('dependencies', 'tslib', library.tslibVersion),
         addPackageToPackageJson('devDependencies', '@angular-devkit/build-ng-packagr', library.buildNgPackagrVersion),
         addPackageToPackageJson('devDependencies', 'ng-packagr', library.ngPackagrVersion),
         addPackageToPackageJson('devDependencies', 'tsickle', library.tsickleVersion),

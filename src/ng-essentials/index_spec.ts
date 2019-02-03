@@ -23,6 +23,7 @@ describe('ng-essentials', () => {
     appTree = createTestTypescriptFile(new UnitTestTree(appTree));
     appTree = createTsConfigAppInSrcDirectory(new UnitTestTree(appTree));
     appTree = createTsConfigSpecInSrcDirectory(new UnitTestTree(appTree));
+    appTree = createEndToEndTestingFiles(new UnitTestTree(appTree));
   });
 
   describe('when running for the first time', () => {
@@ -80,7 +81,9 @@ describe('ng-essentials', () => {
         );
         expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/router": "${essentials.angularVersion}"`);
         expect(tree.readContent(PACKAGE_JSON)).toContain(`"core-js": "${essentials.coreJsVersion}"`);
+        expect(tree.readContent(PACKAGE_JSON)).toContain(`"tslib": "${essentials.tslibVersion}"`);
         expect(tree.readContent(PACKAGE_JSON)).toContain(`"rxjs": "${essentials.rxjsVersion}"`);
+        expect(tree.readContent(PACKAGE_JSON)).toContain(`"zone.js": "${essentials.zoneVersion}"`);
         expect(tree.readContent(PACKAGE_JSON)).toContain(
           `"@angular-devkit/build-angular": "${essentials.buildAngularVersion}"`
         );
@@ -102,6 +105,7 @@ describe('ng-essentials', () => {
         expect(tree.readContent(PACKAGE_JSON)).toContain(
           `"tslint-config-prettier": "${essentials.tsLintConfigPrettierVersion}"`
         );
+        expect(tree.readContent(PACKAGE_JSON)).toContain(`"terser": "${essentials.terserVersion}"`);
       });
 
       it('adds additional scripts in package.json', () => {
@@ -598,6 +602,15 @@ function createTsConfigSpecInSrcDirectory(tree: UnitTestTree): UnitTestTree {
       ]
     }`
   );
+
+  return tree;
+}
+
+function createEndToEndTestingFiles(tree: UnitTestTree): UnitTestTree {
+  tree.create('/e2e/src/app.e2e-spec.ts', '');
+  tree.create('/e2e/src/app.po.ts', '');
+  tree.create('/e2e/protractor.conf.js', '');
+  tree.create('/e2e/tsconfig.e2e.json', '');
 
   return tree;
 }

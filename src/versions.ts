@@ -1,27 +1,33 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '7.2.1',
+  angularVersion: '7.2.3',
 
   // core-js
-  coreJsVersion: '2.6.2',
+  coreJsVersion: '2.6.3',
+
+  // tslib
+  tslibVersion: '1.9.3',
 
   // rxjs
-  rxjsVersion: '6.3.3',
+  rxjsVersion: '6.4.0',
+
+  // zone.js
+  zoneVersion: '0.8.29',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.12.2',
+  buildAngularVersion: '0.13.0',
 
   // @angular/cli
-  cliVersion: '7.2.2',
+  cliVersion: '7.3.0',
 
   // @types/node
-  nodeVersion: '10.12.18',
+  nodeVersion: '10.12.21',
 
   // codelizer
   codelizerVersion: '4.5.0',
 
   // ts-node
-  tsNodeVersion: '7.0.1',
+  tsNodeVersion: '8.0.2',
 
   // tslint
   tsLintVersion: '5.12.1',
@@ -36,13 +42,16 @@ export const essentials = {
   npmRunAllVersion: '4.1.5',
 
   // prettier
-  prettierVersion: '1.16.0',
+  prettierVersion: '1.16.3',
 
   // pretty-quick
   prettyQuickVersion: '1.10.0',
 
   // tslint-config-prettier
-  tsLintConfigPrettierVersion: '1.17.0'
+  tsLintConfigPrettierVersion: '1.17.0',
+
+  // terser
+  terserVersion: '3.14.1'
 };
 
 export const karma = {
@@ -67,7 +76,7 @@ export const karma = {
 
 export const jest = {
   // @angular-builders/jest
-  jestBuilderVersion: '7.2.1',
+  jestBuilderVersion: '7.2.3',
 
   // @types/jest
   jestTypeVersion: '23.3.13',
@@ -87,7 +96,7 @@ export const jest = {
 
 export const cypress = {
   // cypress
-  cypressVersion: '3.1.4'
+  cypressVersion: '3.1.5'
 };
 
 export const testcafe = {
@@ -95,7 +104,7 @@ export const testcafe = {
   testcafeVersion: '0.23.3',
 
   // testcafe-angular-selectors
-  angularSelectorsVersion: '0.3.1',
+  angularSelectorsVersion: '0.3.2',
 
   // testcafe-live
   liveVersion: '0.1.4'
@@ -120,8 +129,5 @@ export const library = {
   ngPackagrVersion: '4.4.5',
 
   // tsickle
-  tsickleVersion: '0.34.0',
-
-  // tslib
-  tslibVersion: '1.9.3'
+  tsickleVersion: '0.34.0'
 };

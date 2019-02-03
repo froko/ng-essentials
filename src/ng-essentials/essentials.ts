@@ -26,6 +26,7 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
     addDefaultSchematicsToAngularJson(),
     addNgEssentialsToAngularJson(options),
     removeEndToEndTestNodeFromAngularJson(),
+    removeEndToEndTestFiles(),
     removePackageFromPackageJson('devDependencies', '@types/jasminewd2'),
     removePackageFromPackageJson('devDependencies', 'protractor'),
     removeScriptFromPackageJson('e2e'),
@@ -40,7 +41,9 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
     addPackageToPackageJson('dependencies', '@angular/platform-browser-dynamic', essentials.angularVersion),
     addPackageToPackageJson('dependencies', '@angular/router', essentials.angularVersion),
     addPackageToPackageJson('dependencies', 'core-js', essentials.coreJsVersion),
+    addPackageToPackageJson('dependencies', 'tslib', essentials.tslibVersion),
     addPackageToPackageJson('dependencies', 'rxjs', essentials.rxjsVersion),
+    addPackageToPackageJson('dependencies', 'zone.js', essentials.zoneVersion),
     addPackageToPackageJson('devDependencies', '@angular-devkit/build-angular', essentials.buildAngularVersion),
     addPackageToPackageJson('devDependencies', '@angular/cli', essentials.cliVersion),
     addPackageToPackageJson('devDependencies', '@angular/compiler-cli', essentials.angularVersion),
@@ -55,6 +58,7 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
     addPackageToPackageJson('devDependencies', 'prettier', essentials.prettierVersion),
     addPackageToPackageJson('devDependencies', 'pretty-quick', essentials.prettyQuickVersion),
     addPackageToPackageJson('devDependencies', 'tslint-config-prettier', essentials.tsLintConfigPrettierVersion),
+    addPackageToPackageJson('devDependencies', 'terser', essentials.terserVersion),
     addScriptToPackageJson('format', 'prettier --write "{src,lib}/**/*{.ts,.js,.json,.css,.scss}"'),
     addScriptToPackageJson('format:check', 'prettier --list-different "{src,lib}/**/*{.ts,.js,.json,.css,.scss}"'),
     addScriptToPackageJson('format:fix', 'pretty-quick --staged'),
@@ -139,6 +143,23 @@ function removeEndToEndTestNodeFromAngularJson(): Rule {
   };
 }
 
+function removeEndToEndTestFiles(): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    host.delete('e2e/src/app.e2e-spec.ts');
+    host.delete('e2e/src/app.po.ts');
+    host.delete('e2e/protractor.conf.js');
+    host.delete('e2e/tsconfig.e2e.json');
+
+    if (host.exists('e2e/src')) {
+      host.delete('e2e/src');
+    }
+
+    if (host.exists('e2e')) {
+      host.delete('e2e');
+    }
+  };
+}
+
 function addHuskyConfigToPackageJson(): Rule {
   return (host: Tree, _: SchematicContext) => {
     if (!host.exists(PACKAGE_JSON)) {
@@ -204,7 +225,8 @@ function editTsLintConfigJson(): Rule {
       ['jsdoc-format']: false,
       ['no-implicit-dependencies']: false,
       ['no-submodule-imports']: false,
-      ['interface-name']: [true, 'never-prefix']
+      ['interface-name']: [true, 'never-prefix'],
+      ['ordered-imports']: true
     };
 
     host.overwrite(TSLINT_JSON, JSON.stringify(tslintJson, null, 2));

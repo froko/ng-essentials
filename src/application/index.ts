@@ -1,4 +1,3 @@
-import { dasherize } from '@angular-devkit/core/src/utils/strings';
 import { SchematicContext, Tree, chain, Rule, externalSchematic, noop } from '@angular-devkit/schematics';
 
 import { AngularApplicationOptionsSchema } from './schema';
@@ -16,6 +15,7 @@ export default function(options: AngularApplicationOptionsSchema): Rule {
 
       return chain([
         removeEndToEndTestNodeFromAngularJson(`${options.name}`),
+        removeEndToEndTestFiles(`${options.name}`),
         hasJest ? deleteFile(`${defaultProjectName}/${applicationName}/karma.conf.js`) : noop(),
         hasJest ? deleteFile(`${defaultProjectName}/${applicationName}/src/test.ts`) : noop(),
         hasJest ? editTsConfigAppJson(`${defaultProjectName}/${applicationName}`) : noop(),
@@ -62,6 +62,33 @@ function removeEndToEndTestNodeFromAngularJson(applicationName: string): Rule {
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
 
     return host;
+  };
+}
+
+function removeEndToEndTestFiles(applicationName: string): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!host.exists(ANGULAR_JSON)) {
+      return host;
+    }
+
+    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+    const angularJson = JSON.parse(sourceText);
+    const projectsDirectory = angularJson['newProjectRoot'];
+    const e2eTestProjectName = applicationName + '-e2e';
+    const e2eDirectory = `${projectsDirectory}/${e2eTestProjectName}`;
+
+    host.delete(`${e2eDirectory}/src/app.e2e-spec.ts`);
+    host.delete(`${e2eDirectory}/src/app.po.ts`);
+    host.delete(`${e2eDirectory}/protractor.conf.js`);
+    host.delete(`${e2eDirectory}/tsconfig.e2e.json`);
+
+    if (host.exists(`${e2eDirectory}/src`)) {
+      host.delete(`${e2eDirectory}/src`);
+    }
+
+    if (host.exists(`${e2eDirectory}`)) {
+      host.delete(`${e2eDirectory}`);
+    }
   };
 }
 
