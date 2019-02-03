@@ -32,6 +32,8 @@ _ng-essentials_ comes with some configuration switches to add even more value:
 
 - `--testcafe` adds e2e testing functionality with [Testcafe](https://devexpress.github.io/testcafe/). Please note that `ng e2e` won't work anymore. Use `npm run testcafe` or `yarn testcafe` instead.
 
+- `--wallaby` adds a wallaby.js configuration depending on the chosen test framework (`jasmine` or `jest`)
+
 #### Adding a new library with jest support
 
 This schematic enhances the creation of a new library when the schematic was previously installed with the `--jest` option. By running
