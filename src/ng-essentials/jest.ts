@@ -78,27 +78,10 @@ export function prepareTsSpecConfigForJest(rootPath: string): Rule {
 
 export function switchToJestBuilderInAngularJson(projectName: string): Rule {
   return updateJson(ANGULAR_JSON, json => {
-    let project = json[projectName];
-    project = {
-      ...project,
-      architect: {
-        test: {
-          builder: '@angular-builders/jest:run',
-          options: {}
-        }
-      }
-    };
+    json['projects'][projectName]['architect']['test'].builder = '@angular-builders/jest:run';
+    json['projects'][projectName]['architect']['test'].options = {};
 
-    let projects = json['projects'];
-    projects = {
-      ...projects,
-      defaultProject: project
-    };
-
-    return {
-      ...json,
-      projects
-    };
+    return json;
   });
 }
 
