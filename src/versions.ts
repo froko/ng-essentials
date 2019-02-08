@@ -1,9 +1,9 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '7.2.3',
+  angularVersion: '7.2.4',
 
   // core-js
-  coreJsVersion: '2.6.3',
+  coreJsVersion: '2.6.4',
 
   // tslib
   tslibVersion: '1.9.3',
@@ -15,13 +15,13 @@ export const essentials = {
   zoneVersion: '0.8.29',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.13.0',
+  buildAngularVersion: '0.13.1',
 
   // @angular/cli
-  cliVersion: '7.3.0',
+  cliVersion: '7.3.1',
 
   // @types/node
-  nodeVersion: '10.12.21',
+  nodeVersion: '10.12.23',
 
   // codelizer
   codelizerVersion: '4.5.0',
@@ -42,36 +42,36 @@ export const essentials = {
   npmRunAllVersion: '4.1.5',
 
   // prettier
-  prettierVersion: '1.16.3',
+  prettierVersion: '1.16.4',
 
   // pretty-quick
   prettyQuickVersion: '1.10.0',
 
   // tslint-config-prettier
-  tsLintConfigPrettierVersion: '1.17.0',
-
-  // terser
-  terserVersion: '3.14.1'
+  tsLintConfigPrettierVersion: '1.18.0'
 };
 
 export const karma = {
   // @types/jasmine
-  jasmineTypeVersion: '2.8.9',
+  jasmineTypeVersion: '3.3.8',
 
   // jasmine-core
-  jasmineCoreVersion: '2.99.1',
+  jasmineCoreVersion: '3.3.0',
 
   // karma
-  karmaVersion: '3.1.1',
+  karmaVersion: '4.0.0',
+
+  // karma-chrome-launcher
+  chromeLauncherVersion: '2.2.0',
 
   // karma-coverage-istanbul-reporter
   coverageReporterVersion: '2.0.4',
 
   // karma-jasmine
-  karmaJasmineVersion: '1.1.2',
+  karmaJasmineVersion: '2.0.1',
 
   // karma-jasmine-html-reporter
-  htmlReporterVersion: '0.2.2'
+  htmlReporterVersion: '1.4.0'
 };
 
 export const jest = {
@@ -91,7 +91,7 @@ export const jest = {
   jestVersion: '23.6.0',
 
   // jest-preset-angular
-  angularPresetVersion: '6.0.1'
+  angularPresetVersion: '6.0.2'
 };
 
 export const cypress = {
@@ -118,15 +118,15 @@ export const wallaby = {
   wallabyWebpack: '3.9.13',
 
   // ngx-wallaby-jest
-  wallabyJest: '0.0.1'
+  wallabyJest: '0.0.2'
 };
 
 export const library = {
   // @angular-devkit/build-ng-packagr
-  buildNgPackagrVersion: '0.11.4',
+  buildNgPackagrVersion: '0.13.1',
 
   // ng-packagr
-  ngPackagrVersion: '4.4.5',
+  ngPackagrVersion: '4.7.0',
 
   // tsickle
   tsickleVersion: '0.34.0'

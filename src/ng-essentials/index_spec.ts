@@ -105,7 +105,6 @@ describe('ng-essentials', () => {
         expect(tree.readContent(PACKAGE_JSON)).toContain(
           `"tslint-config-prettier": "${essentials.tsLintConfigPrettierVersion}"`
         );
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"terser": "${essentials.terserVersion}"`);
       });
 
       it('adds additional scripts in package.json', () => {

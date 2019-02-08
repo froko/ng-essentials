@@ -64,7 +64,6 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('devDependencies', 'prettier', essentials.prettierVersion),
         addPackageToPackageJson('devDependencies', 'pretty-quick', essentials.prettyQuickVersion),
         addPackageToPackageJson('devDependencies', 'tslint-config-prettier', essentials.tsLintConfigPrettierVersion),
-        addPackageToPackageJson('devDependencies', 'terser', essentials.terserVersion),
         addScriptToPackageJson('format', 'prettier --write "{src,lib}/**/*{.ts,.js,.json,.css,.scss}"'),
         addScriptToPackageJson('format:check', 'prettier --list-different "{src,lib}/**/*{.ts,.js,.json,.css,.scss}"'),
         addScriptToPackageJson('format:fix', 'pretty-quick --staged'),
