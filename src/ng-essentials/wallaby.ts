@@ -3,8 +3,7 @@ import { Rule, chain, Tree, SchematicContext } from '@angular-devkit/schematics'
 import { NgEssentialsOptions } from './schema';
 
 import { wallaby } from '../versions';
-import { TSCONFIGAPP_JSON } from '../constants';
-import { addPackageToPackageJson, findDefaultProjectNameInAngularJson } from '../utils';
+import { addPackageToPackageJson, findNewProjectRootInAngularJson, updateJson, tsconfigFilePath } from '../utils';
 
 export function addWallaby(options: NgEssentialsOptions): Rule {
   if (!options.firstRun || !options.wallaby) {
@@ -12,19 +11,19 @@ export function addWallaby(options: NgEssentialsOptions): Rule {
   }
   return chain([
     (tree: Tree, _context: SchematicContext) => {
-      const defaultProjectName = findDefaultProjectNameInAngularJson(tree);
+      const newProjectRoot = findNewProjectRootInAngularJson(tree);
 
       if (options.jest) {
         return chain([
           addPackageToPackageJson('devDependencies', 'ngx-wallaby-jest', wallaby.wallabyJest),
-          addWallabyConfigForJest(defaultProjectName)
+          addWallabyConfigForJest(newProjectRoot)
         ]);
       }
 
       return chain([
         addPackageToPackageJson('devDependencies', 'angular2-template-loader', wallaby.angularTemplateLoader),
         addPackageToPackageJson('devDependencies', 'wallaby-webpack', wallaby.wallabyWebpack),
-        addWallabyConfigForJasmine(defaultProjectName),
+        addWallabyConfigForJasmine(newProjectRoot),
         addWallabyTestFile(),
         editTsConfigAppJson()
       ]);
@@ -32,7 +31,7 @@ export function addWallaby(options: NgEssentialsOptions): Rule {
   ]);
 }
 
-function addWallabyConfigForJest(defaultProjectName: string): Rule {
+function addWallabyConfigForJest(newProjectRoot: string): Rule {
   return (host: Tree) => {
     host.create(
       './wallaby.js',
@@ -42,15 +41,15 @@ module.exports = function(wallaby) {
   return {
     files: [
       'src/**/*.+(ts|html|json|snap|css|less|sass|scss|jpg|jpeg|gif|png|svg)',
-      '${defaultProjectName}/**/*.+(ts|html|json|snap|css|less|sass|scss|jpg|jpeg|gif|png|svg)',
+      '${newProjectRoot}/**/*.+(ts|html|json|snap|css|less|sass|scss|jpg|jpeg|gif|png|svg)',
       'tsconfig.json',
       'tsconfig.spec.json',
       'jest.config.js',
       '!src/**/*.spec.ts',
-      '!${defaultProjectName}/**/*.spec.ts'
+      '!${newProjectRoot}/**/*.spec.ts'
     ],
 
-    tests: ['src/**/*.spec.ts', '${defaultProjectName}/**/*.spec.ts'],
+    tests: ['src/**/*.spec.ts', '${newProjectRoot}/**/*.spec.ts'],
 
     env: {
       type: 'node',
@@ -61,7 +60,7 @@ module.exports = function(wallaby) {
     },
     preprocessors: {
       'src/**/*.component.ts': ngxWallabyJest,
-      '${defaultProjectName}/**/*.component.ts': ngxWallabyJest
+      '${newProjectRoot}/**/*.component.ts': ngxWallabyJest
     },
     testFramework: 'jest'
   };
@@ -73,7 +72,7 @@ module.exports = function(wallaby) {
   };
 }
 
-function addWallabyConfigForJasmine(defaultProjectName: string): Rule {
+function addWallabyConfigForJasmine(newProjectRoot: string): Rule {
   return (host: Tree) => {
     host.create(
       './wallaby.js',
@@ -89,7 +88,7 @@ compilerOptions.module = 'CommonJs';
 
 module.exports = function(wallaby) {
   var webpackPostprocessor = wallabyWebpack({
-    entryPatterns: ['src/wallabyTest.js', 'src/**/*spec.js', '${defaultProjectName}/**/*spec.js'],
+    entryPatterns: ['src/wallabyTest.js', 'src/**/*spec.js', '${newProjectRoot}/**/*spec.js'],
 
     module: {
       rules: [
@@ -114,7 +113,7 @@ module.exports = function(wallaby) {
       modules: [
         path.join(wallaby.projectCacheDir, 'src/app'),
         path.join(wallaby.projectCacheDir, 'src'),
-        path.join(wallaby.projectCacheDir, '${defaultProjectName}'),
+        path.join(wallaby.projectCacheDir, '${newProjectRoot}'),
         'node_modules'
       ]
     },
@@ -131,12 +130,12 @@ module.exports = function(wallaby) {
       { pattern: 'src/**/*.+(ts|css|less|scss|sass|styl|html|json|svg)', load: false },
       { pattern: 'src/**/*.d.ts', ignore: true },
       { pattern: 'src/**/*spec.ts', ignore: true },
-      { pattern: '${defaultProjectName}/**/*.+(ts|css|less|scss|sass|styl|html|json|svg)', load: false },
-      { pattern: '${defaultProjectName}/**/*.d.ts', ignore: true },
-      { pattern: '${defaultProjectName}/**/*spec.ts', ignore: true }
+      { pattern: '${newProjectRoot}/**/*.+(ts|css|less|scss|sass|styl|html|json|svg)', load: false },
+      { pattern: '${newProjectRoot}/**/*.d.ts', ignore: true },
+      { pattern: '${newProjectRoot}/**/*spec.ts', ignore: true }
     ],
 
-    tests: [{ pattern: 'src/**/*spec.ts', load: false }, { pattern: '${defaultProjectName}/**/*spec.ts', load: false }],
+    tests: [{ pattern: 'src/**/*spec.ts', load: false }, { pattern: '${newProjectRoot}/**/*spec.ts', load: false }],
 
     testFramework: 'jasmine',
 
@@ -191,22 +190,10 @@ getTestBed().initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDyn
 }
 
 function editTsConfigAppJson(): Rule {
-  return (host: Tree, _: SchematicContext) => {
-    if (!host.exists(TSCONFIGAPP_JSON)) {
-      return host;
-    }
-
-    const sourceText = host.read(TSCONFIGAPP_JSON).toString('utf-8');
-    const tsconfigJson = JSON.parse(sourceText);
-
-    if (!tsconfigJson['exclude']) {
-      tsconfigJson['exclude'] = [];
-    }
-
-    tsconfigJson['exclude'] = ['test.ts', 'wallabyTest.ts', '**/*.spec.ts'];
-
-    host.overwrite(TSCONFIGAPP_JSON, JSON.stringify(tsconfigJson, null, 2));
-
-    return host;
-  };
+  return updateJson(tsconfigFilePath('src', 'app'), json => {
+    return {
+      ...json,
+      exclude: ['test.ts', 'wallabyTest.ts', '**/*.spec.ts']
+    };
+  });
 }

@@ -4,4 +4,3 @@ export const PACKAGE_JSON = 'package.json';
 export const ANGULAR_JSON = 'angular.json';
 
 export const TSLINT_JSON = 'tslint.json';
-export const TSCONFIGAPP_JSON = './src/tsconfig.app.json';

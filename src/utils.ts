@@ -11,14 +11,16 @@ import {
 import { strings } from '@angular-devkit/core';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
-import { PACKAGE_JSON, ANGULAR_JSON } from './constants';
+import { PACKAGE_JSON, ANGULAR_JSON, NG_ESSENTIALS } from './constants';
+
+export type DependencyType = 'dependencies' | 'devDependencies';
+
+export type AppOrLibType = 'app' | 'lib';
+
+export type TsConfigContext = 'app' | 'spec' | 'lib';
 
 export function removeAutomaticUpdateSymbols(): Rule {
   return (host: Tree, _: SchematicContext) => {
-    if (!host.exists(PACKAGE_JSON)) {
-      return host;
-    }
-
     const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
     const packageJson = JSON.parse(sourceText);
 
@@ -40,20 +42,14 @@ export function removeAutomaticUpdateSymbols(): Rule {
   };
 }
 
-export function removePackageFromPackageJson(type: string, pkg: string): Rule {
+export function removePackageFromPackageJson(type: DependencyType, pkg: string): Rule {
   return (host: Tree, _: SchematicContext) => {
-    if (!host.exists(PACKAGE_JSON)) {
-      return host;
-    }
-
     const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
     const packageJson = JSON.parse(sourceText);
 
-    if (!packageJson[type]) {
-      return host;
+    if (packageJson[type][pkg]) {
+      delete packageJson[type][pkg];
     }
-
-    delete packageJson[type][pkg];
 
     host.overwrite(PACKAGE_JSON, JSON.stringify(packageJson, null, 2));
 
@@ -61,18 +57,10 @@ export function removePackageFromPackageJson(type: string, pkg: string): Rule {
   };
 }
 
-export function addPackageToPackageJson(type: string, pkg: string, version: string): Rule {
+export function addPackageToPackageJson(type: DependencyType, pkg: string, version: string): Rule {
   return (host: Tree, _: SchematicContext) => {
-    if (!host.exists(PACKAGE_JSON)) {
-      return host;
-    }
-
     const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
     const packageJson = JSON.parse(sourceText);
-
-    if (!packageJson[type]) {
-      packageJson[type] = {};
-    }
 
     if (!packageJson[type][pkg]) {
       packageJson[type][pkg] = version;
@@ -88,18 +76,10 @@ export function addPackageToPackageJson(type: string, pkg: string, version: stri
   };
 }
 
-export function updatePackageInPackageJson(type: string, pkg: string, version: string): Rule {
+export function updatePackageInPackageJson(type: DependencyType, pkg: string, version: string): Rule {
   return (host: Tree, _: SchematicContext) => {
-    if (!host.exists(PACKAGE_JSON)) {
-      return host;
-    }
-
     const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
     const packageJson = JSON.parse(sourceText);
-
-    if (!packageJson[type]) {
-      packageJson[type] = {};
-    }
 
     if (packageJson[type][pkg]) {
       packageJson[type][pkg] = version;
@@ -113,16 +93,8 @@ export function updatePackageInPackageJson(type: string, pkg: string, version: s
 
 export function removeScriptFromPackageJson(key: string): Rule {
   return (host: Tree, _: SchematicContext) => {
-    if (!host.exists(PACKAGE_JSON)) {
-      return host;
-    }
-
     const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
     const packageJson = JSON.parse(sourceText);
-
-    if (!packageJson['scripts']) {
-      packageJson['scripts'] = {};
-    }
 
     if (packageJson['scripts'][key]) {
       delete packageJson['scripts'][key];
@@ -136,16 +108,8 @@ export function removeScriptFromPackageJson(key: string): Rule {
 
 export function addScriptToPackageJson(key: string, command: string): Rule {
   return (host: Tree, _: SchematicContext) => {
-    if (!host.exists(PACKAGE_JSON)) {
-      return host;
-    }
-
     const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
     const packageJson = JSON.parse(sourceText);
-
-    if (!packageJson['scripts']) {
-      packageJson['scripts'] = {};
-    }
 
     packageJson['scripts'] = {
       ...Object.keys(packageJson['scripts'])
@@ -164,43 +128,64 @@ export function addScriptToPackageJson(key: string, command: string): Rule {
 }
 
 export function findDefaultProjectNameInAngularJson(host: Tree): string {
-  if (!host.exists(ANGULAR_JSON)) {
-    return 'projects';
-  }
-
   const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
   const angularJson = JSON.parse(sourceText);
-  const defaulProjectName = angularJson['newProjectRoot'];
+  const defaulProjectName = angularJson['defaultProject'];
 
-  return defaulProjectName ? defaulProjectName : 'projects';
+  return defaulProjectName ? defaulProjectName : '';
 }
 
-export function editTsConfigSpecJson(path: string): Rule {
+export function findNewProjectRootInAngularJson(host: Tree): string {
+  const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+  const angularJson = JSON.parse(sourceText);
+  const newProjectRoot = angularJson['newProjectRoot'];
+
+  return newProjectRoot ? newProjectRoot : 'projects';
+}
+
+export function findJestOptionInAngularJson(host: Tree): boolean {
+  const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+  const angularJson = JSON.parse(sourceText);
+  const defaultProject = angularJson['defaultProject'];
+  const optionsFromAngularJson = angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS];
+
+  if (optionsFromAngularJson) {
+    return optionsFromAngularJson.jest;
+  }
+
+  return false;
+}
+
+export function removeEndToEndTestNodeFromAngularJson(applicationName: string): Rule {
   return (host: Tree, _: SchematicContext) => {
-    if (!host.exists(`${path}/tsconfig.spec.json`)) {
+    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+    const angularJson = JSON.parse(sourceText);
+    const e2eTestProject = applicationName + '-e2e';
+
+    if (angularJson['projects'][e2eTestProject]) {
+      delete angularJson['projects'][e2eTestProject];
+    }
+
+    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
+
+    return host;
+  };
+}
+
+export function tsconfigFilePath(rootPath: string, context: TsConfigContext): string {
+  return `${rootPath}/tsconfig.${context}.json`;
+}
+
+export function updateJson<T = any, O = T>(filePath: string, callback: (json: T) => O): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!host.exists(filePath)) {
       return host;
     }
 
-    const sourceText = host.read(`${path}/tsconfig.spec.json`).toString('utf-8');
-    const tsconfigJson = JSON.parse(sourceText);
+    const fileContent = host.read(filePath).toString('utf-8');
+    const json = JSON.parse(fileContent);
 
-    if (tsconfigJson['files']) {
-      delete tsconfigJson['files'];
-    }
-
-    if (!tsconfigJson['compilerOptions']['types']) {
-      tsconfigJson['compilerOptions']['types'] = [];
-    }
-
-    tsconfigJson['compilerOptions']['types'] = ['jest', 'node'];
-
-    if (!tsconfigJson['compilerOptions']['module']) {
-      tsconfigJson['compilerOptions']['module'] = '';
-    }
-
-    tsconfigJson['compilerOptions']['module'] = 'commonjs';
-
-    host.overwrite(`${path}/tsconfig.spec.json`, JSON.stringify(tsconfigJson, null, 2));
+    host.overwrite(filePath, JSON.stringify(callback(json), null, 2));
 
     return host;
   };

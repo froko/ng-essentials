@@ -4,7 +4,7 @@ import { createAppModule } from '@schematics/angular/utility/test/create-app-mod
 
 import * as path from 'path';
 
-import { ANGULAR_JSON, PACKAGE_JSON, TSLINT_JSON, TSCONFIGAPP_JSON } from '../constants';
+import { ANGULAR_JSON, PACKAGE_JSON, TSLINT_JSON } from '../constants';
 import { essentials, jest, cypress, testcafe, karma, wallaby } from '../versions';
 
 const collectionPath = path.join(__dirname, '../collection.json');
@@ -215,7 +215,7 @@ describe('ng-essentials', () => {
       });
 
       it('updates application typescript config file in src folder', () => {
-        expect(tree.readContent(TSCONFIGAPP_JSON)).not.toContain('test.ts');
+        expect(tree.readContent('src/tsconfig.app.json')).not.toContain('test.ts');
       });
 
       it('updates spec typescript config file in src folder', () => {
@@ -309,6 +309,10 @@ describe('ng-essentials', () => {
 
       it('adds wallaby test file', () => {
         expect(tree.files).toContain('/src/wallabyTest.ts');
+      });
+
+      it('adds wallabyTest.ts in tsconfig.app', () => {
+        expect(tree.readContent('src/tsconfig.app.json')).toContain('wallabyTest.ts');
       });
     });
 
@@ -563,7 +567,7 @@ function createTestTypescriptFile(tree: UnitTestTree): UnitTestTree {
 
 function createTsConfigAppInSrcDirectory(tree: UnitTestTree): UnitTestTree {
   tree.create(
-    TSCONFIGAPP_JSON,
+    'src/tsconfig.app.json',
     `{
       "extends": "../tsconfig.json",
       "compilerOptions": {
