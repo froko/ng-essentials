@@ -76,7 +76,7 @@ export const karma = {
 
 export const jest = {
   // @angular-builders/jest
-  jestBuilderVersion: '7.2.3',
+  jestBuilderVersion: '7.3.1',
 
   // @types/jest
   jestTypeVersion: '23.3.13',
