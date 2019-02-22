@@ -1,9 +1,9 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '7.2.4',
+  angularVersion: '7.2.6',
 
   // core-js
-  coreJsVersion: '2.6.4',
+  coreJsVersion: '2.6.5',
 
   // tslib
   tslibVersion: '1.9.3',
@@ -15,13 +15,13 @@ export const essentials = {
   zoneVersion: '0.8.29',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.13.1',
+  buildAngularVersion: '0.13.3',
 
   // @angular/cli
-  cliVersion: '7.3.1',
+  cliVersion: '7.3.3',
 
   // @types/node
-  nodeVersion: '10.12.23',
+  nodeVersion: '11.9.4',
 
   // codelizer
   codelizerVersion: '4.5.0',
@@ -65,7 +65,7 @@ export const karma = {
   chromeLauncherVersion: '2.2.0',
 
   // karma-coverage-istanbul-reporter
-  coverageReporterVersion: '2.0.4',
+  coverageReporterVersion: '2.0.5',
 
   // karma-jasmine
   karmaJasmineVersion: '2.0.1',
@@ -79,16 +79,16 @@ export const jest = {
   jestBuilderVersion: '7.3.1',
 
   // @types/jest
-  jestTypeVersion: '23.3.13',
+  jestTypeVersion: '24.0.6',
 
   // babel-core
   babelCoreVersion: '6.26.3',
 
   // babel-jest
-  babelJestVersion: '23.6.0',
+  babelJestVersion: '24.1.0',
 
   // jest
-  jestVersion: '23.6.0',
+  jestVersion: '24.1.0',
 
   // jest-preset-angular
   angularPresetVersion: '6.0.2'
@@ -123,10 +123,10 @@ export const wallaby = {
 
 export const library = {
   // @angular-devkit/build-ng-packagr
-  buildNgPackagrVersion: '0.13.1',
+  buildNgPackagrVersion: '0.13.3',
 
   // ng-packagr
-  ngPackagrVersion: '4.7.0',
+  ngPackagrVersion: '4.7.1',
 
   // tsickle
   tsickleVersion: '0.34.0'
