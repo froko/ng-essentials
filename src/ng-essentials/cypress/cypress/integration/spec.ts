@@ -1,5 +1,7 @@
 describe('Hello Angular', () => {
-  beforeEach(() => { cy.visit('http://localhost:4200'); });
+  beforeEach(() => {
+    cy.visit('http://localhost:4200');
+  });
 
   it('should display welcome message', () => {
     cy.get('app-root h1').should('contain', 'Welcome');

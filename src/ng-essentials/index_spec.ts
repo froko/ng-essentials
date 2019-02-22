@@ -232,7 +232,6 @@ describe('ng-essentials', () => {
       });
 
       it('adds jest files', () => {
-        expect(tree.files).toContain('/jest.config.js');
         expect(tree.files).toContain('/src/jest.config.js');
         expect(tree.files).toContain('/src/setup-jest.ts');
       });
@@ -247,7 +246,11 @@ describe('ng-essentials', () => {
       });
 
       it('adds cypress packages to packages.json', () => {
+        expect(tree.readContent(PACKAGE_JSON)).toContain(
+          `"@cypress/webpack-preprocessor": "${cypress.preprocessorVersion}"`
+        );
         expect(tree.readContent(PACKAGE_JSON)).toContain(`"cypress": "${cypress.cypressVersion}"`);
+        expect(tree.readContent(PACKAGE_JSON)).toContain(`"ts-loader": "${cypress.tsLoaderVersion}"`);
       });
 
       it('adds cypress script to package.json', () => {
@@ -258,10 +261,10 @@ describe('ng-essentials', () => {
       it('adds cypress files', () => {
         expect(tree.files).toContain('/cypress/tsconfig.json');
         expect(tree.files).toContain('/cypress/fixtures/example.json');
-        expect(tree.files).toContain('/cypress/integration/spec.js');
+        expect(tree.files).toContain('/cypress/integration/spec.ts');
         expect(tree.files).toContain('/cypress/plugins/index.js');
-        expect(tree.files).toContain('/cypress/support/commands.js');
-        expect(tree.files).toContain('/cypress/support/index.js');
+        expect(tree.files).toContain('/cypress/support/commands.ts');
+        expect(tree.files).toContain('/cypress/support/index.ts');
       });
     });
 

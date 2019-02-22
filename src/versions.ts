@@ -95,8 +95,14 @@ export const jest = {
 };
 
 export const cypress = {
+  // @cypress/webpack-preprocessor
+  preprocessorVersion: '4.0.3',
+
   // cypress
-  cypressVersion: '3.1.5'
+  cypressVersion: '3.1.5',
+
+  // tl-loader
+  tsLoaderVersion: '5.3.3'
 };
 
 export const testcafe = {
