@@ -67,10 +67,6 @@ describe('application', () => {
       expect(tree.readContent(`/libs/${appName}/tsconfig.spec.json`)).toContain('commonjs');
     });
 
-    it('adds jest config file in application folder', () => {
-      expect(tree.files).toContain(`/libs/${appName}/jest.config.js`);
-    });
-
     it('switches to jest builder in angular.json', () => {
       expect(tree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
     });

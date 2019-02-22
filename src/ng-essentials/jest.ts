@@ -12,7 +12,8 @@ import {
   updateJson,
   tsconfigFilePath,
   AppOrLibType,
-  findDefaultProjectNameInAngularJson
+  findDefaultProjectNameInAngularJson,
+  addScriptToPackageJson
 } from '../utils';
 
 export function addJest(options: NgEssentialsOptions): Rule {
@@ -27,6 +28,7 @@ export function addJest(options: NgEssentialsOptions): Rule {
       return chain([
         deleteFile('src/karma.conf.js'),
         deleteFile('src/test.ts'),
+        addScriptToPackageJson('test', 'jest --watch --coverage'),
         removePackageFromPackageJson('devDependencies', '@types/jasmine'),
         removePackageFromPackageJson('devDependencies', 'jasmine-core'),
         removePackageFromPackageJson('devDependencies', 'jasmine-spec-reporter'),
@@ -85,28 +87,14 @@ export function switchToJestBuilderInAngularJson(projectName: string): Rule {
   });
 }
 
-export function addJestConfigInAppOrLibFolder(rootPath: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
-    host.create(
-      `${rootPath}/jest.config.js`,
-      `module.exports = {
-  preset: 'jest-preset-angular',
-  setupTestFrameworkScriptFile: '<rootDir>/src/setup-jest.ts'
-};`
-    );
-
-    return host;
-  };
-}
-
-export function updateJestConfig(defaultProjectName: string): Rule {
+export function updateJestConfig(projectRoot: string): Rule {
   return (host: Tree, _: SchematicContext) => {
     host.overwrite(
       './jest.config.js',
       `module.exports = {
   preset: 'jest-preset-angular',
-  roots: ['src', '${defaultProjectName}'],
-  setupTestFrameworkScriptFile: '<rootDir>/src/setup-jest.ts'
+  roots: ['src', '${projectRoot}'],
+  setupFilesAfterEnv: ['<rootDir>/src/setup-jest.ts']
 };`
     );
 

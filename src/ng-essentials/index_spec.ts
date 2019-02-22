@@ -231,8 +231,7 @@ describe('ng-essentials', () => {
         );
       });
 
-      it('adds jest files', () => {
-        expect(tree.files).toContain('/src/jest.config.js');
+      it('adds jest setup file', () => {
         expect(tree.files).toContain('/src/setup-jest.ts');
       });
     });
@@ -379,10 +378,10 @@ describe('ng-essentials', () => {
 
       it('does not add cypress files', () => {
         expect(tree.files).not.toContain('/cypress/fixtures/example.json');
-        expect(tree.files).not.toContain('/cypress/integration/spec.js');
+        expect(tree.files).not.toContain('/cypress/integration/spec.ts');
         expect(tree.files).not.toContain('/cypress/plugins/index.js');
-        expect(tree.files).not.toContain('/cypress/support/commands.js');
-        expect(tree.files).not.toContain('/cypress/support/index.js');
+        expect(tree.files).not.toContain('/cypress/support/commands.ts');
+        expect(tree.files).not.toContain('/cypress/support/index.ts');
       });
 
       it('does not add testcafe packages to packages.json', () => {

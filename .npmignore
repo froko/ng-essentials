@@ -1,6 +1,7 @@
-# Ignores TypeScript files, but keeps definitions.
+# Ignores TypeScript files, but keeps definitions & cypress template files
 *.ts
 !*.d.ts
+!src/ng-essentials/cypress/**/*.ts
 
 #Versioning
 versioning

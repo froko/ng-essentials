@@ -19,7 +19,6 @@ import {
 import {
   prepareTsAppOrLibConfigForJest,
   prepareTsSpecConfigForJest,
-  addJestConfigInAppOrLibFolder,
   updateJestConfig,
   switchToJestBuilderInAngularJson
 } from '../ng-essentials/jest';
@@ -45,7 +44,6 @@ export default function(options: AngularApplicationOptionsSchema): Rule {
         hasJest ? deleteFile(`${applicationPath}/src/test.ts`) : noop(),
         hasJest ? prepareTsAppOrLibConfigForJest(applicationPath, 'app') : noop(),
         hasJest ? prepareTsSpecConfigForJest(applicationPath) : noop(),
-        hasJest ? addJestConfigInAppOrLibFolder(applicationPath) : noop(),
         hasJest ? updateJestConfig(newProjectRoot) : noop(),
         hasJest ? switchToJestBuilderInAngularJson(applicationName) : noop()
       ]);
