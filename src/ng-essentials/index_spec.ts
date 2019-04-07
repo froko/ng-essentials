@@ -74,7 +74,6 @@ describe('ng-essentials', () => {
         expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/compiler": "${essentials.angularVersion}"`);
         expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/core": "${essentials.angularVersion}"`);
         expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/forms": "${essentials.angularVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/http": "${essentials.angularVersion}"`);
         expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/platform-browser": "${essentials.angularVersion}"`);
         expect(tree.readContent(PACKAGE_JSON)).toContain(
           `"@angular/platform-browser-dynamic": "${essentials.angularVersion}"`
@@ -227,7 +226,7 @@ describe('ng-essentials', () => {
 
       it('adds launch.json with debug option for jest', () => {
         expect(tree.readContent('/.vscode/launch.json')).toContain(
-          '"program": "${workspaceFolder}/node_modules/jest/bin/jest"'
+          '"program": "${workspaceFolder}/node_modules/@angular/cli/bin/ng"'
         );
       });
 

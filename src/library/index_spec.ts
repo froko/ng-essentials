@@ -90,10 +90,6 @@ describe('library', () => {
     it('switches to jest builder in angular.json', () => {
       expect(tree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
     });
-
-    it('adds default project name to roots array in jest config', () => {
-      expect(tree.readContent('jest.config.js')).toContain("roots: ['src', 'libs']");
-    });
   });
 });
 

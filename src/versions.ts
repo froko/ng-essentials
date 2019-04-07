@@ -3,7 +3,7 @@ export const essentials = {
   angularVersion: '7.2.12',
 
   // core-js
-  coreJsVersion: '3.0.1',
+  coreJsVersion: '2.6.5',
 
   // tslib
   tslibVersion: '1.9.3',
@@ -12,7 +12,7 @@ export const essentials = {
   rxjsVersion: '6.4.0',
 
   // zone.js
-  zoneVersion: '0.9.0',
+  zoneVersion: '0.8.26',
 
   // @angular-devkit/build-angular
   buildAngularVersion: '0.13.8',

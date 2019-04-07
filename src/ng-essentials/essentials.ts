@@ -37,12 +37,12 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         removePackageFromPackageJson('devDependencies', 'protractor'),
         removeScriptFromPackageJson('e2e'),
         removeAutomaticUpdateSymbols(),
+        removePackageFromPackageJson('dependencies', '@angular/http'),
         addPackageToPackageJson('dependencies', '@angular/animations', essentials.angularVersion),
         addPackageToPackageJson('dependencies', '@angular/common', essentials.angularVersion),
         addPackageToPackageJson('dependencies', '@angular/compiler', essentials.angularVersion),
         addPackageToPackageJson('dependencies', '@angular/core', essentials.angularVersion),
         addPackageToPackageJson('dependencies', '@angular/forms', essentials.angularVersion),
-        addPackageToPackageJson('dependencies', '@angular/http', essentials.angularVersion),
         addPackageToPackageJson('dependencies', '@angular/platform-browser', essentials.angularVersion),
         addPackageToPackageJson('dependencies', '@angular/platform-browser-dynamic', essentials.angularVersion),
         addPackageToPackageJson('dependencies', '@angular/router', essentials.angularVersion),
@@ -257,6 +257,9 @@ function editTsLintConfigJson(): Rule {
       'quotemark',
       'semicolon',
       'typedef-whitespace',
+      'use-input-property-decorator',
+      'use-output-property-decorator',
+      'use-host-property-decorator',
       'whitespace'
     ];
 

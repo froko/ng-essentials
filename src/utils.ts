@@ -12,6 +12,7 @@ import { strings } from '@angular-devkit/core';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 import { PACKAGE_JSON, ANGULAR_JSON, NG_ESSENTIALS } from './constants';
+import { NodePackageInstallTaskOptions } from '@angular-devkit/schematics/tasks/node-package/install-task';
 
 export type DependencyType = 'dependencies' | 'devDependencies';
 
@@ -215,6 +216,16 @@ export function copyConfigFiles(path: string): Rule {
 export function runNpmPackageInstall() {
   return (host: Tree, context: SchematicContext) => {
     context.addTask(new NodePackageInstallTask());
+    return host;
+  };
+}
+
+export function installPackage(packageName: string) {
+  return (host: Tree, context: SchematicContext) => {
+    const options = new NodePackageInstallTaskOptions();
+    options.packageName = packageName;
+
+    context.addTask(new NodePackageInstallTask(options));
     return host;
   };
 }

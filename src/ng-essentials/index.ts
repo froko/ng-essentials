@@ -10,7 +10,7 @@ import { addTestcafe } from './testcafe';
 import { addEssentials } from './essentials';
 
 import { ANGULAR_JSON, NG_ESSENTIALS } from '../constants';
-import { runNpmPackageInstall } from '../utils';
+import { installPackage, runNpmPackageInstall } from '../utils';
 
 export default function(options: NgEssentialsOptions): Rule {
   return (tree: Tree, _context: SchematicContext) => {
@@ -23,6 +23,7 @@ export default function(options: NgEssentialsOptions): Rule {
       addCypress(options),
       addTestcafe(options),
       addEssentials(options),
+      installPackage('@froko/ng-essentials'),
       runNpmPackageInstall()
     ]);
 

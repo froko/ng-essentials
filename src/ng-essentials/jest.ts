@@ -28,7 +28,8 @@ export function addJest(options: NgEssentialsOptions): Rule {
       return chain([
         deleteFile('src/karma.conf.js'),
         deleteFile('src/test.ts'),
-        addScriptToPackageJson('test', 'jest --watch --coverage'),
+        addScriptToPackageJson('test', 'ng test'),
+        addScriptToPackageJson('test:watch', 'ng test -- --watch --coverage'),
         removePackageFromPackageJson('devDependencies', '@types/jasmine'),
         removePackageFromPackageJson('devDependencies', 'jasmine-core'),
         removePackageFromPackageJson('devDependencies', 'jasmine-spec-reporter'),
@@ -87,21 +88,6 @@ export function switchToJestBuilderInAngularJson(projectName: string): Rule {
   });
 }
 
-export function updateJestConfig(projectRoot: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
-    host.overwrite(
-      './jest.config.js',
-      `module.exports = {
-  preset: 'jest-preset-angular',
-  roots: ['src', '${projectRoot}'],
-  setupFilesAfterEnv: ['<rootDir>/src/setup-jest.ts']
-};`
-    );
-
-    return host;
-  };
-}
-
 function createLaunchJson(): Rule {
   return (host: Tree, _: SchematicContext) => {
     host.create(
@@ -120,8 +106,8 @@ function createLaunchJson(): Rule {
       "name": "ng test",
       "type": "node",
       "request": "launch",
-      "program": "\${workspaceFolder}/node_modules/jest/bin/jest",
-      "args": ["--runInBand"],
+      "program": "\${workspaceFolder}/node_modules/@angular/cli/bin/ng",
+      "args": ["test", "-- --runInBand"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     }
