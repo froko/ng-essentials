@@ -29,7 +29,6 @@ export function addJest(options: NgEssentialsOptions): Rule {
         deleteFile('src/karma.conf.js'),
         deleteFile('src/test.ts'),
         addScriptToPackageJson('test', 'ng test'),
-        addScriptToPackageJson('test:watch', 'ng test -- --watch --coverage'),
         removePackageFromPackageJson('devDependencies', '@types/jasmine'),
         removePackageFromPackageJson('devDependencies', 'jasmine-core'),
         removePackageFromPackageJson('devDependencies', 'jasmine-spec-reporter'),
@@ -83,7 +82,10 @@ export function prepareTsSpecConfigForJest(rootPath: string): Rule {
 export function switchToJestBuilderInAngularJson(projectName: string): Rule {
   return updateJson(ANGULAR_JSON, json => {
     json['projects'][projectName]['architect']['test'].builder = '@angular-builders/jest:run';
-    json['projects'][projectName]['architect']['test'].options = {};
+    json['projects'][projectName]['architect']['test'].options = {
+      coverage: true,
+      detectOpenHandles: true
+    };
 
     return json;
   });
