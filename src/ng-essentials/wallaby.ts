@@ -42,9 +42,6 @@ module.exports = function(wallaby) {
     files: [
       'src/**/*.+(ts|html|json|snap|css|less|sass|scss|jpg|jpeg|gif|png|svg)',
       '${newProjectRoot}/**/*.+(ts|html|json|snap|css|less|sass|scss|jpg|jpeg|gif|png|svg)',
-      'tsconfig.json',
-      'tsconfig.spec.json',
-      'jest.config.js',
       '!src/**/*.spec.ts',
       '!${newProjectRoot}/**/*.spec.ts'
     ],

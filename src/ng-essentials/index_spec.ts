@@ -112,6 +112,10 @@ describe('ng-essentials', () => {
         expect(tree.readContent(PACKAGE_JSON)).toContain('format:fix');
       });
 
+      it('runs format scripts in src and configured projects path', () => {
+        expect(tree.readContent(PACKAGE_JSON)).toContain('{src,projects}');
+      });
+
       it('adds husky config in package.json', () => {
         expect(tree.readContent(PACKAGE_JSON)).toContain('hooks');
         expect(tree.readContent(PACKAGE_JSON)).toContain('"pre-commit": "run-s format:fix lint"');
@@ -232,6 +236,10 @@ describe('ng-essentials', () => {
 
       it('adds jest setup file', () => {
         expect(tree.files).toContain('/src/setup-jest.ts');
+      });
+
+      it('adds jest config to package.json', () => {
+        expect(tree.readContent(PACKAGE_JSON)).toContain('<rootDir>/src/setup-jest.ts');
       });
     });
 

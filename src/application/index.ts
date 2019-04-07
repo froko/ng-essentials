@@ -6,7 +6,8 @@ import {
   deleteFile,
   findNewProjectRootInAngularJson,
   findJestOptionInAngularJson,
-  removeEndToEndTestNodeFromAngularJson
+  removeEndToEndTestNodeFromAngularJson,
+  removePackageFromPackageJson
 } from '../utils';
 
 import {
@@ -19,7 +20,8 @@ import {
 import {
   prepareTsAppOrLibConfigForJest,
   prepareTsSpecConfigForJest,
-  switchToJestBuilderInAngularJson
+  switchToJestBuilderInAngularJson,
+  copyJestConfig
 } from '../ng-essentials/jest';
 
 export default function(options: AngularApplicationOptionsSchema): Rule {
@@ -39,11 +41,13 @@ export default function(options: AngularApplicationOptionsSchema): Rule {
         updateDevelopmentEnvironmentFile(applicationSourcePath),
         updateProductionEnvironmentFile(applicationSourcePath),
         addEnvProvidersToAppModule(applicationSourcePath),
+        removePackageFromPackageJson('devDependencies', 'tslib'),
         hasJest ? deleteFile(`${applicationPath}/karma.conf.js`) : noop(),
         hasJest ? deleteFile(`${applicationPath}/src/test.ts`) : noop(),
         hasJest ? prepareTsAppOrLibConfigForJest(applicationPath, 'app') : noop(),
         hasJest ? prepareTsSpecConfigForJest(applicationPath) : noop(),
-        hasJest ? switchToJestBuilderInAngularJson(applicationName) : noop()
+        hasJest ? switchToJestBuilderInAngularJson(applicationName) : noop(),
+        hasJest ? copyJestConfig(applicationPath) : noop()
       ]);
     }
   ]);

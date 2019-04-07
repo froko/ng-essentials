@@ -2,7 +2,7 @@ import { Rule, chain, Tree, SchematicContext } from '@angular-devkit/schematics'
 
 import { NgEssentialsOptions } from './schema';
 
-import { ANGULAR_JSON } from '../constants';
+import { ANGULAR_JSON, PACKAGE_JSON } from '../constants';
 import { jest } from '../versions';
 import {
   deleteFile,
@@ -45,6 +45,7 @@ export function addJest(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('devDependencies', 'jest', jest.jestVersion),
         addPackageToPackageJson('devDependencies', 'jest-preset-angular', jest.angularPresetVersion),
         switchToJestBuilderInAngularJson(defaultProjectName),
+        addJestConfigToPackageJson(),
         prepareTsAppOrLibConfigForJest('src', 'app'),
         prepareTsSpecConfigForJest('src'),
         createLaunchJson(),
@@ -86,6 +87,37 @@ export function switchToJestBuilderInAngularJson(projectName: string): Rule {
 
     return json;
   });
+}
+
+export function copyJestConfig(targetDirectory: string): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    const buffer = host.read('./src/jest.config.js');
+    const content = buffer.toString();
+
+    host.create(`${targetDirectory}/jest.config.js`, content);
+  };
+}
+
+function addJestConfigToPackageJson(): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    if (!host.exists(PACKAGE_JSON)) {
+      return host;
+    }
+
+    const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
+    const packageJson = JSON.parse(sourceText);
+
+    if (!packageJson['jest']) {
+      packageJson['jest'] = {
+        preset: 'jest-preset-angular',
+        setupFilesAfterEnv: '<rootDir>/src/setup-jest.ts'
+      };
+    }
+
+    host.overwrite(PACKAGE_JSON, JSON.stringify(packageJson, null, 2));
+
+    return host;
+  };
 }
 
 function createLaunchJson(): Rule {

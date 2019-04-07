@@ -75,16 +75,22 @@ describe('library', () => {
       expect(tree.files).not.toContain(`/libs/${dasherizedLibraryName}/src/test.ts`);
     });
 
-    it('updates application typescript config file in src folder', () => {
+    it('updates application typescript config file in library folder', () => {
       expect(tree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.lib.json`)).not.toContain('test.ts');
     });
 
-    it('updates spec typescript config file in src folder', () => {
+    it('updates spec typescript config file in library folder', () => {
       expect(tree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).not.toContain('files');
       expect(tree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).not.toContain('jasmine');
 
       expect(tree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).toContain('jest');
       expect(tree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).toContain('commonjs');
+    });
+
+    it('adds jest config in library folder', () => {
+      expect(tree.readContent(`/libs/${dasherizedLibraryName}/jest.config.js`)).toContain(
+        '<rootDir>/src/setup-jest.ts'
+      );
     });
 
     it('switches to jest builder in angular.json', () => {
@@ -208,10 +214,10 @@ function createPackageJson(tree: UnitTestTree): UnitTestTree {
 
 function createJestConfig(tree: UnitTestTree): UnitTestTree {
   tree.create(
-    './jest.config.js',
+    './src/jest.config.js',
     `module.exports = {
       preset: 'jest-preset-angular',
-      roots: ['src'],
+      roots: [''],
       setupTestFrameworkScriptFile: '<rootDir>/src/setup-jest.ts'
     };`
   );

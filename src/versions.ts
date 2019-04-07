@@ -132,7 +132,7 @@ export const library = {
   buildNgPackagrVersion: '0.13.8',
 
   // ng-packagr
-  ngPackagrVersion: '5.0.1',
+  ngPackagrVersion: '4.7.1',
 
   // tsickle
   tsickleVersion: '0.34.0'

@@ -10,6 +10,7 @@ import { ANGULAR_JSON, NG_ESSENTIALS, TSLINT_JSON, PACKAGE_JSON } from '../const
 import { essentials } from '../versions';
 import {
   findDefaultProjectNameInAngularJson,
+  findNewProjectRootInAngularJson,
   removeEndToEndTestNodeFromAngularJson,
   removePackageFromPackageJson,
   removeScriptFromPackageJson,
@@ -27,6 +28,7 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
   return chain([
     (tree: Tree, _context: SchematicContext) => {
       const defaultProjectName = findDefaultProjectNameInAngularJson(tree);
+      const defaultProjectRoot = findNewProjectRootInAngularJson(tree);
 
       return chain([
         addDefaultSchematicsToAngularJson(),
@@ -64,8 +66,14 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('devDependencies', 'prettier', essentials.prettierVersion),
         addPackageToPackageJson('devDependencies', 'pretty-quick', essentials.prettyQuickVersion),
         addPackageToPackageJson('devDependencies', 'tslint-config-prettier', essentials.tsLintConfigPrettierVersion),
-        addScriptToPackageJson('format', 'prettier --write "{src,lib}/**/*{.ts,.js,.json,.css,.scss}"'),
-        addScriptToPackageJson('format:check', 'prettier --list-different "{src,lib}/**/*{.ts,.js,.json,.css,.scss}"'),
+        addScriptToPackageJson(
+          'format',
+          `prettier --write "{src,${defaultProjectRoot}}/**/*{.ts,.js,.json,.css,.scss}"`
+        ),
+        addScriptToPackageJson(
+          'format:check',
+          `prettier --list-different "{src,${defaultProjectRoot}}/**/*{.ts,.js,.json,.css,.scss}"`
+        ),
         addScriptToPackageJson('format:fix', 'pretty-quick --staged'),
         updateDevelopmentEnvironmentFile('src'),
         updateProductionEnvironmentFile('src'),
