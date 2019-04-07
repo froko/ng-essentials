@@ -1,9 +1,9 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '7.2.6',
+  angularVersion: '7.2.12',
 
   // core-js
-  coreJsVersion: '2.6.5',
+  coreJsVersion: '3.0.1',
 
   // tslib
   tslibVersion: '1.9.3',
@@ -12,25 +12,25 @@ export const essentials = {
   rxjsVersion: '6.4.0',
 
   // zone.js
-  zoneVersion: '0.8.29',
+  zoneVersion: '0.9.0',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.13.3',
+  buildAngularVersion: '0.13.8',
 
   // @angular/cli
-  cliVersion: '7.3.3',
+  cliVersion: '7.3.8',
 
   // @types/node
-  nodeVersion: '11.9.4',
+  nodeVersion: '11.13.0',
 
   // codelizer
-  codelizerVersion: '4.5.0',
+  codelizerVersion: '5.0.0',
 
   // ts-node
-  tsNodeVersion: '8.0.2',
+  tsNodeVersion: '8.0.3',
 
   // tslint
-  tsLintVersion: '5.12.1',
+  tsLintVersion: '5.15.0',
 
   // typescript
   typescriptVersion: '3.2.4',
@@ -53,13 +53,13 @@ export const essentials = {
 
 export const karma = {
   // @types/jasmine
-  jasmineTypeVersion: '3.3.8',
+  jasmineTypeVersion: '3.3.12',
 
   // jasmine-core
-  jasmineCoreVersion: '3.3.0',
+  jasmineCoreVersion: '3.4.0',
 
   // karma
-  karmaVersion: '4.0.0',
+  karmaVersion: '4.0.1',
 
   // karma-chrome-launcher
   chromeLauncherVersion: '2.2.0',
@@ -76,22 +76,22 @@ export const karma = {
 
 export const jest = {
   // @angular-builders/jest
-  jestBuilderVersion: '7.3.1',
+  jestBuilderVersion: '7.4.1',
 
   // @types/jest
-  jestTypeVersion: '24.0.6',
+  jestTypeVersion: '24.0.11',
 
   // babel-core
   babelCoreVersion: '6.26.3',
 
   // babel-jest
-  babelJestVersion: '24.1.0',
+  babelJestVersion: '24.7.1',
 
   // jest
-  jestVersion: '24.1.0',
+  jestVersion: '24.7.1',
 
   // jest-preset-angular
-  angularPresetVersion: '6.0.2'
+  angularPresetVersion: '7.0.1'
 };
 
 export const cypress = {
@@ -99,9 +99,9 @@ export const cypress = {
   preprocessorVersion: '4.0.3',
 
   // cypress
-  cypressVersion: '3.1.5',
+  cypressVersion: '3.2.0',
 
-  // tl-loader
+  // ts-loader
   tsLoaderVersion: '5.3.3'
 };
 
@@ -121,7 +121,7 @@ export const wallaby = {
   angularTemplateLoader: '0.6.2',
 
   // wallaby-webpack
-  wallabyWebpack: '3.9.13',
+  wallabyWebpack: '3.9.14',
 
   // ngx-wallaby-jest
   wallabyJest: '0.0.2'
@@ -129,10 +129,10 @@ export const wallaby = {
 
 export const library = {
   // @angular-devkit/build-ng-packagr
-  buildNgPackagrVersion: '0.13.3',
+  buildNgPackagrVersion: '0.13.8',
 
   // ng-packagr
-  ngPackagrVersion: '4.7.1',
+  ngPackagrVersion: '5.0.1',
 
   // tsickle
   tsickleVersion: '0.34.0'
