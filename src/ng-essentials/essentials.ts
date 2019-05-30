@@ -92,7 +92,7 @@ export function removeEndToEndTestFiles(e2ePath: string): Rule {
     host.delete(`${e2ePath}/src/app.e2e-spec.ts`);
     host.delete(`${e2ePath}/src/app.po.ts`);
     host.delete(`${e2ePath}/protractor.conf.js`);
-    host.delete(`${e2ePath}/tsconfig.e2e.json`);
+    host.delete(`${e2ePath}/tsconfig.json`);
   };
 }
 

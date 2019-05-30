@@ -618,7 +618,7 @@ function createEndToEndTestingFiles(tree: Tree): Tree {
   tree.create('/e2e/src/app.e2e-spec.ts', '');
   tree.create('/e2e/src/app.po.ts', '');
   tree.create('/e2e/protractor.conf.js', '');
-  tree.create('/e2e/tsconfig.e2e.json', '');
+  tree.create('/e2e/tsconfig.json', '');
 
   return tree;
 }
