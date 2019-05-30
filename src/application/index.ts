@@ -11,7 +11,6 @@ import {
 } from '../utils';
 
 import {
-  removeEndToEndTestFiles,
   updateDevelopmentEnvironmentFile,
   updateProductionEnvironmentFile,
   addEnvProvidersToAppModule
@@ -37,7 +36,6 @@ export default function(options: AngularApplicationOptionsSchema): Rule {
 
       return chain([
         removeEndToEndTestNodeFromAngularJson(applicationName),
-        removeEndToEndTestFiles(e2eTestPath),
         updateDevelopmentEnvironmentFile(applicationSourcePath),
         updateProductionEnvironmentFile(applicationSourcePath),
         addEnvProvidersToAppModule(applicationSourcePath),

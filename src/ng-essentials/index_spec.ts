@@ -1,421 +1,416 @@
-import { Tree, VirtualTree } from '@angular-devkit/schematics';
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { Tree } from '@angular-devkit/schematics';
+import { UnitTestTree } from '@angular-devkit/schematics/testing';
 import { createAppModule } from '@schematics/angular/utility/test/create-app-module';
-
-import * as path from 'path';
 
 import { ANGULAR_JSON, PACKAGE_JSON, TSLINT_JSON } from '../constants';
 import { essentials, jest, cypress, testcafe, karma, wallaby } from '../versions';
-
-const collectionPath = path.join(__dirname, '../collection.json');
+import { runSchematic } from '../testing';
 
 describe('ng-essentials', () => {
   let appTree: Tree;
 
   beforeEach(() => {
-    appTree = new VirtualTree();
-    appTree = createPackageJson(new UnitTestTree(appTree));
+    appTree = Tree.empty();
     appTree = createAppModule(new UnitTestTree(appTree));
-    appTree = createGlobalTsLintJson(new UnitTestTree(appTree));
-    appTree = createDevelopmentEnvironmentFile(new UnitTestTree(appTree));
-    appTree = createProductionEnvironmentFile(new UnitTestTree(appTree));
-    appTree = createKarmaConfig(new UnitTestTree(appTree));
-    appTree = createTestTypescriptFile(new UnitTestTree(appTree));
-    appTree = createTsConfigAppInSrcDirectory(new UnitTestTree(appTree));
-    appTree = createTsConfigSpecInSrcDirectory(new UnitTestTree(appTree));
-    appTree = createEndToEndTestingFiles(new UnitTestTree(appTree));
+    appTree = createPackageJson(appTree);
+    appTree = createGlobalTsLintJson(appTree);
+    appTree = createDevelopmentEnvironmentFile(appTree);
+    appTree = createProductionEnvironmentFile(appTree);
+    appTree = createKarmaConfig(appTree);
+    appTree = createTestTypescriptFile(appTree);
+    appTree = createTsConfigAppInSrcDirectory(appTree);
+    appTree = createTsConfigSpecInSrcDirectory(appTree);
+    appTree = createEndToEndTestingFiles(appTree);
   });
 
   describe('when running for the first time', () => {
     beforeEach(() => {
-      appTree = createAngularJsonForFirstRun(new UnitTestTree(appTree));
+      appTree = createAngularJsonForFirstRun(appTree);
     });
 
     describe('without options', () => {
-      let tree: UnitTestTree;
+      let testTree: UnitTestTree;
 
-      beforeEach(() => {
-        const runner = new SchematicTestRunner('schematics', collectionPath);
-        tree = runner.runSchematic('ng-add', {}, appTree);
+      beforeEach(async () => {
+        testTree = await runSchematic('ng-add', {}, appTree);
       });
 
       it('adds default collection to angular.json', () => {
-        expect(tree.readContent(ANGULAR_JSON)).toContain('"defaultCollection": "@froko/ng-essentials"');
+        expect(testTree.readContent(ANGULAR_JSON)).toContain('"defaultCollection": "@froko/ng-essentials"');
       });
 
       it('adds ng-essentials options to angular.json', () => {
-        expect(tree.readContent(ANGULAR_JSON)).toContain('"jest": false');
-        expect(tree.readContent(ANGULAR_JSON)).toContain('"cypress": false');
-        expect(tree.readContent(ANGULAR_JSON)).toContain('"testcafe": false');
+        expect(testTree.readContent(ANGULAR_JSON)).toContain('"jest": false');
+        expect(testTree.readContent(ANGULAR_JSON)).toContain('"cypress": false');
+        expect(testTree.readContent(ANGULAR_JSON)).toContain('"testcafe": false');
       });
 
       it('removes e2e test node from angular.json', () => {
-        expect(tree.readContent(ANGULAR_JSON)).not.toContain('froko-app-e2e');
+        expect(testTree.readContent(ANGULAR_JSON)).not.toContain('froko-app-e2e');
       });
 
       it('removes protractor packages from angular.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).not.toContain('protractor');
-        expect(tree.readContent(PACKAGE_JSON)).not.toContain('@types/jasminewd2');
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('protractor');
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('@types/jasminewd2');
       });
 
       it('removes e2e script from package.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).not.toContain('e2e');
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('e2e');
       });
 
       it('removes automatic update symbols from package.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).not.toContain('^');
-        expect(tree.readContent(PACKAGE_JSON)).not.toContain('~');
-        expect(tree.readContent(PACKAGE_JSON)).not.toContain('>=');
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('^');
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('~');
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('>=');
       });
 
       it('updates angular packages in package.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/animations": "${essentials.angularVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/common": "${essentials.angularVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/compiler": "${essentials.angularVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/core": "${essentials.angularVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/forms": "${essentials.angularVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/platform-browser": "${essentials.angularVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/animations": "${essentials.angularVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/common": "${essentials.angularVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/compiler": "${essentials.angularVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/core": "${essentials.angularVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/forms": "${essentials.angularVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(
+          `"@angular/platform-browser": "${essentials.angularVersion}"`
+        );
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(
           `"@angular/platform-browser-dynamic": "${essentials.angularVersion}"`
         );
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/router": "${essentials.angularVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"core-js": "${essentials.coreJsVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"tslib": "${essentials.tslibVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"rxjs": "${essentials.rxjsVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"zone.js": "${essentials.zoneVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/router": "${essentials.angularVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"core-js": "${essentials.coreJsVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"tslib": "${essentials.tslibVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"rxjs": "${essentials.rxjsVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"zone.js": "${essentials.zoneVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(
           `"@angular-devkit/build-angular": "${essentials.buildAngularVersion}"`
         );
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/cli": "${essentials.cliVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/compiler-cli": "${essentials.angularVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular/language-service": "${essentials.angularVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@types/node": "${essentials.nodeVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"codelyzer": "${essentials.codelizerVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"ts-node": "${essentials.tsNodeVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"tslint": "${essentials.tsLintVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"typescript": "${essentials.typescriptVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/cli": "${essentials.cliVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/compiler-cli": "${essentials.angularVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(
+          `"@angular/language-service": "${essentials.angularVersion}"`
+        );
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@types/node": "${essentials.nodeVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"codelyzer": "${essentials.codelizerVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"ts-node": "${essentials.tsNodeVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"tslint": "${essentials.tsLintVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"typescript": "${essentials.typescriptVersion}"`);
       });
 
       it('adds additional packages in package.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"husky": "${essentials.huskyVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"npm-run-all": "${essentials.npmRunAllVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"prettier": "${essentials.prettierVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"pretty-quick": "${essentials.prettyQuickVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"husky": "${essentials.huskyVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"npm-run-all": "${essentials.npmRunAllVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"prettier": "${essentials.prettierVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"pretty-quick": "${essentials.prettyQuickVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(
           `"tslint-config-prettier": "${essentials.tsLintConfigPrettierVersion}"`
         );
       });
 
       it('adds additional scripts in package.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain('format');
-        expect(tree.readContent(PACKAGE_JSON)).toContain('format:check');
-        expect(tree.readContent(PACKAGE_JSON)).toContain('format:fix');
+        expect(testTree.readContent(PACKAGE_JSON)).toContain('format');
+        expect(testTree.readContent(PACKAGE_JSON)).toContain('format:check');
+        expect(testTree.readContent(PACKAGE_JSON)).toContain('format:fix');
       });
 
       it('runs format scripts in src and configured projects path', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain('{src,projects}');
+        expect(testTree.readContent(PACKAGE_JSON)).toContain('{src,projects}');
       });
 
       it('adds husky config in package.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain('hooks');
-        expect(tree.readContent(PACKAGE_JSON)).toContain('"pre-commit": "run-s format:fix lint"');
+        expect(testTree.readContent(PACKAGE_JSON)).toContain('hooks');
+        expect(testTree.readContent(PACKAGE_JSON)).toContain('"pre-commit": "run-s format:fix lint"');
       });
 
       it('updates global tslint.json', () => {
-        expect(tree.readContent(TSLINT_JSON)).toContain('"tslint:latest"');
-        expect(tree.readContent(TSLINT_JSON)).toContain('"tslint-config-prettier"');
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"tslint:latest"');
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"tslint-config-prettier"');
 
-        expect(tree.readContent(TSLINT_JSON)).not.toContain('eofline');
-        expect(tree.readContent(TSLINT_JSON)).not.toContain('whitespace');
+        expect(testTree.readContent(TSLINT_JSON)).not.toContain('eofline');
+        expect(testTree.readContent(TSLINT_JSON)).not.toContain('whitespace');
 
-        expect(tree.readContent(TSLINT_JSON)).toContain('"jsdoc-format": false');
-        expect(tree.readContent(TSLINT_JSON)).toContain('"no-implicit-dependencies"');
-        expect(tree.readContent(TSLINT_JSON)).toContain('"no-submodule-imports": false');
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"jsdoc-format": false');
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"no-implicit-dependencies"');
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"no-submodule-imports": false');
       });
 
       it('updates development environment file', () => {
-        expect(tree.readContent('src/environments/environment.ts')).toContain(
+        expect(testTree.readContent('src/environments/environment.ts')).toContain(
           "{ provide: 'environment', useValue: 'Development' },"
         );
-        expect(tree.readContent('src/environments/environment.ts')).toContain(
+        expect(testTree.readContent('src/environments/environment.ts')).toContain(
           'export const ENV_PROVIDERS = providers;'
         );
       });
 
       it('updates production environment file', () => {
-        expect(tree.readContent('src/environments/environment.prod.ts')).toContain(
+        expect(testTree.readContent('src/environments/environment.prod.ts')).toContain(
           "{ provide: 'environment', useValue: 'Production' },"
         );
-        expect(tree.readContent('src/environments/environment.prod.ts')).toContain(
+        expect(testTree.readContent('src/environments/environment.prod.ts')).toContain(
           'export const ENV_PROVIDERS = providers;'
         );
       });
 
       it('adds ENV_PROVIDERS to app module', () => {
-        expect(tree.readContent('src/app/app.module.ts')).toContain(
+        expect(testTree.readContent('src/app/app.module.ts')).toContain(
           "import { ENV_PROVIDERS } from '../environments/environment';"
         );
-        expect(tree.readContent('src/app/app.module.ts')).toContain('providers: [ENV_PROVIDERS]');
+        expect(testTree.readContent('src/app/app.module.ts')).toContain('providers: [ENV_PROVIDERS]');
       });
 
       it('adds launch.json with debug option for karma', () => {
-        expect(tree.readContent('/.vscode/launch.json')).toContain('"url": "http://localhost:9876/debug.html"');
+        expect(testTree.readContent('/.vscode/launch.json')).toContain('"url": "http://localhost:9876/debug.html"');
       });
 
       it('adds essentials files', () => {
-        expect(tree.files).toContain('/.npmrc');
-        expect(tree.files).toContain('/.prettierrc');
-        expect(tree.files).toContain('/.vscode/settings.json');
+        expect(testTree.files).toContain('/.npmrc');
+        expect(testTree.files).toContain('/.prettierrc');
+        expect(testTree.files).toContain('/.vscode/settings.json');
       });
 
       it('updates jasmine packages in package.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@types/jasmine": "${karma.jasmineTypeVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"jasmine-core": "${karma.jasmineCoreVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"karma": "${karma.karmaVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@types/jasmine": "${karma.jasmineTypeVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jasmine-core": "${karma.jasmineCoreVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"karma": "${karma.karmaVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(
           `"karma-coverage-istanbul-reporter": "${karma.coverageReporterVersion}"`
         );
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"karma-jasmine": "${karma.karmaJasmineVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"karma-jasmine": "${karma.karmaJasmineVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(
           `"karma-jasmine-html-reporter": "${karma.htmlReporterVersion}"`
         );
       });
     });
 
     describe('with jest option', () => {
-      let tree: UnitTestTree;
+      let testTree: UnitTestTree;
 
-      beforeEach(() => {
-        const runner = new SchematicTestRunner('schematics', collectionPath);
-        tree = runner.runSchematic('ng-add', { jest: true }, appTree);
+      beforeEach(async () => {
+        testTree = await runSchematic('ng-add', { jest: true }, appTree);
       });
 
       it('removes karma config file', () => {
-        expect(tree.files).not.toContain('/src/karma.conf.js');
+        expect(testTree.files).not.toContain('/src/karma.conf.js');
       });
 
       it('removes test typescript file', () => {
-        expect(tree.files).not.toContain('/src/test.ts');
+        expect(testTree.files).not.toContain('/src/test.ts');
       });
 
       it('removes jasmine and karma packages from packages.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).not.toContain('jasmine');
-        expect(tree.readContent(PACKAGE_JSON)).not.toContain('karma');
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('jasmine');
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('karma');
       });
 
       it('adds jest packages to packages.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@angular-builders/jest": "${jest.jestBuilderVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"@types/jest": "${jest.jestTypeVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"babel-core": "${jest.babelCoreVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"babel-jest": "${jest.babelJestVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"jest": "${jest.jestVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"jest-preset-angular": "${jest.angularPresetVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular-builders/jest": "${jest.jestBuilderVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@types/jest": "${jest.jestTypeVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"babel-core": "${jest.babelCoreVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"babel-jest": "${jest.babelJestVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jest": "${jest.jestVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jest-preset-angular": "${jest.angularPresetVersion}"`);
       });
 
       it('switches to jest builder in angular.json', () => {
-        expect(tree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
+        expect(testTree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
       });
 
       it('updates application typescript config file in src folder', () => {
-        expect(tree.readContent('src/tsconfig.app.json')).not.toContain('test.ts');
+        expect(testTree.readContent('src/tsconfig.app.json')).not.toContain('test.ts');
       });
 
       it('updates spec typescript config file in src folder', () => {
-        expect(tree.readContent('/src/tsconfig.spec.json')).not.toContain('files');
-        expect(tree.readContent('/src/tsconfig.spec.json')).not.toContain('jasmine');
+        expect(testTree.readContent('/src/tsconfig.spec.json')).not.toContain('files');
+        expect(testTree.readContent('/src/tsconfig.spec.json')).not.toContain('jasmine');
 
-        expect(tree.readContent('/src/tsconfig.spec.json')).toContain('jest');
-        expect(tree.readContent('/src/tsconfig.spec.json')).toContain('commonjs');
+        expect(testTree.readContent('/src/tsconfig.spec.json')).toContain('jest');
+        expect(testTree.readContent('/src/tsconfig.spec.json')).toContain('commonjs');
       });
 
       it('adds launch.json with debug option for jest', () => {
-        expect(tree.readContent('/.vscode/launch.json')).toContain(
+        expect(testTree.readContent('/.vscode/launch.json')).toContain(
           '"program": "${workspaceFolder}/node_modules/@angular/cli/bin/ng"'
         );
       });
 
       it('adds jest setup file', () => {
-        expect(tree.files).toContain('/src/setup-jest.ts');
+        expect(testTree.files).toContain('/src/setup-jest.ts');
       });
 
       it('adds jest config to package.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain('<rootDir>/src/setup-jest.ts');
+        expect(testTree.readContent(PACKAGE_JSON)).toContain('<rootDir>/src/setup-jest.ts');
       });
     });
 
     describe('with cypress option', () => {
-      let tree: UnitTestTree;
+      let testTree: UnitTestTree;
 
-      beforeEach(() => {
-        const runner = new SchematicTestRunner('schematics', collectionPath);
-        tree = runner.runSchematic('ng-add', { cypress: true }, appTree);
+      beforeEach(async () => {
+        testTree = await runSchematic('ng-add', { cypress: true }, appTree);
       });
 
       it('adds cypress packages to packages.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain(
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(
           `"@cypress/webpack-preprocessor": "${cypress.preprocessorVersion}"`
         );
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"cypress": "${cypress.cypressVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"ts-loader": "${cypress.tsLoaderVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"cypress": "${cypress.cypressVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"ts-loader": "${cypress.tsLoaderVersion}"`);
       });
 
       it('adds cypress script to package.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"cypress": "run-p start cypress:open"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"cypress:open": "cypress open"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"cypress": "run-p start cypress:open"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"cypress:open": "cypress open"`);
       });
 
       it('adds cypress files', () => {
-        expect(tree.files).toContain('/cypress/tsconfig.json');
-        expect(tree.files).toContain('/cypress/fixtures/example.json');
-        expect(tree.files).toContain('/cypress/integration/spec.ts');
-        expect(tree.files).toContain('/cypress/plugins/index.js');
-        expect(tree.files).toContain('/cypress/support/commands.ts');
-        expect(tree.files).toContain('/cypress/support/index.ts');
+        expect(testTree.files).toContain('/cypress/tsconfig.json');
+        expect(testTree.files).toContain('/cypress/fixtures/example.json');
+        expect(testTree.files).toContain('/cypress/integration/spec.ts');
+        expect(testTree.files).toContain('/cypress/plugins/index.js');
+        expect(testTree.files).toContain('/cypress/support/commands.ts');
+        expect(testTree.files).toContain('/cypress/support/index.ts');
       });
     });
 
     describe('with testcafe option', () => {
-      let tree: UnitTestTree;
+      let testTree: UnitTestTree;
 
-      beforeEach(() => {
-        const runner = new SchematicTestRunner('schematics', collectionPath);
-        tree = runner.runSchematic('ng-add', { testcafe: true }, appTree);
+      beforeEach(async () => {
+        testTree = await runSchematic('ng-add', { testcafe: true }, appTree);
       });
 
       it('adds testcafe packages to packages.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"testcafe": "${testcafe.testcafeVersion}"`);
-        expect(tree.readContent(PACKAGE_JSON)).toContain(
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"testcafe": "${testcafe.testcafeVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(
           `"testcafe-angular-selectors": "${testcafe.angularSelectorsVersion}"`
         );
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"testcafe-live": "${testcafe.liveVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"testcafe-live": "${testcafe.liveVersion}"`);
       });
 
       it('adds testcafe files', () => {
-        expect(tree.files).toContain('/testcafe/index.e2e-spec.js');
+        expect(testTree.files).toContain('/testcafe/index.e2e-spec.js');
       });
     });
 
     describe('with wallaby option', () => {
-      let tree: UnitTestTree;
+      let testTree: UnitTestTree;
 
-      beforeEach(() => {
-        const runner = new SchematicTestRunner('schematics', collectionPath);
-        tree = runner.runSchematic('ng-add', { wallaby: true }, appTree);
+      beforeEach(async () => {
+        testTree = await runSchematic('ng-add', { wallaby: true }, appTree);
       });
 
       it('adds wallaby packages to packages.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain(
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(
           `"angular2-template-loader": "${wallaby.angularTemplateLoader}"`
         );
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"wallaby-webpack": "${wallaby.wallabyWebpack}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"wallaby-webpack": "${wallaby.wallabyWebpack}"`);
       });
 
       it('adds wallaby.js file with jasmine support', () => {
-        expect(tree.files).toContain('/wallaby.js');
-        expect(tree.readContent('/wallaby.js')).toContain('jasmine');
+        expect(testTree.files).toContain('/wallaby.js');
+        expect(testTree.readContent('/wallaby.js')).toContain('jasmine');
       });
 
       it('adds wallaby test file', () => {
-        expect(tree.files).toContain('/src/wallabyTest.ts');
+        expect(testTree.files).toContain('/src/wallabyTest.ts');
       });
 
       it('adds wallabyTest.ts in tsconfig.app', () => {
-        expect(tree.readContent('src/tsconfig.app.json')).toContain('wallabyTest.ts');
+        expect(testTree.readContent('src/tsconfig.app.json')).toContain('wallabyTest.ts');
       });
     });
 
     describe('with wallaby and jest option', () => {
-      let tree: UnitTestTree;
+      let testTree: UnitTestTree;
 
-      beforeEach(() => {
-        const runner = new SchematicTestRunner('schematics', collectionPath);
-        tree = runner.runSchematic('ng-add', { wallaby: true, jest: true }, appTree);
+      beforeEach(async () => {
+        testTree = await runSchematic('ng-add', { wallaby: true, jest: true }, appTree);
       });
 
       it('adds wallaby packages to packages.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain(`"ngx-wallaby-jest": "${wallaby.wallabyJest}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"ngx-wallaby-jest": "${wallaby.wallabyJest}"`);
       });
 
       it('adds wallaby.js file with jasmine support', () => {
-        expect(tree.files).toContain('/wallaby.js');
-        expect(tree.readContent('/wallaby.js')).toContain('jest');
+        expect(testTree.files).toContain('/wallaby.js');
+        expect(testTree.readContent('/wallaby.js')).toContain('jest');
       });
     });
   });
 
   describe('when running for a subsequent time', () => {
     beforeEach(() => {
-      appTree = createAngularJsonForSubsequentRun(new UnitTestTree(appTree));
+      appTree = createAngularJsonForSubsequentRun(appTree);
     });
 
     describe('with all options', () => {
-      let tree: UnitTestTree;
+      let testTree: UnitTestTree;
 
-      beforeEach(() => {
-        const runner = new SchematicTestRunner('schematics', collectionPath);
-        tree = runner.runSchematic('ng-add', { jest: true, cypress: true, tesetcafe: true }, appTree);
+      beforeEach(async () => {
+        testTree = await runSchematic('ng-add', { jest: true, cypress: true, tesetcafe: true }, appTree);
       });
 
       it('does not add default collection to angular.json', () => {
-        expect(tree.readContent(ANGULAR_JSON)).not.toContain('"defaultCollection": "@froko/ng-essentials"');
+        expect(testTree.readContent(ANGULAR_JSON)).not.toContain('"defaultCollection": "@froko/ng-essentials"');
       });
 
       it('does not add essentials files', () => {
-        expect(tree.files).not.toContain('/.npmrc');
-        expect(tree.files).not.toContain('/.prettierrc');
-        expect(tree.files).not.toContain('/.vscode/launch.json');
+        expect(testTree.files).not.toContain('/.npmrc');
+        expect(testTree.files).not.toContain('/.prettierrc');
+        expect(testTree.files).not.toContain('/.vscode/launch.json');
       });
 
       it('does not update jasmine packages in package.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).toContain('"jasmine-core": "~2.99.1"');
+        expect(testTree.readContent(PACKAGE_JSON)).toContain('"jasmine-core": "~2.99.1"');
       });
 
       it('does not delete karma config file', () => {
-        expect(tree.files).toContain('/src/karma.conf.js');
+        expect(testTree.files).toContain('/src/karma.conf.js');
       });
 
       it('does not switch to jest builder in angular.json', () => {
-        expect(tree.readContent(ANGULAR_JSON)).toContain('@angular-devkit/build-angular:dev-server');
+        expect(testTree.readContent(ANGULAR_JSON)).toContain('@angular-devkit/build-angular:dev-server');
       });
 
       it('does not add cypress packages to packages.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).not.toContain('concurrently');
-        expect(tree.readContent(PACKAGE_JSON)).not.toContain('cypress');
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('concurrently');
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('cypress');
       });
 
       it('does not add cypress files', () => {
-        expect(tree.files).not.toContain('/cypress/fixtures/example.json');
-        expect(tree.files).not.toContain('/cypress/integration/spec.ts');
-        expect(tree.files).not.toContain('/cypress/plugins/index.js');
-        expect(tree.files).not.toContain('/cypress/support/commands.ts');
-        expect(tree.files).not.toContain('/cypress/support/index.ts');
+        expect(testTree.files).not.toContain('/cypress/fixtures/example.json');
+        expect(testTree.files).not.toContain('/cypress/integration/spec.ts');
+        expect(testTree.files).not.toContain('/cypress/plugins/index.js');
+        expect(testTree.files).not.toContain('/cypress/support/commands.ts');
+        expect(testTree.files).not.toContain('/cypress/support/index.ts');
       });
 
       it('does not add testcafe packages to packages.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).not.toContain('testcafe');
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('testcafe');
       });
 
       it('does not add testcafe files', () => {
-        expect(tree.files).not.toContain('/testcafe/index.e2e-spec.js');
+        expect(testTree.files).not.toContain('/testcafe/index.e2e-spec.js');
       });
 
       it('does not add wallaby packages to packages.json', () => {
-        expect(tree.readContent(PACKAGE_JSON)).not.toContain('wallaby');
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('wallaby');
       });
 
       it('does not add wallaby files', () => {
-        expect(tree.files).not.toContain('/wallaby.js');
-        expect(tree.files).not.toContain('/src/wallabyTest.ts');
+        expect(testTree.files).not.toContain('/wallaby.js');
+        expect(testTree.files).not.toContain('/src/wallabyTest.ts');
       });
     });
   });
 });
 
-function createAngularJsonForFirstRun(tree: UnitTestTree): UnitTestTree {
+function createAngularJsonForFirstRun(tree: Tree): Tree {
   tree.create(
     ANGULAR_JSON,
     `{
       "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+      "version": 1,
       "projects": {
         "froko-app": {
           "schematics": {},
@@ -434,11 +429,12 @@ function createAngularJsonForFirstRun(tree: UnitTestTree): UnitTestTree {
   return tree;
 }
 
-function createAngularJsonForSubsequentRun(tree: UnitTestTree): UnitTestTree {
+function createAngularJsonForSubsequentRun(tree: Tree): Tree {
   tree.create(
     ANGULAR_JSON,
     `{
       "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+      "version": 1,
       "projects": {
         "froko-app": {
           "schematics": {
@@ -464,7 +460,7 @@ function createAngularJsonForSubsequentRun(tree: UnitTestTree): UnitTestTree {
   return tree;
 }
 
-function createPackageJson(tree: UnitTestTree): UnitTestTree {
+function createPackageJson(tree: Tree): Tree {
   tree.create(
     PACKAGE_JSON,
     `{
@@ -517,7 +513,7 @@ function createPackageJson(tree: UnitTestTree): UnitTestTree {
   return tree;
 }
 
-function createGlobalTsLintJson(tree: UnitTestTree): UnitTestTree {
+function createGlobalTsLintJson(tree: Tree): Tree {
   tree.create(
     TSLINT_JSON,
     `{
@@ -535,7 +531,7 @@ function createGlobalTsLintJson(tree: UnitTestTree): UnitTestTree {
   return tree;
 }
 
-function createDevelopmentEnvironmentFile(tree: UnitTestTree): UnitTestTree {
+function createDevelopmentEnvironmentFile(tree: Tree): Tree {
   tree.create(
     './src/environments/environment.ts',
     `
@@ -548,7 +544,7 @@ function createDevelopmentEnvironmentFile(tree: UnitTestTree): UnitTestTree {
   return tree;
 }
 
-function createProductionEnvironmentFile(tree: UnitTestTree): UnitTestTree {
+function createProductionEnvironmentFile(tree: Tree): Tree {
   tree.create(
     './src/environments/environment.prod.ts',
     `
@@ -561,19 +557,19 @@ function createProductionEnvironmentFile(tree: UnitTestTree): UnitTestTree {
   return tree;
 }
 
-function createKarmaConfig(tree: UnitTestTree): UnitTestTree {
+function createKarmaConfig(tree: Tree): Tree {
   tree.create('src/karma.conf.js', 'module.exports = function(confg) {};');
 
   return tree;
 }
 
-function createTestTypescriptFile(tree: UnitTestTree): UnitTestTree {
+function createTestTypescriptFile(tree: Tree): Tree {
   tree.create('src/test.ts', "import { getTestBed } from '@angular/core/testing';");
 
   return tree;
 }
 
-function createTsConfigAppInSrcDirectory(tree: UnitTestTree): UnitTestTree {
+function createTsConfigAppInSrcDirectory(tree: Tree): Tree {
   tree.create(
     'src/tsconfig.app.json',
     `{
@@ -592,7 +588,7 @@ function createTsConfigAppInSrcDirectory(tree: UnitTestTree): UnitTestTree {
   return tree;
 }
 
-function createTsConfigSpecInSrcDirectory(tree: UnitTestTree): UnitTestTree {
+function createTsConfigSpecInSrcDirectory(tree: Tree): Tree {
   tree.create(
     '/src/tsconfig.spec.json',
     `{
@@ -618,7 +614,7 @@ function createTsConfigSpecInSrcDirectory(tree: UnitTestTree): UnitTestTree {
   return tree;
 }
 
-function createEndToEndTestingFiles(tree: UnitTestTree): UnitTestTree {
+function createEndToEndTestingFiles(tree: Tree): Tree {
   tree.create('/e2e/src/app.e2e-spec.ts', '');
   tree.create('/e2e/src/app.po.ts', '');
   tree.create('/e2e/protractor.conf.js', '');

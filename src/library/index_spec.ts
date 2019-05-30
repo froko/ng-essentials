@@ -1,13 +1,10 @@
 import { dasherize } from '@angular-devkit/core/src/utils/strings';
-import { Tree, VirtualTree } from '@angular-devkit/schematics';
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-
-import * as path from 'path';
+import { Tree } from '@angular-devkit/schematics';
+import { UnitTestTree } from '@angular-devkit/schematics/testing';
 
 import { PACKAGE_JSON, ANGULAR_JSON } from '../constants';
 import { library } from '../versions';
-
-const collectionPath = path.join(__dirname, '../collection.json');
+import { runSchematic } from '../testing';
 
 describe('library', () => {
   const libraryName = 'myLib';
@@ -16,94 +13,91 @@ describe('library', () => {
   let appTree: Tree;
 
   beforeEach(() => {
-    appTree = new VirtualTree();
-    appTree = createPackageJson(new UnitTestTree(appTree));
+    appTree = Tree.empty();
+    appTree = createPackageJson(appTree);
   });
 
   describe('when creating a new library', () => {
-    let tree: UnitTestTree;
+    let testTree: UnitTestTree;
 
-    beforeEach(() => {
-      appTree = createAngularJsonWithoutJestOption(new UnitTestTree(appTree));
-
-      const runner = new SchematicTestRunner('schematics', collectionPath);
-      tree = runner.runSchematic('library', { name: libraryName }, appTree);
+    beforeEach(async () => {
+      appTree = createAngularJsonWithoutJestOption(appTree);
+      testTree = await runSchematic('library', { name: libraryName }, appTree);
     });
 
     it('adds files from the original @angular/schematics command', () => {
-      expect(tree.files).toContain(`/libs/${dasherizedLibraryName}/karma.conf.js`);
-      expect(tree.files).toContain(`/libs/${dasherizedLibraryName}/ng-package.json`);
-      expect(tree.files).toContain(`/libs/${dasherizedLibraryName}/package.json`);
-      expect(tree.files).toContain(`/libs/${dasherizedLibraryName}/tsconfig.lib.json`);
-      expect(tree.files).toContain(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`);
-      expect(tree.files).toContain(`/libs/${dasherizedLibraryName}/tslint.json`);
-      expect(tree.files).toContain(`/libs/${dasherizedLibraryName}/src/public_api.ts`);
-      expect(tree.files).toContain(`/libs/${dasherizedLibraryName}/src/test.ts`);
+      expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/karma.conf.js`);
+      expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/ng-package.json`);
+      expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/package.json`);
+      expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/tsconfig.lib.json`);
+      expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`);
+      expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/tslint.json`);
+      expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/src/public-api.ts`);
+      expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/src/test.ts`);
     });
 
     it('removes automatic update symbols from package.json', () => {
-      expect(tree.readContent(PACKAGE_JSON)).not.toContain('^');
-      expect(tree.readContent(PACKAGE_JSON)).not.toContain('~');
-      expect(tree.readContent(PACKAGE_JSON)).not.toContain('>=');
+      expect(testTree.readContent(PACKAGE_JSON)).not.toContain('^');
+      expect(testTree.readContent(PACKAGE_JSON)).not.toContain('~');
+      expect(testTree.readContent(PACKAGE_JSON)).not.toContain('>=');
     });
 
     it('updates angular packages in package.json', () => {
-      expect(tree.readContent(PACKAGE_JSON)).toContain(
+      expect(testTree.readContent(PACKAGE_JSON)).toContain(
         `"@angular-devkit/build-ng-packagr": "${library.buildNgPackagrVersion}"`
       );
-      expect(tree.readContent(PACKAGE_JSON)).toContain(`"ng-packagr": "${library.ngPackagrVersion}"`);
-      expect(tree.readContent(PACKAGE_JSON)).toContain(`"tsickle": "${library.tsickleVersion}"`);
+      expect(testTree.readContent(PACKAGE_JSON)).toContain(`"ng-packagr": "${library.ngPackagrVersion}"`);
+      expect(testTree.readContent(PACKAGE_JSON)).toContain(`"tsickle": "${library.tsickleVersion}"`);
     });
   });
 
   describe('when creating a new library with jest option', () => {
-    let tree: UnitTestTree;
+    let testTree: UnitTestTree;
 
-    beforeEach(() => {
-      appTree = createAngularJsonWithJestOption(new UnitTestTree(appTree));
-      appTree = createJestConfig(new UnitTestTree(appTree));
-
-      const runner = new SchematicTestRunner('schematics', collectionPath);
-      tree = runner.runSchematic('library', { name: libraryName }, appTree);
+    beforeEach(async () => {
+      appTree = createAngularJsonWithJestOption(appTree);
+      appTree = createJestConfig(appTree);
+      testTree = await runSchematic('library', { name: libraryName }, appTree);
     });
 
     it('removes karma config of library', () => {
-      expect(tree.files).not.toContain(`/libs/${dasherizedLibraryName}/karma.conf.js`);
+      expect(testTree.files).not.toContain(`/libs/${dasherizedLibraryName}/karma.conf.js`);
     });
 
     it('removes test typescript file of library', () => {
-      expect(tree.files).not.toContain(`/libs/${dasherizedLibraryName}/src/test.ts`);
+      expect(testTree.files).not.toContain(`/libs/${dasherizedLibraryName}/src/test.ts`);
     });
 
     it('updates application typescript config file in library folder', () => {
-      expect(tree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.lib.json`)).not.toContain('test.ts');
+      expect(testTree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.lib.json`)).not.toContain('test.ts');
     });
 
     it('updates spec typescript config file in library folder', () => {
-      expect(tree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).not.toContain('files');
-      expect(tree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).not.toContain('jasmine');
+      expect(testTree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).not.toContain('files');
+      expect(testTree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).not.toContain('jasmine');
 
-      expect(tree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).toContain('jest');
-      expect(tree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).toContain('commonjs');
+      expect(testTree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).toContain('jest');
+      expect(testTree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).toContain('commonjs');
     });
 
     it('adds jest config in library folder', () => {
-      expect(tree.readContent(`/libs/${dasherizedLibraryName}/jest.config.js`)).toContain(
+      expect(testTree.readContent(`/libs/${dasherizedLibraryName}/jest.config.js`)).toContain(
         '<rootDir>/src/setup-jest.ts'
       );
     });
 
     it('switches to jest builder in angular.json', () => {
-      expect(tree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
+      expect(testTree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
     });
   });
 });
 
-function createAngularJsonWithoutJestOption(tree: UnitTestTree): UnitTestTree {
+function createAngularJsonWithoutJestOption(tree: Tree): Tree {
   tree.create(
     ANGULAR_JSON,
     `{
         "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+        "version": 1,
         "newProjectRoot": "libs",
         "projects": {
           "froko-app": {
@@ -129,11 +123,12 @@ function createAngularJsonWithoutJestOption(tree: UnitTestTree): UnitTestTree {
   return tree;
 }
 
-function createAngularJsonWithJestOption(tree: UnitTestTree): UnitTestTree {
+function createAngularJsonWithJestOption(tree: Tree): Tree {
   tree.create(
     ANGULAR_JSON,
     `{
         "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+        "version": 1,
         "newProjectRoot": "libs",
         "projects": {
           "froko-app": {
@@ -159,7 +154,7 @@ function createAngularJsonWithJestOption(tree: UnitTestTree): UnitTestTree {
   return tree;
 }
 
-function createPackageJson(tree: UnitTestTree): UnitTestTree {
+function createPackageJson(tree: Tree): Tree {
   tree.create(
     PACKAGE_JSON,
     `{
@@ -212,7 +207,7 @@ function createPackageJson(tree: UnitTestTree): UnitTestTree {
   return tree;
 }
 
-function createJestConfig(tree: UnitTestTree): UnitTestTree {
+function createJestConfig(tree: Tree): Tree {
   tree.create(
     './src/jest.config.js',
     `module.exports = {

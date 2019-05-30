@@ -1,11 +1,8 @@
-import { Tree, VirtualTree } from '@angular-devkit/schematics';
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-
-import * as path from 'path';
+import { Tree } from '@angular-devkit/schematics';
+import { UnitTestTree } from '@angular-devkit/schematics/testing';
 
 import { PACKAGE_JSON, ANGULAR_JSON } from '../constants';
-
-const collectionPath = path.join(__dirname, '../collection.json');
+import { runSchematic } from '../testing';
 
 describe('application', () => {
   const appName = 'myApp';
@@ -13,75 +10,72 @@ describe('application', () => {
   let appTree: Tree;
 
   beforeEach(() => {
-    appTree = new VirtualTree();
-    appTree = createPackageJson(new UnitTestTree(appTree));
+    appTree = Tree.empty();
+    appTree = createPackageJson(appTree);
   });
 
   describe('when creating a new application', () => {
-    let tree: UnitTestTree;
+    let testTree: UnitTestTree;
 
-    beforeEach(() => {
-      appTree = createAngularJsonWithoutJestOption(new UnitTestTree(appTree));
-
-      const runner = new SchematicTestRunner('schematics', collectionPath);
-      tree = runner.runSchematic('application', { name: appName }, appTree);
+    beforeEach(async () => {
+      appTree = createAngularJsonWithoutJestOption(appTree);
+      testTree = await runSchematic('application', { name: appName }, appTree);
     });
 
     it('adds files from the original @angular/schematics command', () => {
-      expect(tree.files).toContain(`/libs/${appName}/karma.conf.js`);
-      expect(tree.files).toContain(`/libs/${appName}/tsconfig.app.json`);
-      expect(tree.files).toContain(`/libs/${appName}/tsconfig.spec.json`);
-      expect(tree.files).toContain(`/libs/${appName}/tslint.json`);
-      expect(tree.files).toContain(`/libs/${appName}/src/test.ts`);
+      expect(testTree.files).toContain(`/libs/${appName}/karma.conf.js`);
+      expect(testTree.files).toContain(`/libs/${appName}/tsconfig.app.json`);
+      expect(testTree.files).toContain(`/libs/${appName}/tsconfig.spec.json`);
+      expect(testTree.files).toContain(`/libs/${appName}/tslint.json`);
+      expect(testTree.files).toContain(`/libs/${appName}/src/test.ts`);
     });
   });
 
   describe('when creating a new application with jest option', () => {
-    let tree: UnitTestTree;
+    let testTree: UnitTestTree;
 
-    beforeEach(() => {
-      appTree = createAngularJsonWithJestOption(new UnitTestTree(appTree));
+    beforeEach(async () => {
+      appTree = createAngularJsonWithJestOption(appTree);
       appTree = createJestConfig(new UnitTestTree(appTree));
-
-      const runner = new SchematicTestRunner('schematics', collectionPath);
-      tree = runner.runSchematic('application', { name: appName }, appTree);
+      testTree = await runSchematic('application', { name: appName }, appTree);
     });
 
     it('removes karma config of application', () => {
-      expect(tree.files).not.toContain(`/libs/${appName}/karma.conf.js`);
+      expect(testTree.files).not.toContain(`/libs/${appName}/karma.conf.js`);
     });
 
     it('removes test typescript file of application', () => {
-      expect(tree.files).not.toContain(`/libs/${appName}/src/test.ts`);
+      expect(testTree.files).not.toContain(`/libs/${appName}/src/test.ts`);
     });
 
     it('updates application typescript config file in src folder', () => {
-      expect(tree.readContent(`/libs/${appName}/tsconfig.app.json`)).not.toContain('test.ts');
+      expect(testTree.readContent(`/libs/${appName}/tsconfig.app.json`)).not.toContain('test.ts');
     });
 
     it('updates spec typescript config file in application folder', () => {
-      expect(tree.readContent(`/libs/${appName}/tsconfig.spec.json`)).not.toContain('files');
-      expect(tree.readContent(`/libs/${appName}/tsconfig.spec.json`)).not.toContain('jasmine');
+      expect(testTree.readContent(`/libs/${appName}/tsconfig.spec.json`)).not.toContain('files');
+      expect(testTree.readContent(`/libs/${appName}/tsconfig.spec.json`)).not.toContain('jasmine');
 
-      expect(tree.readContent(`/libs/${appName}/tsconfig.spec.json`)).toContain('jest');
-      expect(tree.readContent(`/libs/${appName}/tsconfig.spec.json`)).toContain('commonjs');
+      expect(testTree.readContent(`/libs/${appName}/tsconfig.spec.json`)).toContain('jest');
+      expect(testTree.readContent(`/libs/${appName}/tsconfig.spec.json`)).toContain('commonjs');
     });
 
     it('adds jest config in application folder', () => {
-      expect(tree.readContent(`/libs/${appName}/jest.config.js`)).toContain('<rootDir>/src/setup-jest.ts');
+      expect(testTree.readContent(`/libs/${appName}/jest.config.js`)).toContain('<rootDir>/src/setup-jest.ts');
     });
 
     it('switches to jest builder in angular.json', () => {
-      expect(tree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
+      expect(testTree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
     });
   });
 });
 
-function createAngularJsonWithoutJestOption(tree: UnitTestTree): UnitTestTree {
+function createAngularJsonWithoutJestOption(tree: Tree): Tree {
   tree.create(
     ANGULAR_JSON,
     `{
         "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+        "version": 1,
         "newProjectRoot": "libs",
         "projects": {
           "froko-app": {
@@ -107,11 +101,12 @@ function createAngularJsonWithoutJestOption(tree: UnitTestTree): UnitTestTree {
   return tree;
 }
 
-function createAngularJsonWithJestOption(tree: UnitTestTree): UnitTestTree {
+function createAngularJsonWithJestOption(tree: Tree): Tree {
   tree.create(
     ANGULAR_JSON,
     `{
         "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+        "version": 1,
         "newProjectRoot": "libs",
         "projects": {
           "froko-app": {
@@ -137,7 +132,7 @@ function createAngularJsonWithJestOption(tree: UnitTestTree): UnitTestTree {
   return tree;
 }
 
-function createPackageJson(tree: UnitTestTree): UnitTestTree {
+function createPackageJson(tree: Tree): Tree {
   tree.create(
     PACKAGE_JSON,
     `{
@@ -190,7 +185,7 @@ function createPackageJson(tree: UnitTestTree): UnitTestTree {
   return tree;
 }
 
-function createJestConfig(tree: UnitTestTree): UnitTestTree {
+function createJestConfig(tree: Tree): Tree {
   tree.create(
     './src/jest.config.js',
     `module.exports = {
