@@ -45,8 +45,12 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(ANGULAR_JSON)).toContain('"testcafe": false');
       });
 
+      it('removes e2e tsconfig.json in linting options from angular.json', () => {
+        expect(testTree.readContent(ANGULAR_JSON)).not.toContain('e2e/tsconfig.json');
+      });
+
       it('removes e2e test node from angular.json', () => {
-        expect(testTree.readContent(ANGULAR_JSON)).not.toContain('froko-app-e2e');
+        expect(testTree.readContent(ANGULAR_JSON)).not.toContain('"e2e": {');
       });
 
       it('removes protractor packages from angular.json', () => {
@@ -190,7 +194,7 @@ describe('ng-essentials', () => {
       });
 
       it('removes karma config file', () => {
-        expect(testTree.files).not.toContain('/src/karma.conf.js');
+        expect(testTree.files).not.toContain('/karma.conf.js');
       });
 
       it('removes test typescript file', () => {
@@ -417,10 +421,22 @@ function createAngularJsonForFirstRun(tree: Tree): Tree {
           "architect": {
             "test": {
               "builder": "@angular-devkit/build-angular:dev-server"
+            },
+            "lint": {
+              "builder": "@angular-devkit/build-angular:tslint",
+              "options": {
+                "tsConfig": [
+                  "tsconfig.app.json",
+                  "tsconfig.spec.json",
+                  "e2e/tsconfig.json"
+                ]
+              }
+            },
+            "e2e": {
+              "builder": "@angular-devkit/build-angular:protractor"
             }
           }
-        },
-        "froko-app-e2e": {}
+        }
       },
       "defaultProject": "froko-app"
     }`
@@ -448,10 +464,18 @@ function createAngularJsonForSubsequentRun(tree: Tree): Tree {
           "architect": {
             "test": {
               "builder": "@angular-devkit/build-angular:dev-server"
+            },
+            "lint": {
+              "builder": "@angular-devkit/build-angular:tslint",
+              "options": {
+                "tsConfig": [
+                  "tsconfig.app.json",
+                  "tsconfig.spec.json"
+                ]
+              }
             }
           }
-        },
-        "froko-app-e2e": {}
+        }
       },
       "defaultProject": "froko-app"
     }`

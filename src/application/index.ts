@@ -2,6 +2,8 @@ import { SchematicContext, Tree, chain, Rule, externalSchematic, noop } from '@a
 
 import { AngularApplicationOptionsSchema } from './schema';
 
+import { ANGULAR_JSON } from '../constants';
+
 import {
   deleteFile,
   findNewProjectRootInAngularJson,
@@ -32,10 +34,10 @@ export default function(options: AngularApplicationOptionsSchema): Rule {
       const newProjectRoot = findNewProjectRootInAngularJson(tree);
       const applicationPath = `${newProjectRoot}/${applicationName}`;
       const applicationSourcePath = `${applicationPath}/src`;
-      const e2eTestPath = `${applicationPath}-e2e`;
 
       return chain([
         removeEndToEndTestNodeFromAngularJson(applicationName),
+        removeEndToEndTsConfigNodeFromAngularJson(applicationName, applicationPath),
         updateDevelopmentEnvironmentFile(applicationSourcePath),
         updateProductionEnvironmentFile(applicationSourcePath),
         addEnvProvidersToAppModule(applicationSourcePath),
@@ -49,4 +51,22 @@ export default function(options: AngularApplicationOptionsSchema): Rule {
       ]);
     }
   ]);
+}
+
+function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string, applicationPath: string): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+    const angularJson = JSON.parse(sourceText);
+
+    if (angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig']) {
+      angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig'] = [
+        `${applicationPath}/tsconfig.app.json`,
+        `${applicationPath}/tsconfig.spec.json`
+      ];
+    }
+
+    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
+
+    return host;
+  };
 }

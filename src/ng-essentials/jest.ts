@@ -26,7 +26,7 @@ export function addJest(options: NgEssentialsOptions): Rule {
       const defaultProjectName = findDefaultProjectNameInAngularJson(tree);
 
       return chain([
-        deleteFile('src/karma.conf.js'),
+        deleteFile('karma.conf.js'),
         deleteFile('src/test.ts'),
         addScriptToPackageJson('test', 'ng test'),
         removePackageFromPackageJson('devDependencies', '@types/jasmine'),

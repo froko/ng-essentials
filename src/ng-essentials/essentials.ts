@@ -17,7 +17,8 @@ import {
   removeAutomaticUpdateSymbols,
   addPackageToPackageJson,
   addScriptToPackageJson,
-  copyConfigFiles
+  copyConfigFiles,
+  deleteFile
 } from '../utils';
 
 export function addEssentials(options: NgEssentialsOptions): Rule {
@@ -33,8 +34,9 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
       return chain([
         addDefaultSchematicsToAngularJson(),
         addNgEssentialsToAngularJson(options),
+        removeEndToEndTsConfigNodeFromAngularJson(defaultProjectName),
         removeEndToEndTestNodeFromAngularJson(defaultProjectName),
-        removeEndToEndTestFiles('e2e'),
+        removeEndToEndTestFiles(),
         removePackageFromPackageJson('devDependencies', '@types/jasminewd2'),
         removePackageFromPackageJson('devDependencies', 'protractor'),
         removeScriptFromPackageJson('e2e'),
@@ -87,12 +89,30 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
   ]);
 }
 
-export function removeEndToEndTestFiles(e2ePath: string): Rule {
+function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string): Rule {
   return (host: Tree, _: SchematicContext) => {
-    host.delete(`${e2ePath}/src/app.e2e-spec.ts`);
-    host.delete(`${e2ePath}/src/app.po.ts`);
-    host.delete(`${e2ePath}/protractor.conf.js`);
-    host.delete(`${e2ePath}/tsconfig.json`);
+    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+    const angularJson = JSON.parse(sourceText);
+
+    if (angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig']) {
+      angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig'] = [
+        'tsconfig.app.json',
+        'tsconfig.spec.json'
+      ];
+    }
+
+    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
+
+    return host;
+  };
+}
+
+function removeEndToEndTestFiles(): Rule {
+  return (_: Tree, __: SchematicContext) => {
+    deleteFile('e2e/src/app.e2e-spec.ts');
+    deleteFile('e2e/src/app.po.ts');
+    deleteFile('e2e/protractor.conf.js');
+    deleteFile('e2e/tsconfig.json');
   };
 }
 
@@ -165,10 +185,6 @@ export function addEnvProvidersToAppModule(sourceDirectory: string): Rule {
 
 function addDefaultSchematicsToAngularJson(): Rule {
   return (host: Tree, _: SchematicContext) => {
-    if (!host.exists(ANGULAR_JSON)) {
-      return host;
-    }
-
     const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
     const angularJson = JSON.parse(sourceText);
 
@@ -188,19 +204,18 @@ function addDefaultSchematicsToAngularJson(): Rule {
 
 function addNgEssentialsToAngularJson(options: NgEssentialsOptions): Rule {
   return (host: Tree, _: SchematicContext) => {
-    if (!host.exists(ANGULAR_JSON)) {
-      return host;
-    }
-
     const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
     const angularJson = JSON.parse(sourceText);
-    const defaultProject = angularJson['defaultProject'];
 
-    if (angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS]) {
+    if (!angularJson['schematics']) {
+      angularJson['schematics'] = {};
+    }
+
+    if (angularJson['schematics'][NG_ESSENTIALS]) {
       return host;
     }
 
-    angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS] = {
+    angularJson['schematics'][NG_ESSENTIALS] = {
       jest: options.jest ? options.jest.valueOf() : false,
       cypress: options.cypress ? options.cypress.valueOf() : false,
       testcafe: options.testcafe ? options.testcafe.valueOf() : false,
@@ -215,10 +230,6 @@ function addNgEssentialsToAngularJson(options: NgEssentialsOptions): Rule {
 
 function addHuskyConfigToPackageJson(): Rule {
   return (host: Tree, _: SchematicContext) => {
-    if (!host.exists(PACKAGE_JSON)) {
-      return host;
-    }
-
     const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
     const packageJson = JSON.parse(sourceText);
 
@@ -238,10 +249,6 @@ function addHuskyConfigToPackageJson(): Rule {
 
 function editTsLintConfigJson(): Rule {
   return (host: Tree, _: SchematicContext) => {
-    if (!host.exists(TSLINT_JSON)) {
-      return host;
-    }
-
     const sourceText = host.read(TSLINT_JSON).toString('utf-8');
     const tslintJson = JSON.parse(sourceText);
 
@@ -255,7 +262,7 @@ function editTsLintConfigJson(): Rule {
       tslintJson['rules'] = {};
     }
 
-    const obsoloete = [
+    const obsolete = [
       'eofline',
       'import-spacing',
       'indent',
@@ -273,7 +280,7 @@ function editTsLintConfigJson(): Rule {
 
     tslintJson['rules'] = {
       ...Object.keys(tslintJson['rules'])
-        .filter(key => !obsoloete.includes(key))
+        .filter(key => !obsolete.includes(key))
         .reduce((obj, key) => {
           obj[key] = tslintJson['rules'][key];
           return obj;

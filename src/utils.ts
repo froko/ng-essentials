@@ -157,14 +157,31 @@ export function findJestOptionInAngularJson(host: Tree): boolean {
   return false;
 }
 
+export function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+    const angularJson = JSON.parse(sourceText);
+
+    if (angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig']) {
+      angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig'] = [
+        'tsconfig.app.json',
+        'tsconfig.spec.json'
+      ];
+    }
+
+    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
+
+    return host;
+  };
+}
+
 export function removeEndToEndTestNodeFromAngularJson(applicationName: string): Rule {
   return (host: Tree, _: SchematicContext) => {
     const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
     const angularJson = JSON.parse(sourceText);
-    const e2eTestProject = applicationName + '-e2e';
 
-    if (angularJson['projects'][e2eTestProject]) {
-      delete angularJson['projects'][e2eTestProject];
+    if (angularJson['projects'][applicationName]['architect']['e2e']) {
+      delete angularJson['projects'][applicationName]['architect']['e2e'];
     }
 
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
@@ -194,7 +211,9 @@ export function updateJson<T = any, O = T>(filePath: string, callback: (json: T)
 
 export function deleteFile(file: string) {
   return (host: Tree, _: SchematicContext) => {
-    host.delete(file);
+    if (host.exists(file)) {
+      host.delete(file);
+    }
 
     return host;
   };
