@@ -16,8 +16,7 @@ import {
 import {
   prepareTsAppOrLibConfigForJest,
   prepareTsSpecConfigForJest,
-  switchToJestBuilderInAngularJson,
-  copyJestConfig
+  switchToJestBuilderInAngularJson
 } from '../ng-essentials/jest';
 
 export default function(options: LibraryOptionsSchema): Rule {
@@ -40,8 +39,7 @@ export default function(options: LibraryOptionsSchema): Rule {
         hasJest ? deleteFile(`${libraryPath}/src/test.ts`) : noop(),
         hasJest ? prepareTsAppOrLibConfigForJest(libraryPath, 'lib') : noop(),
         hasJest ? prepareTsSpecConfigForJest(libraryPath) : noop(),
-        hasJest ? switchToJestBuilderInAngularJson(libraryName) : noop(),
-        hasJest ? copyJestConfig(libraryPath) : noop()
+        hasJest ? switchToJestBuilderInAngularJson(libraryName) : noop()
       ]);
     }
   ]);

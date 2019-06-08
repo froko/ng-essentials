@@ -56,7 +56,6 @@ describe('library', () => {
 
     beforeEach(async () => {
       appTree = createAngularJsonWithJestOption(appTree);
-      appTree = createJestConfig(appTree);
       testTree = await runSchematic('library', { name: libraryName }, appTree);
     });
 
@@ -80,12 +79,6 @@ describe('library', () => {
       expect(testTree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).toContain('commonjs');
     });
 
-    it('adds jest config in library folder', () => {
-      expect(testTree.readContent(`/libs/${dasherizedLibraryName}/jest.config.js`)).toContain(
-        '<rootDir>/src/setup-jest.ts'
-      );
-    });
-
     it('switches to jest builder in angular.json', () => {
       expect(testTree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
     });
@@ -101,13 +94,6 @@ function createAngularJsonWithoutJestOption(tree: Tree): Tree {
         "newProjectRoot": "libs",
         "projects": {
           "froko-app": {
-            "schematics": {
-              "@froko/ng-essentials": {
-                "jest": false,
-                "cypress": false,
-                "testcafe": false
-              }
-            },
             "architect": {
               "test": {
                 "builder": "@angular-devkit/build-angular:dev-server"
@@ -116,7 +102,14 @@ function createAngularJsonWithoutJestOption(tree: Tree): Tree {
           },
           "froko-app-e2e": {}
         },
-        "defaultProject": "froko-app"
+        "defaultProject": "froko-app",
+        "schematics": {
+          "@froko/ng-essentials": {
+            "jest": false,
+            "cypress": false,
+            "testcafe": false
+          }
+        }
       }`
   );
 
@@ -132,13 +125,6 @@ function createAngularJsonWithJestOption(tree: Tree): Tree {
         "newProjectRoot": "libs",
         "projects": {
           "froko-app": {
-            "schematics": {
-              "@froko/ng-essentials": {
-                "jest": true,
-                "cypress": false,
-                "testcafe": false
-              }
-            },
             "architect": {
               "test": {
                 "builder": "@angular-devkit/build-angular:dev-server"
@@ -147,7 +133,14 @@ function createAngularJsonWithJestOption(tree: Tree): Tree {
           },
           "froko-app-e2e": {}
         },
-        "defaultProject": "froko-app"
+        "defaultProject": "froko-app",
+        "schematics": {
+          "@froko/ng-essentials": {
+            "jest": true,
+            "cypress": false,
+            "testcafe": false
+          }
+        }
       }`
   );
 
@@ -202,19 +195,6 @@ function createPackageJson(tree: Tree): Tree {
           "typescript": "~2.9.2"
         }
     }`
-  );
-
-  return tree;
-}
-
-function createJestConfig(tree: Tree): Tree {
-  tree.create(
-    './src/jest.config.js',
-    `module.exports = {
-      preset: 'jest-preset-angular',
-      roots: [''],
-      setupTestFrameworkScriptFile: '<rootDir>/src/setup-jest.ts'
-    };`
   );
 
   return tree;

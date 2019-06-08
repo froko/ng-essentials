@@ -10,9 +10,9 @@ import {
 } from '@angular-devkit/schematics';
 import { strings } from '@angular-devkit/core';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { NodePackageInstallTaskOptions } from '@angular-devkit/schematics/tasks/node-package/install-task';
 
 import { PACKAGE_JSON, ANGULAR_JSON, NG_ESSENTIALS } from './constants';
-import { NodePackageInstallTaskOptions } from '@angular-devkit/schematics/tasks/node-package/install-task';
 
 export type DependencyType = 'dependencies' | 'devDependencies';
 
@@ -50,9 +50,8 @@ export function removePackageFromPackageJson(type: DependencyType, pkg: string):
 
     if (packageJson[type][pkg]) {
       delete packageJson[type][pkg];
+      host.overwrite(PACKAGE_JSON, JSON.stringify(packageJson, null, 2));
     }
-
-    host.overwrite(PACKAGE_JSON, JSON.stringify(packageJson, null, 2));
 
     return host;
   };
@@ -147,14 +146,28 @@ export function findNewProjectRootInAngularJson(host: Tree): string {
 export function findJestOptionInAngularJson(host: Tree): boolean {
   const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
   const angularJson = JSON.parse(sourceText);
-  const defaultProject = angularJson['defaultProject'];
-  const optionsFromAngularJson = angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS];
+  const optionsFromAngularJson = angularJson['schematics'][NG_ESSENTIALS];
 
   if (optionsFromAngularJson) {
     return optionsFromAngularJson.jest;
   }
 
   return false;
+}
+
+export function removeEndToEndTestNodeFromAngularJson(applicationName: string): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+    const angularJson = JSON.parse(sourceText);
+
+    if (angularJson['projects'][applicationName]['architect']['e2e']) {
+      delete angularJson['projects'][applicationName]['architect']['e2e'];
+    }
+
+    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
+
+    return host;
+  };
 }
 
 export function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string): Rule {
@@ -167,21 +180,6 @@ export function removeEndToEndTsConfigNodeFromAngularJson(applicationName: strin
         'tsconfig.app.json',
         'tsconfig.spec.json'
       ];
-    }
-
-    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
-
-    return host;
-  };
-}
-
-export function removeEndToEndTestNodeFromAngularJson(applicationName: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
-    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
-    const angularJson = JSON.parse(sourceText);
-
-    if (angularJson['projects'][applicationName]['architect']['e2e']) {
-      delete angularJson['projects'][applicationName]['architect']['e2e'];
     }
 
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));

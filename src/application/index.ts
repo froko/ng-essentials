@@ -21,8 +21,7 @@ import {
 import {
   prepareTsAppOrLibConfigForJest,
   prepareTsSpecConfigForJest,
-  switchToJestBuilderInAngularJson,
-  copyJestConfig
+  switchToJestBuilderInAngularJson
 } from '../ng-essentials/jest';
 
 export default function(options: AngularApplicationOptionsSchema): Rule {
@@ -38,6 +37,7 @@ export default function(options: AngularApplicationOptionsSchema): Rule {
       return chain([
         removeEndToEndTestNodeFromAngularJson(applicationName),
         removeEndToEndTsConfigNodeFromAngularJson(applicationName, applicationPath),
+        removeEndToEndTestFiles(applicationPath),
         updateDevelopmentEnvironmentFile(applicationSourcePath),
         updateProductionEnvironmentFile(applicationSourcePath),
         addEnvProvidersToAppModule(applicationSourcePath),
@@ -46,8 +46,7 @@ export default function(options: AngularApplicationOptionsSchema): Rule {
         hasJest ? deleteFile(`${applicationPath}/src/test.ts`) : noop(),
         hasJest ? prepareTsAppOrLibConfigForJest(applicationPath, 'app') : noop(),
         hasJest ? prepareTsSpecConfigForJest(applicationPath) : noop(),
-        hasJest ? switchToJestBuilderInAngularJson(applicationName) : noop(),
-        hasJest ? copyJestConfig(applicationPath) : noop()
+        hasJest ? switchToJestBuilderInAngularJson(applicationName) : noop()
       ]);
     }
   ]);
@@ -68,5 +67,14 @@ function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string, appl
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
 
     return host;
+  };
+}
+
+function removeEndToEndTestFiles(applicationPath: string): Rule {
+  return (_: Tree, __: SchematicContext) => {
+    deleteFile(`${applicationPath}/e2e/src/app.e2e-spec.ts`);
+    deleteFile(`${applicationPath}/e2e/src/app.po.ts`);
+    deleteFile(`${applicationPath}/e2e/protractor.conf.js`);
+    deleteFile(`${applicationPath}/e2e/tsconfig.json`);
   };
 }

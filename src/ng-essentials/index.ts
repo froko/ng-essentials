@@ -41,7 +41,7 @@ function readNgEssentialsOptionsFromAngularJson(host: Tree, options: NgEssential
   const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
   const angularJson = JSON.parse(sourceText);
   const defaultProject = angularJson['defaultProject'];
-  const optionsFromAngularJson = angularJson['projects'][defaultProject]['schematics'][NG_ESSENTIALS];
+  const optionsFromAngularJson = angularJson['schematics'][NG_ESSENTIALS];
 
   if (optionsFromAngularJson) {
     options.firstRun = false;

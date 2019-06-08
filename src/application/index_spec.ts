@@ -60,10 +60,6 @@ describe('application', () => {
       expect(testTree.readContent(`/libs/${appName}/tsconfig.spec.json`)).toContain('commonjs');
     });
 
-    it('adds jest config in application folder', () => {
-      expect(testTree.readContent(`/libs/${appName}/jest.config.js`)).toContain('<rootDir>/src/setup-jest.ts');
-    });
-
     it('switches to jest builder in angular.json', () => {
       expect(testTree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
     });
@@ -79,13 +75,6 @@ function createAngularJsonWithoutJestOption(tree: Tree): Tree {
         "newProjectRoot": "libs",
         "projects": {
           "froko-app": {
-            "schematics": {
-              "@froko/ng-essentials": {
-                "jest": false,
-                "cypress": false,
-                "testcafe": false
-              }
-            },
             "architect": {
               "test": {
                 "builder": "@angular-devkit/build-angular:dev-server"
@@ -94,7 +83,14 @@ function createAngularJsonWithoutJestOption(tree: Tree): Tree {
           },
           "froko-app-e2e": {}
         },
-        "defaultProject": "froko-app"
+        "defaultProject": "froko-app",
+        "schematics": {
+          "@froko/ng-essentials": {
+            "jest": false,
+            "cypress": false,
+            "testcafe": false
+          }
+        }
     }`
   );
 
@@ -110,13 +106,6 @@ function createAngularJsonWithJestOption(tree: Tree): Tree {
         "newProjectRoot": "libs",
         "projects": {
           "froko-app": {
-            "schematics": {
-              "@froko/ng-essentials": {
-                "jest": true,
-                "cypress": false,
-                "testcafe": false
-              }
-            },
             "architect": {
               "test": {
                 "builder": "@angular-devkit/build-angular:dev-server"
@@ -125,7 +114,14 @@ function createAngularJsonWithJestOption(tree: Tree): Tree {
           },
           "froko-app-e2e": {}
         },
-        "defaultProject": "froko-app"
+        "defaultProject": "froko-app",
+        "schematics": {
+          "@froko/ng-essentials": {
+            "jest": true,
+            "cypress": false,
+            "testcafe": false
+          }
+        }
       }`
   );
 

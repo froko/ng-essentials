@@ -15,34 +15,34 @@ export const essentials = {
   zoneVersion: '0.9.1',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.800.0',
+  buildAngularVersion: '0.800.2',
 
   // @angular/cli
-  cliVersion: '8.0.0',
+  cliVersion: '8.0.2',
 
   // @types/node
   nodeVersion: '11.13.0',
 
   // codelizer
-  codelizerVersion: '5.0.1',
+  codelizerVersion: '5.1.0',
 
   // ts-node
   tsNodeVersion: '8.2.0',
 
   // tslint
-  tsLintVersion: '5.16.0',
+  tsLintVersion: '5.17.0',
 
   // typescript
   typescriptVersion: '3.4.3',
 
   // husky
-  huskyVersion: '2.3.0',
+  huskyVersion: '2.4.0',
 
   // npm-run-all
   npmRunAllVersion: '4.1.5',
 
   // prettier
-  prettierVersion: '1.17.1',
+  prettierVersion: '1.18.2',
 
   // pretty-quick
   prettyQuickVersion: '1.11.0',
@@ -76,7 +76,7 @@ export const karma = {
 
 export const jest = {
   // @angular-builders/jest
-  jestBuilderVersion: '8.0.1',
+  jestBuilderVersion: '8.0.2',
 
   // @types/jest
   jestTypeVersion: '24.0.13',
@@ -89,6 +89,9 @@ export const jest = {
 
   // jest
   jestVersion: '24.8.0',
+
+  // jest-cli
+  jestCliVersion: '24.8.0',
 
   // jest-preset-angular
   angularPresetVersion: '7.1.1'
@@ -129,10 +132,10 @@ export const wallaby = {
 
 export const library = {
   // @angular-devkit/build-ng-packagr
-  buildNgPackagrVersion: '0.800.0',
+  buildNgPackagrVersion: '0.800.2',
 
   // ng-packagr
-  ngPackagrVersion: '5.2.0',
+  ngPackagrVersion: '5.3.0',
 
   // tsickle
   tsickleVersion: '0.35.0'

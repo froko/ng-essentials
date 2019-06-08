@@ -1,7 +1,5 @@
 import 'jest-preset-angular';
 
-global['CSS'] = null;
-
 const mock = () => {
   let storage = {};
   return {

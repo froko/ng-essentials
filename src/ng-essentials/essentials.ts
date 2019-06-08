@@ -267,6 +267,7 @@ function editTsLintConfigJson(): Rule {
       'import-spacing',
       'indent',
       'max-line-length',
+      'no-use-before-declare',
       'no-trailing-whitespace',
       'one-line',
       'quotemark',

@@ -240,10 +240,6 @@ describe('ng-essentials', () => {
       it('adds jest setup file', () => {
         expect(testTree.files).toContain('/src/setup-jest.ts');
       });
-
-      it('adds jest config to package.json', () => {
-        expect(testTree.readContent(PACKAGE_JSON)).toContain('<rootDir>/src/setup-jest.ts');
-      });
     });
 
     describe('with cypress option', () => {
@@ -417,7 +413,6 @@ function createAngularJsonForFirstRun(tree: Tree): Tree {
       "version": 1,
       "projects": {
         "froko-app": {
-          "schematics": {},
           "architect": {
             "test": {
               "builder": "@angular-devkit/build-angular:dev-server"
@@ -438,7 +433,8 @@ function createAngularJsonForFirstRun(tree: Tree): Tree {
           }
         }
       },
-      "defaultProject": "froko-app"
+      "defaultProject": "froko-app",
+      "schematics": {}
     }`
   );
 
@@ -453,14 +449,6 @@ function createAngularJsonForSubsequentRun(tree: Tree): Tree {
       "version": 1,
       "projects": {
         "froko-app": {
-          "schematics": {
-            "@froko/ng-essentials": {
-              "jest": true,
-              "cypress": true,
-              "testcafe": true,
-              "wallaby": true
-            }
-          },
           "architect": {
             "test": {
               "builder": "@angular-devkit/build-angular:dev-server"
@@ -477,7 +465,15 @@ function createAngularJsonForSubsequentRun(tree: Tree): Tree {
           }
         }
       },
-      "defaultProject": "froko-app"
+      "defaultProject": "froko-app",
+      "schematics": {
+        "@froko/ng-essentials": {
+          "jest": true,
+          "cypress": true,
+          "testcafe": true,
+          "wallaby": true
+        }
+      }
     }`
   );
 
