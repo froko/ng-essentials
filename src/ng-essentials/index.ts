@@ -34,13 +34,13 @@ export default function(options: NgEssentialsOptions): Rule {
 function readNgEssentialsOptionsFromAngularJson(host: Tree, options: NgEssentialsOptions): NgEssentialsOptions {
   options.firstRun = true;
 
-  if (!host.exists(ANGULAR_JSON)) {
+  const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+  const angularJson = JSON.parse(sourceText);
+
+  if (!angularJson['schematics']) {
     return options;
   }
 
-  const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
-  const angularJson = JSON.parse(sourceText);
-  const defaultProject = angularJson['defaultProject'];
   const optionsFromAngularJson = angularJson['schematics'][NG_ESSENTIALS];
 
   if (optionsFromAngularJson) {

@@ -187,7 +187,7 @@ getTestBed().initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDyn
 }
 
 function editTsConfigAppJson(): Rule {
-  return updateJson(tsconfigFilePath('src', 'app'), json => {
+  return updateJson(tsconfigFilePath('.', 'app'), json => {
     return {
       ...json,
       exclude: ['test.ts', 'wallabyTest.ts', '**/*.spec.ts']

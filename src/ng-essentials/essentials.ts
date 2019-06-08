@@ -50,7 +50,6 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('dependencies', '@angular/platform-browser', essentials.angularVersion),
         addPackageToPackageJson('dependencies', '@angular/platform-browser-dynamic', essentials.angularVersion),
         addPackageToPackageJson('dependencies', '@angular/router', essentials.angularVersion),
-        addPackageToPackageJson('dependencies', 'core-js', essentials.coreJsVersion),
         addPackageToPackageJson('dependencies', 'tslib', essentials.tslibVersion),
         addPackageToPackageJson('dependencies', 'rxjs', essentials.rxjsVersion),
         addPackageToPackageJson('dependencies', 'zone.js', essentials.zoneVersion),

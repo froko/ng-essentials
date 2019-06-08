@@ -2,9 +2,6 @@ export const essentials = {
   // Angular base version
   angularVersion: '8.0.0',
 
-  // core-js
-  coreJsVersion: '3.1.3',
-
   // tslib
   tslibVersion: '1.9.3',
 

@@ -18,8 +18,8 @@ describe('ng-essentials', () => {
     appTree = createProductionEnvironmentFile(appTree);
     appTree = createKarmaConfig(appTree);
     appTree = createTestTypescriptFile(appTree);
-    appTree = createTsConfigAppInSrcDirectory(appTree);
-    appTree = createTsConfigSpecInSrcDirectory(appTree);
+    appTree = createTsConfigApp(appTree);
+    appTree = createTsConfigSpec(appTree);
     appTree = createEndToEndTestingFiles(appTree);
   });
 
@@ -81,7 +81,6 @@ describe('ng-essentials', () => {
           `"@angular/platform-browser-dynamic": "${essentials.angularVersion}"`
         );
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/router": "${essentials.angularVersion}"`);
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"core-js": "${essentials.coreJsVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"tslib": "${essentials.tslibVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"rxjs": "${essentials.rxjsVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"zone.js": "${essentials.zoneVersion}"`);
@@ -212,6 +211,7 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"babel-core": "${jest.babelCoreVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"babel-jest": "${jest.babelJestVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jest": "${jest.jestVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jest-cli": "${jest.jestCliVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jest-preset-angular": "${jest.angularPresetVersion}"`);
       });
 
@@ -219,16 +219,16 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
       });
 
-      it('updates application typescript config file in src folder', () => {
-        expect(testTree.readContent('src/tsconfig.app.json')).not.toContain('test.ts');
+      it('updates application typescript config file', () => {
+        expect(testTree.readContent('tsconfig.app.json')).not.toContain('test.ts');
       });
 
-      it('updates spec typescript config file in src folder', () => {
-        expect(testTree.readContent('/src/tsconfig.spec.json')).not.toContain('files');
-        expect(testTree.readContent('/src/tsconfig.spec.json')).not.toContain('jasmine');
+      it('updates spec typescript config file', () => {
+        expect(testTree.readContent('tsconfig.spec.json')).not.toContain('files');
+        expect(testTree.readContent('tsconfig.spec.json')).not.toContain('jasmine');
 
-        expect(testTree.readContent('/src/tsconfig.spec.json')).toContain('jest');
-        expect(testTree.readContent('/src/tsconfig.spec.json')).toContain('commonjs');
+        expect(testTree.readContent('tsconfig.spec.json')).toContain('jest');
+        expect(testTree.readContent('tsconfig.spec.json')).toContain('commonjs');
       });
 
       it('adds launch.json with debug option for jest', () => {
@@ -316,7 +316,7 @@ describe('ng-essentials', () => {
       });
 
       it('adds wallabyTest.ts in tsconfig.app', () => {
-        expect(testTree.readContent('src/tsconfig.app.json')).toContain('wallabyTest.ts');
+        expect(testTree.readContent('tsconfig.app.json')).toContain('wallabyTest.ts');
       });
     });
 
@@ -331,7 +331,7 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"ngx-wallaby-jest": "${wallaby.wallabyJest}"`);
       });
 
-      it('adds wallaby.js file with jasmine support', () => {
+      it('adds wallaby.js file with jest support', () => {
         expect(testTree.files).toContain('/wallaby.js');
         expect(testTree.readContent('/wallaby.js')).toContain('jest');
       });
@@ -433,8 +433,7 @@ function createAngularJsonForFirstRun(tree: Tree): Tree {
           }
         }
       },
-      "defaultProject": "froko-app",
-      "schematics": {}
+      "defaultProject": "froko-app"
     }`
   );
 
@@ -589,9 +588,9 @@ function createTestTypescriptFile(tree: Tree): Tree {
   return tree;
 }
 
-function createTsConfigAppInSrcDirectory(tree: Tree): Tree {
+function createTsConfigApp(tree: Tree): Tree {
   tree.create(
-    'src/tsconfig.app.json',
+    'tsconfig.app.json',
     `{
       "extends": "../tsconfig.json",
       "compilerOptions": {
@@ -608,9 +607,9 @@ function createTsConfigAppInSrcDirectory(tree: Tree): Tree {
   return tree;
 }
 
-function createTsConfigSpecInSrcDirectory(tree: Tree): Tree {
+function createTsConfigSpec(tree: Tree): Tree {
   tree.create(
-    '/src/tsconfig.spec.json',
+    'tsconfig.spec.json',
     `{
       "extends": "../tsconfig.json",
       "compilerOptions": {
