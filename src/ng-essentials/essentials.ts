@@ -11,7 +11,7 @@ import { essentials } from '../versions';
 import {
   findDefaultProjectNameInAngularJson,
   findNewProjectRootInAngularJson,
-  removeEndToEndTestNodeFromAngularJson,
+  removeArchitectNodeFromAngularJson,
   removePackageFromPackageJson,
   removeScriptFromPackageJson,
   removeAutomaticUpdateSymbols,
@@ -35,7 +35,7 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         addDefaultSchematicsToAngularJson(),
         addNgEssentialsToAngularJson(options),
         removeEndToEndTsConfigNodeFromAngularJson(defaultProjectName),
-        removeEndToEndTestNodeFromAngularJson(defaultProjectName),
+        removeArchitectNodeFromAngularJson(defaultProjectName, 'e2e'),
         removeEndToEndTestFiles(),
         removePackageFromPackageJson('devDependencies', '@types/jasminewd2'),
         removePackageFromPackageJson('devDependencies', 'protractor'),

@@ -155,13 +155,13 @@ export function findJestOptionInAngularJson(host: Tree): boolean {
   return false;
 }
 
-export function removeEndToEndTestNodeFromAngularJson(applicationName: string): Rule {
+export function removeArchitectNodeFromAngularJson(applicationName: string, node: string): Rule {
   return (host: Tree, _: SchematicContext) => {
     const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
     const angularJson = JSON.parse(sourceText);
 
-    if (angularJson['projects'][applicationName]['architect']['e2e']) {
-      delete angularJson['projects'][applicationName]['architect']['e2e'];
+    if (angularJson['projects'][applicationName]['architect'][node]) {
+      delete angularJson['projects'][applicationName]['architect'][node];
     }
 
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));

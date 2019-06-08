@@ -8,7 +8,7 @@ import {
   deleteFile,
   findNewProjectRootInAngularJson,
   findJestOptionInAngularJson,
-  removeEndToEndTestNodeFromAngularJson,
+  removeArchitectNodeFromAngularJson,
   removePackageFromPackageJson
 } from '../utils';
 
@@ -18,11 +18,7 @@ import {
   addEnvProvidersToAppModule
 } from '../ng-essentials/essentials';
 
-import {
-  prepareTsAppOrLibConfigForJest,
-  prepareTsSpecConfigForJest,
-  switchToJestBuilderInAngularJson
-} from '../ng-essentials/jest';
+import { prepareTsAppOrLibConfigForJest, prepareTsSpecConfigForJest } from '../ng-essentials/jest';
 
 export default function(options: AngularApplicationOptionsSchema): Rule {
   return chain([
@@ -35,18 +31,18 @@ export default function(options: AngularApplicationOptionsSchema): Rule {
       const applicationSourcePath = `${applicationPath}/src`;
 
       return chain([
-        removeEndToEndTestNodeFromAngularJson(applicationName),
+        removeArchitectNodeFromAngularJson(applicationName, 'e2e'),
         removeEndToEndTsConfigNodeFromAngularJson(applicationName, applicationPath),
         removeEndToEndTestFiles(applicationPath),
         updateDevelopmentEnvironmentFile(applicationSourcePath),
         updateProductionEnvironmentFile(applicationSourcePath),
         addEnvProvidersToAppModule(applicationSourcePath),
         removePackageFromPackageJson('devDependencies', 'tslib'),
+        hasJest ? removeArchitectNodeFromAngularJson(applicationName, 'test') : noop(),
         hasJest ? deleteFile(`${applicationPath}/karma.conf.js`) : noop(),
         hasJest ? deleteFile(`${applicationPath}/src/test.ts`) : noop(),
         hasJest ? prepareTsAppOrLibConfigForJest(applicationPath, 'app') : noop(),
-        hasJest ? prepareTsSpecConfigForJest(applicationPath) : noop(),
-        hasJest ? switchToJestBuilderInAngularJson(applicationName) : noop()
+        hasJest ? prepareTsSpecConfigForJest(applicationPath) : noop()
       ]);
     }
   ]);
@@ -71,10 +67,10 @@ function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string, appl
 }
 
 function removeEndToEndTestFiles(applicationPath: string): Rule {
-  return (_: Tree, __: SchematicContext) => {
-    deleteFile(`${applicationPath}/e2e/src/app.e2e-spec.ts`);
-    deleteFile(`${applicationPath}/e2e/src/app.po.ts`);
-    deleteFile(`${applicationPath}/e2e/protractor.conf.js`);
-    deleteFile(`${applicationPath}/e2e/tsconfig.json`);
+  return (host: Tree, __: SchematicContext) => {
+    host.delete(`${applicationPath}/e2e/src/app.e2e-spec.ts`);
+    host.delete(`${applicationPath}/e2e/src/app.po.ts`);
+    host.delete(`${applicationPath}/e2e/protractor.conf.js`);
+    host.delete(`${applicationPath}/e2e/tsconfig.json`);
   };
 }

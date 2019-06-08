@@ -58,7 +58,7 @@ export function prepareTsAppOrLibConfigForJest(rootPath: string, context: AppOrL
   return updateJson(tsconfigFilePath(rootPath, context), json => {
     return {
       ...json,
-      exclude: ['**/*.spec.ts', 'setup-jest.ts']
+      exclude: ['**/*.spec.ts', 'src/setup-jest.ts']
     };
   });
 }

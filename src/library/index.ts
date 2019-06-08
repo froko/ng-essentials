@@ -10,14 +10,11 @@ import {
   deleteFile,
   findNewProjectRootInAngularJson,
   findJestOptionInAngularJson,
-  removePackageFromPackageJson
+  removePackageFromPackageJson,
+  removeArchitectNodeFromAngularJson
 } from '../utils';
 
-import {
-  prepareTsAppOrLibConfigForJest,
-  prepareTsSpecConfigForJest,
-  switchToJestBuilderInAngularJson
-} from '../ng-essentials/jest';
+import { prepareTsAppOrLibConfigForJest, prepareTsSpecConfigForJest } from '../ng-essentials/jest';
 
 export default function(options: LibraryOptionsSchema): Rule {
   return chain([
@@ -35,11 +32,11 @@ export default function(options: LibraryOptionsSchema): Rule {
         addPackageToPackageJson('devDependencies', 'ng-packagr', library.ngPackagrVersion),
         addPackageToPackageJson('devDependencies', 'tsickle', library.tsickleVersion),
         removePackageFromPackageJson('devDependencies', 'tslib'),
+        hasJest ? removeArchitectNodeFromAngularJson(libraryName, 'test') : noop(),
         hasJest ? deleteFile(`${libraryPath}/karma.conf.js`) : noop(),
         hasJest ? deleteFile(`${libraryPath}/src/test.ts`) : noop(),
         hasJest ? prepareTsAppOrLibConfigForJest(libraryPath, 'lib') : noop(),
-        hasJest ? prepareTsSpecConfigForJest(libraryPath) : noop(),
-        hasJest ? switchToJestBuilderInAngularJson(libraryName) : noop()
+        hasJest ? prepareTsSpecConfigForJest(libraryPath) : noop()
       ]);
     }
   ]);

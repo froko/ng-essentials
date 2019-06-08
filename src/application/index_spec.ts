@@ -29,6 +29,13 @@ describe('application', () => {
       expect(testTree.files).toContain(`/libs/${appName}/tslint.json`);
       expect(testTree.files).toContain(`/libs/${appName}/src/test.ts`);
     });
+
+    it('removes e2e files from the origina @angular/schematics command', () => {
+      expect(testTree.files).not.toContain(`/libs/${appName}/e2e/tsconfig.json`);
+      expect(testTree.files).not.toContain(`/libs/${appName}/e2e/protractor.conf.js`);
+      expect(testTree.files).not.toContain(`/libs/${appName}/e2e/src/app.e2e-spec.ts`);
+      expect(testTree.files).not.toContain(`/libs/${appName}/e2e/src/app.po.ts`);
+    });
   });
 
   describe('when creating a new application with jest option', () => {
@@ -36,7 +43,6 @@ describe('application', () => {
 
     beforeEach(async () => {
       appTree = createAngularJsonWithJestOption(appTree);
-      appTree = createJestConfig(new UnitTestTree(appTree));
       testTree = await runSchematic('application', { name: appName }, appTree);
     });
 
@@ -46,6 +52,10 @@ describe('application', () => {
 
     it('removes test typescript file of application', () => {
       expect(testTree.files).not.toContain(`/libs/${appName}/src/test.ts`);
+    });
+
+    it('removes test node in angular.json', () => {
+      expect(testTree.readContent(ANGULAR_JSON)).not.toContain('test');
     });
 
     it('updates application typescript config file in src folder', () => {
@@ -59,10 +69,6 @@ describe('application', () => {
       expect(testTree.readContent(`/libs/${appName}/tsconfig.spec.json`)).toContain('jest');
       expect(testTree.readContent(`/libs/${appName}/tsconfig.spec.json`)).toContain('commonjs');
     });
-
-    it('switches to jest builder in angular.json', () => {
-      expect(testTree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
-    });
   });
 });
 
@@ -74,21 +80,12 @@ function createAngularJsonWithoutJestOption(tree: Tree): Tree {
         "version": 1,
         "newProjectRoot": "libs",
         "projects": {
-          "froko-app": {
-            "architect": {
-              "test": {
-                "builder": "@angular-devkit/build-angular:dev-server"
-              }
-            }
-          },
-          "froko-app-e2e": {}
+          "froko-app": {}
         },
         "defaultProject": "froko-app",
         "schematics": {
           "@froko/ng-essentials": {
-            "jest": false,
-            "cypress": false,
-            "testcafe": false
+            "jest": false
           }
         }
     }`
@@ -105,21 +102,12 @@ function createAngularJsonWithJestOption(tree: Tree): Tree {
         "version": 1,
         "newProjectRoot": "libs",
         "projects": {
-          "froko-app": {
-            "architect": {
-              "test": {
-                "builder": "@angular-devkit/build-angular:dev-server"
-              }
-            }
-          },
-          "froko-app-e2e": {}
+          "froko-app": {}
         },
         "defaultProject": "froko-app",
         "schematics": {
           "@froko/ng-essentials": {
-            "jest": true,
-            "cypress": false,
-            "testcafe": false
+            "jest": true
           }
         }
       }`
@@ -176,19 +164,6 @@ function createPackageJson(tree: Tree): Tree {
           "typescript": "~2.9.2"
         }
       }`
-  );
-
-  return tree;
-}
-
-function createJestConfig(tree: Tree): Tree {
-  tree.create(
-    './src/jest.config.js',
-    `module.exports = {
-      preset: 'jest-preset-angular',
-      roots: [''],
-      setupTestFrameworkScriptFile: '<rootDir>/src/setup-jest.ts'
-    };`
   );
 
   return tree;
