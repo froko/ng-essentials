@@ -43,6 +43,7 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(ANGULAR_JSON)).toContain('"jest": false');
         expect(testTree.readContent(ANGULAR_JSON)).toContain('"cypress": false');
         expect(testTree.readContent(ANGULAR_JSON)).toContain('"testcafe": false');
+        expect(testTree.readContent(ANGULAR_JSON)).toContain('"wallaby": false');
       });
 
       it('removes e2e tsconfig.json in linting options from angular.json', () => {
