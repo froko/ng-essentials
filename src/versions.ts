@@ -1,21 +1,21 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '8.0.0',
-
-  // tslib
-  tslibVersion: '1.9.3',
+  angularVersion: '8.0.3',
 
   // rxjs
   rxjsVersion: '6.5.2',
+
+  // tslib
+  tslibVersion: '1.10.0',
 
   // zone.js
   zoneVersion: '0.9.1',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.800.2',
+  buildAngularVersion: '0.800.6',
 
   // @angular/cli
-  cliVersion: '8.0.2',
+  cliVersion: '8.0.6',
 
   // @types/node
   nodeVersion: '11.13.0',
@@ -24,16 +24,16 @@ export const essentials = {
   codelizerVersion: '5.1.0',
 
   // ts-node
-  tsNodeVersion: '8.2.0',
+  tsNodeVersion: '8.3.0',
 
   // tslint
-  tsLintVersion: '5.17.0',
+  tsLintVersion: '5.18.0',
 
   // typescript
   typescriptVersion: '3.4.3',
 
   // husky
-  huskyVersion: '2.4.0',
+  huskyVersion: '2.7.0',
 
   // npm-run-all
   npmRunAllVersion: '4.1.5',
@@ -42,7 +42,7 @@ export const essentials = {
   prettierVersion: '1.18.2',
 
   // pretty-quick
-  prettyQuickVersion: '1.11.0',
+  prettyQuickVersion: '1.11.1',
 
   // tslint-config-prettier
   tsLintConfigPrettierVersion: '1.18.0'
@@ -73,10 +73,10 @@ export const karma = {
 
 export const jest = {
   // @angular-builders/jest
-  jestBuilderVersion: '8.0.2',
+  jestBuilderVersion: '8.0.3',
 
   // @types/jest
-  jestTypeVersion: '24.0.13',
+  jestTypeVersion: '24.0.15',
 
   // babel-core
   babelCoreVersion: '6.26.3',
@@ -99,7 +99,7 @@ export const cypress = {
   preprocessorVersion: '4.0.3',
 
   // cypress
-  cypressVersion: '3.3.1',
+  cypressVersion: '3.3.2',
 
   // ts-loader
   tsLoaderVersion: '5.3.3'
@@ -129,7 +129,7 @@ export const wallaby = {
 
 export const library = {
   // @angular-devkit/build-ng-packagr
-  buildNgPackagrVersion: '0.800.2',
+  buildNgPackagrVersion: '0.800.6',
 
   // ng-packagr
   ngPackagrVersion: '5.3.0',
