@@ -9,7 +9,7 @@ export const essentials = {
   tslibVersion: '1.10.0',
 
   // zone.js
-  zoneVersion: '0.10.1',
+  zoneVersion: '0.9.1',
 
   // @angular-devkit/build-angular
   buildAngularVersion: '0.802.1',
