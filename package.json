@@ -31,7 +31,8 @@
     "testRegex": "(/__tests__/.*|(\\.|/|_)(test|spec))\\.(tsx?)$",
     "testPathIgnorePatterns": [
       "<rootDir>/.*/(files|jest|cypress|testcafe)",
-      "<rootDir>/node_modules/"
+      "<rootDir>/node_modules/",
+      "<rootDir>/sandbox/"
     ],
     "moduleFileExtensions": [
       "ts",
