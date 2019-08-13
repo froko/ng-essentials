@@ -1,6 +1,6 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '8.1.2',
+  angularVersion: '8.2.2',
 
   // rxjs
   rxjsVersion: '6.5.2',
@@ -9,13 +9,13 @@ export const essentials = {
   tslibVersion: '1.10.0',
 
   // zone.js
-  zoneVersion: '0.9.1',
+  zoneVersion: '0.10.1',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.801.2',
+  buildAngularVersion: '0.802.1',
 
   // @angular/cli
-  cliVersion: '8.1.2',
+  cliVersion: '8.2.1',
 
   // @types/node
   nodeVersion: '11.13.0',
@@ -30,10 +30,10 @@ export const essentials = {
   tsLintVersion: '5.18.0',
 
   // typescript
-  typescriptVersion: '3.4.3',
+  typescriptVersion: '3.5.3',
 
   // husky
-  huskyVersion: '3.0.0',
+  huskyVersion: '3.0.3',
 
   // npm-run-all
   npmRunAllVersion: '4.1.5',
@@ -50,7 +50,7 @@ export const essentials = {
 
 export const karma = {
   // @types/jasmine
-  jasmineTypeVersion: '3.3.13',
+  jasmineTypeVersion: '3.4.0',
 
   // jasmine-core
   jasmineCoreVersion: '3.4.0',
@@ -62,7 +62,7 @@ export const karma = {
   chromeLauncherVersion: '3.0.0',
 
   // karma-coverage-istanbul-reporter
-  coverageReporterVersion: '2.0.5',
+  coverageReporterVersion: '2.1.0',
 
   // karma-jasmine
   karmaJasmineVersion: '2.0.1',
@@ -76,7 +76,7 @@ export const jest = {
   jestBuilderVersion: '8.0.4',
 
   // @types/jest
-  jestTypeVersion: '24.0.15',
+  jestTypeVersion: '24.0.17',
 
   // babel-core
   babelCoreVersion: '6.26.3',
@@ -99,7 +99,7 @@ export const cypress = {
   preprocessorVersion: '4.0.3',
 
   // cypress
-  cypressVersion: '3.4.0',
+  cypressVersion: '3.4.1',
 
   // ts-loader
   tsLoaderVersion: '5.3.3'
@@ -107,13 +107,10 @@ export const cypress = {
 
 export const testcafe = {
   // testcafe
-  testcafeVersion: '0.23.3',
+  testcafeVersion: '1.4.0',
 
   // testcafe-angular-selectors
-  angularSelectorsVersion: '0.3.2',
-
-  // testcafe-live
-  liveVersion: '0.1.4'
+  angularSelectorsVersion: '0.3.2'
 };
 
 export const wallaby = {
@@ -129,10 +126,10 @@ export const wallaby = {
 
 export const library = {
   // @angular-devkit/build-ng-packagr
-  buildNgPackagrVersion: '0.801.2',
+  buildNgPackagrVersion: '0.802.1',
 
   // ng-packagr
-  ngPackagrVersion: '5.3.0',
+  ngPackagrVersion: '5.4.3',
 
   // tsickle
   tsickleVersion: '0.36.0'

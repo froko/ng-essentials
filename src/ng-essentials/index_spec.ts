@@ -285,7 +285,6 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain(
           `"testcafe-angular-selectors": "${testcafe.angularSelectorsVersion}"`
         );
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"testcafe-live": "${testcafe.liveVersion}"`);
       });
 
       it('adds testcafe files', () => {
