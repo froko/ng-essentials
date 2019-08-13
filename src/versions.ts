@@ -91,7 +91,10 @@ export const jest = {
   jestCliVersion: '24.8.0',
 
   // jest-preset-angular
-  angularPresetVersion: '7.1.1'
+  angularPresetVersion: '7.1.1',
+
+  // tsconfig-paths-jest
+  tsconfigPathsJestVersion: '0.0.1'
 };
 
 export const cypress = {

@@ -1,5 +1,9 @@
+const tsconfig = require('./tsconfig.json');
+const moduleNameMapper = require('tsconfig-paths-jest')(tsconfig);
+
 module.exports = {
   preset: 'jest-preset-angular',
   roots: [''],
-  setupFilesAfterEnv: ['<rootDir>/src/setup-jest.ts']
+  setupFilesAfterEnv: ['<rootDir>/src/setup-jest.ts'],
+  moduleNameMapper
 };

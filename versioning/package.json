@@ -50,6 +50,7 @@
     "testcafe-angular-selectors": "0.3.2",
     "testcafe-live": "0.1.4",
     "ts-node": "8.3.0",
+    "tsconfig-paths-jest": "0.0.1",
     "tsickle": "0.36.0",
     "tslint": "5.18.0",
     "tslint-config-prettier": "1.18.0",

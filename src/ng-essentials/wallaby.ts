@@ -53,7 +53,7 @@ module.exports = function(wallaby) {
       runner: 'node'
     },
     compilers: {
-      '**/*.ts?(x)': wallaby.compilers.typeScript({ module: 'commonjs' })
+      '**/*.ts?(x)': wallaby.compilers.typeScript({ module: 'commonjs', emitDecoratorMetadata: true })
     },
     preprocessors: {
       'src/**/*.component.ts': ngxWallabyJest,
