@@ -112,7 +112,6 @@ describe('ng-essentials', () => {
 
       it('adds additional scripts in package.json', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain('format');
-        expect(testTree.readContent(PACKAGE_JSON)).toContain('format:check');
         expect(testTree.readContent(PACKAGE_JSON)).toContain('format:fix');
       });
 

@@ -6,7 +6,7 @@ import * as ts from 'typescript';
 
 import { NgEssentialsOptions } from './schema';
 
-import { ANGULAR_JSON, NG_ESSENTIALS, TSLINT_JSON, PACKAGE_JSON } from '../constants';
+import { ANGULAR_JSON, NG_ESSENTIALS, TSLINT_JSON, PACKAGE_JSON, TSCONFIG_JSON } from '../constants';
 import { essentials } from '../versions';
 import {
   findDefaultProjectNameInAngularJson,
@@ -18,7 +18,8 @@ import {
   addPackageToPackageJson,
   addScriptToPackageJson,
   copyConfigFiles,
-  deleteFile
+  deleteFile,
+  updateJson
 } from '../utils';
 
 export function addEssentials(options: NgEssentialsOptions): Rule {
@@ -71,16 +72,13 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
           'format',
           `prettier --write "{src,${defaultProjectRoot}}/**/*{.ts,.js,.json,.css,.scss}"`
         ),
-        addScriptToPackageJson(
-          'format:check',
-          `prettier --list-different "{src,${defaultProjectRoot}}/**/*{.ts,.js,.json,.css,.scss}"`
-        ),
         addScriptToPackageJson('format:fix', 'pretty-quick --staged'),
         updateDevelopmentEnvironmentFile('src'),
         updateProductionEnvironmentFile('src'),
         addEnvProvidersToAppModule('src'),
         addHuskyConfigToPackageJson(),
         editTsLintConfigJson(),
+        editTsConfigJson(),
         createLaunchJson(options),
         copyConfigFiles('./essentials')
       ]);
@@ -296,6 +294,20 @@ function editTsLintConfigJson(): Rule {
 
     return host;
   };
+}
+
+function editTsConfigJson(): Rule {
+  return updateJson(TSCONFIG_JSON, json => {
+    const compilerOptions = json['compilerOptions'];
+
+    return {
+      ...json,
+      compilerOptions: {
+        ...compilerOptions,
+        paths: {}
+      }
+    };
+  });
 }
 
 function createLaunchJson(options: NgEssentialsOptions): Rule {
