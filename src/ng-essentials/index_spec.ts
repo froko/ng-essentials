@@ -125,7 +125,8 @@ describe('ng-essentials', () => {
       });
 
       it('updates global tslint.json', () => {
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"tslint:latest"');
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"tslint:recommended"');
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"tslint-eslint-rules"');
         expect(testTree.readContent(TSLINT_JSON)).toContain('"tslint-config-prettier"');
 
         expect(testTree.readContent(TSLINT_JSON)).not.toContain('eofline');

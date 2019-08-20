@@ -67,6 +67,7 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('devDependencies', 'npm-run-all', essentials.npmRunAllVersion),
         addPackageToPackageJson('devDependencies', 'prettier', essentials.prettierVersion),
         addPackageToPackageJson('devDependencies', 'pretty-quick', essentials.prettyQuickVersion),
+        addPackageToPackageJson('devDependencies', 'tslint-eslint-rules', essentials.tsLintEsLintRulesVersion),
         addPackageToPackageJson('devDependencies', 'tslint-config-prettier', essentials.tsLintConfigPrettierVersion),
         addScriptToPackageJson(
           'format',
@@ -249,15 +250,7 @@ function editTsLintConfigJson(): Rule {
     const sourceText = host.read(TSLINT_JSON).toString('utf-8');
     const tslintJson = JSON.parse(sourceText);
 
-    if (!tslintJson['extends']) {
-      tslintJson['extends'] = [];
-    }
-
-    tslintJson['extends'] = ['tslint:latest', 'tslint-config-prettier'];
-
-    if (!tslintJson['rules']) {
-      tslintJson['rules'] = {};
-    }
+    tslintJson['extends'] = ['tslint:recommended', 'tslint-eslint-rules', 'tslint-config-prettier'];
 
     const obsolete = [
       'eofline',
@@ -283,11 +276,64 @@ function editTsLintConfigJson(): Rule {
           obj[key] = tslintJson['rules'][key];
           return obj;
         }, {}),
-      ['jsdoc-format']: false,
+      ['align']: true,
+      ['no-conditional-assignment']: true,
+      ['no-consecutive-blank-lines']: true,
       ['no-implicit-dependencies']: false,
+      ['no-string-literal']: true,
       ['no-submodule-imports']: false,
-      ['interface-name']: [true, 'never-prefix'],
-      ['ordered-imports']: true
+      ['jsdoc-format']: false,
+      ['one-line']: [true, 'check-open-brace'],
+      ['only-arrow-functions']: [true, 'allow-named-functions'],
+      ['prefer-for-of']: true,
+      ['prefer-object-spread']: true,
+      ['trailing-comma']: [
+        false,
+        {
+          multiline: 'always',
+          singleline: 'never'
+        }
+      ],
+      ['variable-name']: [true, 'allow-pascal-case', 'ban-keywords', 'check-format'],
+      ['ordered-imports']: [
+        true,
+        {
+          'grouped-imports': true,
+          groups: [
+            {
+              name: 'app',
+              match: '^@app',
+              order: 20
+            },
+            {
+              name: 'shared-lib',
+              match: '^@shared-lib',
+              order: 20
+            },
+            {
+              name: 'relative_paths',
+              match: '^[.][.]?',
+              order: 20
+            },
+            {
+              name: 'scoped_paths',
+              match: '^@',
+              order: 10
+            },
+            {
+              name: 'absolute_paths',
+              match: '^[a-zA-Z]',
+              order: 10
+            },
+            {
+              match: null,
+              order: 10
+            }
+          ]
+        }
+      ],
+      ['array-bracket-spacing']: [true, 'never'],
+      ['object-curly-spacing']: [true, 'always']
     };
 
     host.overwrite(TSLINT_JSON, JSON.stringify(tslintJson, null, 2));
