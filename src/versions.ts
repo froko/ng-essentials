@@ -12,10 +12,10 @@ export const essentials = {
   zoneVersion: '0.9.1',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.802.1',
+  buildAngularVersion: '0.802.2',
 
   // @angular/cli
-  cliVersion: '8.2.1',
+  cliVersion: '8.2.2',
 
   // @types/node
   nodeVersion: '11.13.0',
@@ -27,7 +27,7 @@ export const essentials = {
   tsNodeVersion: '8.3.0',
 
   // tslint
-  tsLintVersion: '5.18.0',
+  tsLintVersion: '5.19.0',
 
   // tslint-eslint-rules
   tsLintEsLintRulesVersion: '5.4.0',
@@ -36,7 +36,7 @@ export const essentials = {
   typescriptVersion: '3.5.3',
 
   // husky
-  huskyVersion: '3.0.3',
+  huskyVersion: '3.0.4',
 
   // npm-run-all
   npmRunAllVersion: '4.1.5',
@@ -62,7 +62,7 @@ export const karma = {
   karmaVersion: '4.2.0',
 
   // karma-chrome-launcher
-  chromeLauncherVersion: '3.0.0',
+  chromeLauncherVersion: '3.1.0',
 
   // karma-coverage-istanbul-reporter
   coverageReporterVersion: '2.1.0',
@@ -76,19 +76,19 @@ export const karma = {
 
 export const jest = {
   // @angular-builders/jest
-  jestBuilderVersion: '8.0.4',
+  jestBuilderVersion: '8.2.0',
 
   // @types/jest
-  jestTypeVersion: '24.0.17',
+  jestTypeVersion: '24.0.18',
 
   // babel-core
   babelCoreVersion: '6.26.3',
 
   // babel-jest
-  babelJestVersion: '24.8.0',
+  babelJestVersion: '24.9.0',
 
   // jest
-  jestVersion: '24.8.0',
+  jestVersion: '24.9.0',
 
   // jest-cli
   jestCliVersion: '24.8.0',
@@ -113,7 +113,7 @@ export const cypress = {
 
 export const testcafe = {
   // testcafe
-  testcafeVersion: '1.4.0',
+  testcafeVersion: '1.4.1',
 
   // testcafe-angular-selectors
   angularSelectorsVersion: '0.3.2'
@@ -132,10 +132,10 @@ export const wallaby = {
 
 export const library = {
   // @angular-devkit/build-ng-packagr
-  buildNgPackagrVersion: '0.802.1',
+  buildNgPackagrVersion: '0.802.2',
 
   // ng-packagr
-  ngPackagrVersion: '5.4.3',
+  ngPackagrVersion: '5.5.0',
 
   // tsickle
   tsickleVersion: '0.36.0'
