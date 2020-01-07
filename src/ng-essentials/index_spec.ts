@@ -291,51 +291,6 @@ describe('ng-essentials', () => {
         expect(testTree.files).toContain('/testcafe/index.e2e-spec.js');
       });
     });
-
-    describe('with wallaby option', () => {
-      let testTree: UnitTestTree;
-
-      beforeEach(async () => {
-        testTree = await runSchematic('ng-add', { wallaby: true }, appTree);
-      });
-
-      it('adds wallaby packages to packages.json', () => {
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(
-          `"angular2-template-loader": "${wallaby.angularTemplateLoader}"`
-        );
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"wallaby-webpack": "${wallaby.wallabyWebpack}"`);
-      });
-
-      it('adds wallaby.js file with jasmine support', () => {
-        expect(testTree.files).toContain('/wallaby.js');
-        expect(testTree.readContent('/wallaby.js')).toContain('jasmine');
-      });
-
-      it('adds wallaby test file', () => {
-        expect(testTree.files).toContain('/src/wallabyTest.ts');
-      });
-
-      it('adds wallabyTest.ts in tsconfig.app', () => {
-        expect(testTree.readContent('tsconfig.app.json')).toContain('wallabyTest.ts');
-      });
-    });
-
-    describe('with wallaby and jest option', () => {
-      let testTree: UnitTestTree;
-
-      beforeEach(async () => {
-        testTree = await runSchematic('ng-add', { wallaby: true, jest: true }, appTree);
-      });
-
-      it('adds wallaby packages to packages.json', () => {
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"ngx-wallaby-jest": "${wallaby.wallabyJest}"`);
-      });
-
-      it('adds wallaby.js file with jest support', () => {
-        expect(testTree.files).toContain('/wallaby.js');
-        expect(testTree.readContent('/wallaby.js')).toContain('jest');
-      });
-    });
   });
 
   describe('when running for a subsequent time', () => {
