@@ -1,9 +1,10 @@
-const { resolve, extname, format } = require('path');
+const { resolve, extname } = require('path');
 const { writeFileSync } = require('fs');
 const { compileFromFile } = require('json-schema-to-typescript');
-const glob = require('glob');
 const { resolveConfig } = require('prettier');
-const { default: chalk } = require('chalk');
+
+const glob = require('glob');
+const chalk = require('chalk');
 
 const log = console.log;
 const rootPath = resolve(__dirname, '..');

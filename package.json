@@ -20,6 +20,7 @@
     "format:fix": "pretty-quick --staged",
     "verify": "npm run format && npm run lint && jest --bail",
     "schema2ts": "node scripts/generate-schema-defs.js",
+    "preinstall": "npx npm-force-resolutions",
     "preversion": "npm run build",
     "postversion": "git push && git push --tags",
     "sandbox:clean": "git checkout HEAD -- sandbox && git clean -f -d sandbox && rimraf sandbox/.vscode",
@@ -46,32 +47,33 @@
     ]
   },
   "dependencies": {
-    "@schematics/angular": "8.2.2"
+    "@schematics/angular": "8.3.21"
   },
   "devDependencies": {
-    "@angular-devkit/core": "8.2.2",
-    "@angular-devkit/schematics": "8.2.2",
-    "@types/jest": "24.0.18",
+    "@angular-devkit/core": "8.3.21",
+    "@angular-devkit/schematics": "8.3.21",
+    "@types/jest": "24.0.25",
     "@types/node": "11.13.9",
     "babel-core": "6.26.3",
     "babel-jest": "24.9.0",
-    "chalk": "2.4.2",
-    "glob": "7.1.4",
-    "husky": "3.0.4",
+    "chalk": "3.0.0",
+    "glob": "7.1.6",
+    "husky": "4.0.0",
     "jest": "24.9.0",
-    "json-schema-to-typescript": "7.0.0",
+    "json-schema-to-typescript": "8.0.0",
     "npm-run-all": "4.1.5",
-    "prettier": "1.18.2",
-    "pretty-quick": "1.11.1",
+    "prettier": "1.19.1",
+    "pretty-quick": "2.0.1",
     "rimraf": "3.0.0",
-    "ts-jest": "24.0.2",
-    "tslint": "5.19.0",
+    "ts-jest": "24.3.0",
+    "tslint": "5.20.1",
     "tslint-config-prettier": "1.18.0",
-    "tslint-config-standard": "8.0.1",
+    "tslint-config-standard": "9.0.0",
     "typescript": "3.5.3"
   },
   "resolutions": {
-    "lodash": "^4.17.12"
+    "lodash": "^4.17.12",
+    "handlebars": "^4.5.3"
   },
   "husky": {
     "hooks": {
