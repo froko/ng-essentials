@@ -1,9 +1,9 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '8.2.2',
+  angularVersion: '8.2.14',
 
   // rxjs
-  rxjsVersion: '6.5.2',
+  rxjsVersion: '6.5.4',
 
   // tslib
   tslibVersion: '1.10.0',
@@ -12,22 +12,22 @@ export const essentials = {
   zoneVersion: '0.9.1',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.802.2',
+  buildAngularVersion: '0.803.21',
 
   // @angular/cli
-  cliVersion: '8.2.2',
+  cliVersion: '8.3.21',
 
   // @types/node
   nodeVersion: '11.13.0',
 
   // codelizer
-  codelizerVersion: '5.1.0',
+  codelizerVersion: '5.2.1',
 
   // ts-node
-  tsNodeVersion: '8.3.0',
+  tsNodeVersion: '8.5.4',
 
   // tslint
-  tsLintVersion: '5.19.0',
+  tsLintVersion: '5.20.1',
 
   // tslint-eslint-rules
   tsLintEsLintRulesVersion: '5.4.0',
@@ -36,16 +36,16 @@ export const essentials = {
   typescriptVersion: '3.5.3',
 
   // husky
-  huskyVersion: '3.0.4',
+  huskyVersion: '4.0.0',
 
   // npm-run-all
   npmRunAllVersion: '4.1.5',
 
   // prettier
-  prettierVersion: '1.18.2',
+  prettierVersion: '1.19.1',
 
   // pretty-quick
-  prettyQuickVersion: '1.11.1',
+  prettyQuickVersion: '2.0.1',
 
   // tslint-config-prettier
   tsLintConfigPrettierVersion: '1.18.0'
@@ -53,33 +53,33 @@ export const essentials = {
 
 export const karma = {
   // @types/jasmine
-  jasmineTypeVersion: '3.4.0',
+  jasmineTypeVersion: '3.5.0',
 
   // jasmine-core
-  jasmineCoreVersion: '3.4.0',
+  jasmineCoreVersion: '3.5.0',
 
   // karma
-  karmaVersion: '4.2.0',
+  karmaVersion: '4.4.1',
 
   // karma-chrome-launcher
   chromeLauncherVersion: '3.1.0',
 
   // karma-coverage-istanbul-reporter
-  coverageReporterVersion: '2.1.0',
+  coverageReporterVersion: '2.1.1',
 
   // karma-jasmine
-  karmaJasmineVersion: '2.0.1',
+  karmaJasmineVersion: '3.0.1',
 
   // karma-jasmine-html-reporter
-  htmlReporterVersion: '1.4.2'
+  htmlReporterVersion: '1.5.1' // was 1.4.2
 };
 
 export const jest = {
   // @angular-builders/jest
-  jestBuilderVersion: '8.2.0',
+  jestBuilderVersion: '8.3.2',
 
   // @types/jest
-  jestTypeVersion: '24.0.18',
+  jestTypeVersion: '24.0.25',
 
   // babel-core
   babelCoreVersion: '6.26.3',
@@ -94,7 +94,7 @@ export const jest = {
   jestCliVersion: '24.8.0',
 
   // jest-preset-angular
-  angularPresetVersion: '7.1.1',
+  angularPresetVersion: '8.0.0',
 
   // tsconfig-paths-jest
   tsconfigPathsJestVersion: '0.0.1'
@@ -105,7 +105,7 @@ export const cypress = {
   preprocessorVersion: '4.0.3',
 
   // cypress
-  cypressVersion: '3.4.1',
+  cypressVersion: '3.8.1',
 
   // ts-loader
   tsLoaderVersion: '5.3.3'
@@ -113,7 +113,7 @@ export const cypress = {
 
 export const testcafe = {
   // testcafe
-  testcafeVersion: '1.4.1',
+  testcafeVersion: '1.7.1',
 
   // testcafe-angular-selectors
   angularSelectorsVersion: '0.3.2'
@@ -132,11 +132,11 @@ export const wallaby = {
 
 export const library = {
   // @angular-devkit/build-ng-packagr
-  buildNgPackagrVersion: '0.802.2',
+  buildNgPackagrVersion: '0.803.21',
 
   // ng-packagr
-  ngPackagrVersion: '5.5.0',
+  ngPackagrVersion: '5.7.1',
 
   // tsickle
-  tsickleVersion: '0.36.0'
+  tsickleVersion: '0.37.1'
 };
