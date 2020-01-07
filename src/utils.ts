@@ -76,21 +76,6 @@ export function addPackageToPackageJson(type: DependencyType, pkg: string, versi
   };
 }
 
-export function updatePackageInPackageJson(type: DependencyType, pkg: string, version: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
-    const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
-    const packageJson = JSON.parse(sourceText);
-
-    if (packageJson[type][pkg]) {
-      packageJson[type][pkg] = version;
-    }
-
-    host.overwrite(PACKAGE_JSON, JSON.stringify(packageJson, null, 2));
-
-    return host;
-  };
-}
-
 export function removeScriptFromPackageJson(key: string): Rule {
   return (host: Tree, _: SchematicContext) => {
     const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
@@ -162,24 +147,6 @@ export function removeArchitectNodeFromAngularJson(applicationName: string, node
 
     if (angularJson['projects'][applicationName]['architect'][node]) {
       delete angularJson['projects'][applicationName]['architect'][node];
-    }
-
-    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
-
-    return host;
-  };
-}
-
-export function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
-    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
-    const angularJson = JSON.parse(sourceText);
-
-    if (angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig']) {
-      angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig'] = [
-        'tsconfig.app.json',
-        'tsconfig.spec.json'
-      ];
     }
 
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
