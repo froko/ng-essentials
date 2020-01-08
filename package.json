@@ -20,7 +20,6 @@
     "format:fix": "pretty-quick --staged",
     "verify": "npm run format && npm run lint && jest --bail",
     "schema2ts": "node scripts/generate-schema-defs.js",
-    "preinstall": "npx npm-force-resolutions",
     "preversion": "npm run build",
     "postversion": "git push && git push --tags",
     "sandbox:clean": "git checkout HEAD -- sandbox && git clean -f -d sandbox && rimraf sandbox/.vscode",
