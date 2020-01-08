@@ -115,10 +115,6 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain('format:fix');
       });
 
-      it('runs format scripts in src and configured projects path', () => {
-        expect(testTree.readContent(PACKAGE_JSON)).toContain('{src,projects}');
-      });
-
       it('adds husky config in package.json', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain('hooks');
         expect(testTree.readContent(PACKAGE_JSON)).toContain('"pre-commit": "run-s format:fix lint"');
@@ -126,15 +122,16 @@ describe('ng-essentials', () => {
 
       it('updates global tslint.json', () => {
         expect(testTree.readContent(TSLINT_JSON)).toContain('"tslint:recommended"');
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"tslint-eslint-rules"');
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"tslint-angular"');
         expect(testTree.readContent(TSLINT_JSON)).toContain('"tslint-config-prettier"');
 
         expect(testTree.readContent(TSLINT_JSON)).not.toContain('eofline');
         expect(testTree.readContent(TSLINT_JSON)).not.toContain('whitespace');
 
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"jsdoc-format": false');
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"no-implicit-dependencies"');
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"no-submodule-imports": false');
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"directive-selector"');
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"component-selector"');
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"no-console"');
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"ordered-imports"');
       });
 
       it('updates development environment file', () => {
@@ -209,11 +206,7 @@ describe('ng-essentials', () => {
       it('adds jest packages to packages.json', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular-builders/jest": "${jest.jestBuilderVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@types/jest": "${jest.jestTypeVersion}"`);
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"babel-core": "${jest.babelCoreVersion}"`);
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"babel-jest": "${jest.babelJestVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jest": "${jest.jestVersion}"`);
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jest-cli": "${jest.jestCliVersion}"`);
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jest-preset-angular": "${jest.angularPresetVersion}"`);
       });
 
       it('switches to jest builder in angular.json', () => {
@@ -229,7 +222,6 @@ describe('ng-essentials', () => {
         expect(testTree.readContent('tsconfig.spec.json')).not.toContain('jasmine');
 
         expect(testTree.readContent('tsconfig.spec.json')).toContain('jest');
-        expect(testTree.readContent('tsconfig.spec.json')).toContain('commonjs');
       });
 
       it('adds launch.json with debug option for jest', () => {
@@ -239,7 +231,7 @@ describe('ng-essentials', () => {
       });
 
       it('adds jest setup file', () => {
-        expect(testTree.files).toContain('/src/setup-jest.ts');
+        expect(testTree.files).toContain('/src/jest.ts');
       });
     });
 

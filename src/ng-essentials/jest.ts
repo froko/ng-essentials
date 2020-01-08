@@ -28,7 +28,8 @@ export function addJest(options: NgEssentialsOptions): Rule {
       return chain([
         deleteFile('karma.conf.js'),
         deleteFile('src/test.ts'),
-        addScriptToPackageJson('test', 'ng test'),
+        addScriptToPackageJson('test', 'ng test --coverage'),
+        addScriptToPackageJson('test:watch', 'ng test --watch'),
         removePackageFromPackageJson('devDependencies', '@types/jasmine'),
         removePackageFromPackageJson('devDependencies', 'jasmine-core'),
         removePackageFromPackageJson('devDependencies', 'jasmine-spec-reporter'),
@@ -39,11 +40,7 @@ export function addJest(options: NgEssentialsOptions): Rule {
         removePackageFromPackageJson('devDependencies', 'karma-jasmine-html-reporter'),
         addPackageToPackageJson('devDependencies', '@angular-builders/jest', jest.jestBuilderVersion),
         addPackageToPackageJson('devDependencies', '@types/jest', jest.jestTypeVersion),
-        addPackageToPackageJson('devDependencies', 'babel-core', jest.babelCoreVersion),
-        addPackageToPackageJson('devDependencies', 'babel-jest', jest.babelJestVersion),
         addPackageToPackageJson('devDependencies', 'jest', jest.jestVersion),
-        addPackageToPackageJson('devDependencies', 'jest-cli', jest.jestCliVersion),
-        addPackageToPackageJson('devDependencies', 'jest-preset-angular', jest.angularPresetVersion),
         addPackageToPackageJson('devDependencies', 'tsconfig-paths-jest', jest.tsconfigPathsJestVersion),
         switchToJestBuilderInAngularJson(defaultProjectName),
         prepareTsAppOrLibConfigForJest('.', 'app'),
@@ -59,7 +56,7 @@ export function prepareTsAppOrLibConfigForJest(rootPath: string, context: AppOrL
   return updateJson(tsconfigFilePath(rootPath, context), json => {
     return {
       ...json,
-      exclude: ['**/*.spec.ts', 'src/setup-jest.ts']
+      exclude: ['**/*.spec.ts', 'src/jest.ts']
     };
   });
 }
@@ -74,8 +71,8 @@ export function prepareTsSpecConfigForJest(rootPath: string): Rule {
       ...json,
       compilerOptions: {
         emitDecoratorMetadata: true,
-        types: ['jest'],
-        module: 'commonjs'
+        esModuleInterop: true,
+        types: ['jest']
       }
     };
   });
@@ -85,7 +82,6 @@ export function switchToJestBuilderInAngularJson(projectName: string): Rule {
   return updateJson(ANGULAR_JSON, json => {
     json['projects'][projectName]['architect']['test'].builder = '@angular-builders/jest:run';
     json['projects'][projectName]['architect']['test'].options = {
-      coverage: true,
       detectOpenHandles: true
     };
 

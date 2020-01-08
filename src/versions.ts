@@ -29,8 +29,8 @@ export const essentials = {
   // tslint
   tsLintVersion: '5.20.1',
 
-  // tslint-eslint-rules
-  tsLintEsLintRulesVersion: '5.4.0',
+  // tslint-angular
+  tsLintAngularRulesVersion: '3.0.2',
 
   // typescript
   typescriptVersion: '3.5.3',

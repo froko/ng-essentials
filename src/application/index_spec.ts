@@ -67,7 +67,6 @@ describe('application', () => {
       expect(testTree.readContent(`/libs/${appName}/tsconfig.spec.json`)).not.toContain('jasmine');
 
       expect(testTree.readContent(`/libs/${appName}/tsconfig.spec.json`)).toContain('jest');
-      expect(testTree.readContent(`/libs/${appName}/tsconfig.spec.json`)).toContain('commonjs');
     });
   });
 });

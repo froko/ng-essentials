@@ -67,12 +67,9 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('devDependencies', 'npm-run-all', essentials.npmRunAllVersion),
         addPackageToPackageJson('devDependencies', 'prettier', essentials.prettierVersion),
         addPackageToPackageJson('devDependencies', 'pretty-quick', essentials.prettyQuickVersion),
-        addPackageToPackageJson('devDependencies', 'tslint-eslint-rules', essentials.tsLintEsLintRulesVersion),
+        addPackageToPackageJson('devDependencies', 'tslint-angular', essentials.tsLintAngularRulesVersion),
         addPackageToPackageJson('devDependencies', 'tslint-config-prettier', essentials.tsLintConfigPrettierVersion),
-        addScriptToPackageJson(
-          'format',
-          `prettier --write "{src,${defaultProjectRoot}}/**/*{.ts,.js,.json,.css,.scss}"`
-        ),
+        addScriptToPackageJson('format', '"prettier --write "./**/*{.ts,.js,.json,.css,.scss}""'),
         addScriptToPackageJson('format:fix', 'pretty-quick --staged'),
         updateDevelopmentEnvironmentFile('src'),
         updateProductionEnvironmentFile('src'),
@@ -250,90 +247,49 @@ function editTsLintConfigJson(): Rule {
     const sourceText = host.read(TSLINT_JSON).toString('utf-8');
     const tslintJson = JSON.parse(sourceText);
 
-    tslintJson['extends'] = ['tslint:recommended', 'tslint-eslint-rules', 'tslint-config-prettier'];
-
-    const obsolete = [
-      'eofline',
-      'import-spacing',
-      'indent',
-      'max-line-length',
-      'no-use-before-declare',
-      'no-trailing-whitespace',
-      'one-line',
-      'quotemark',
-      'semicolon',
-      'typedef-whitespace',
-      'use-input-property-decorator',
-      'use-output-property-decorator',
-      'use-host-property-decorator',
-      'whitespace'
-    ];
-
+    tslintJson['extends'] = ['tslint:recommended', 'tslint-angular', 'tslint-config-prettier'];
     tslintJson['rules'] = {
-      ...Object.keys(tslintJson['rules'])
-        .filter(key => !obsolete.includes(key))
-        .reduce((obj, key) => {
-          obj[key] = tslintJson['rules'][key];
-          return obj;
-        }, {}),
-      ['align']: true,
-      ['no-conditional-assignment']: true,
-      ['no-consecutive-blank-lines']: true,
-      ['no-implicit-dependencies']: false,
-      ['no-string-literal']: true,
-      ['no-submodule-imports']: false,
-      ['jsdoc-format']: false,
-      ['one-line']: [true, 'check-open-brace'],
-      ['only-arrow-functions']: [true, 'allow-named-functions'],
-      ['prefer-for-of']: true,
-      ['prefer-object-spread']: true,
-      ['trailing-comma']: [
-        false,
-        {
-          multiline: 'always',
-          singleline: 'never'
-        }
-      ],
-      ['variable-name']: [true, 'allow-pascal-case', 'ban-keywords', 'check-format'],
-      ['ordered-imports']: [
+      'directive-selector': [true, 'attribute', 'app', 'camelCase'],
+      'component-selector': [true, 'element', 'app', 'kebab-case'],
+      'no-console': [true, 'debug', 'info', 'time', 'timeEnd', 'trace'],
+      'ordered-imports': [
         true,
         {
           'grouped-imports': true,
           groups: [
             {
-              name: 'app',
-              match: '^@app',
-              order: 20
+              name: 'angular',
+              match: '^@angular',
+              order: 1
             },
-            {
-              name: 'shared-lib',
-              match: '^@shared-lib',
-              order: 20
-            },
-            {
-              name: 'relative_paths',
-              match: '^[.][.]?',
-              order: 20
-            },
+
             {
               name: 'scoped_paths',
               match: '^@',
-              order: 10
+              order: 3
             },
             {
-              name: 'absolute_paths',
+              name: 'node_modules',
               match: '^[a-zA-Z]',
-              order: 10
+              order: 2
+            },
+            {
+              name: 'parent',
+              match: '^../',
+              order: 3
+            },
+            {
+              name: 'silbing',
+              match: '^./',
+              order: 4
             },
             {
               match: null,
-              order: 10
+              order: 5
             }
           ]
         }
-      ],
-      ['array-bracket-spacing']: [true, 'never'],
-      ['object-curly-spacing']: [true, 'always']
+      ]
     };
 
     host.overwrite(TSLINT_JSON, JSON.stringify(tslintJson, null, 2));

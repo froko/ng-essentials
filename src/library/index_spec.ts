@@ -80,7 +80,6 @@ describe('library', () => {
       expect(testTree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).not.toContain('jasmine');
 
       expect(testTree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).toContain('jest');
-      expect(testTree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).toContain('commonjs');
     });
   });
 });
