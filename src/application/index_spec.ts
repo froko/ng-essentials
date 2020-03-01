@@ -1,7 +1,7 @@
 import { Tree } from '@angular-devkit/schematics';
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
 
-import { PACKAGE_JSON, ANGULAR_JSON } from '../constants';
+import { ANGULAR_JSON, PACKAGE_JSON } from '../constants';
 import { runSchematic } from '../testing';
 
 describe('application', () => {

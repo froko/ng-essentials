@@ -2,9 +2,9 @@ import { dasherize } from '@angular-devkit/core/src/utils/strings';
 import { Tree } from '@angular-devkit/schematics';
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
 
-import { PACKAGE_JSON, ANGULAR_JSON } from '../constants';
-import { library } from '../versions';
+import { ANGULAR_JSON, PACKAGE_JSON } from '../constants';
 import { runSchematic } from '../testing';
+import { library } from '../versions';
 
 describe('library', () => {
   const libraryName = 'myLib';

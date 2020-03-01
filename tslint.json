@@ -13,7 +13,44 @@
   "jsRules": {},
   "rules": {
     "no-non-null-assertion": false,
-    "strict-type-predicates": false
+    "strict-type-predicates": false,
+    "ordered-imports": [
+      true,
+      {
+        "grouped-imports": true,
+        "groups": [
+          {
+            "name": "angular",
+            "match": "^@angular",
+            "order": 1
+          },
+          {
+            "name": "scoped_paths",
+            "match": "^@",
+            "order": 3
+          },
+          {
+            "name": "node_modules",
+            "match": "^[a-zA-Z]",
+            "order": 2
+          },
+          {
+            "name": "parent",
+            "match": "^../",
+            "order": 4
+          },
+          {
+            "name": "silbing",
+            "match": "^./",
+            "order": 5
+          },
+          {
+            "match": null,
+            "order": 5
+          }
+        ]
+      }
+    ]
   },
   "rulesDirectory": []
 }

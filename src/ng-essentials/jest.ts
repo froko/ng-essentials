@@ -1,20 +1,20 @@
-import { Rule, chain, Tree, SchematicContext } from '@angular-devkit/schematics';
-
-import { NgEssentialsOptions } from './schema';
+import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 
 import { ANGULAR_JSON } from '../constants';
-import { jest } from '../versions';
 import {
-  deleteFile,
-  removePackageFromPackageJson,
   addPackageToPackageJson,
-  copyConfigFiles,
-  updateJson,
-  tsconfigFilePath,
+  addScriptToPackageJson,
   AppOrLibType,
+  copyConfigFiles,
+  deleteFile,
   findDefaultProjectNameInAngularJson,
-  addScriptToPackageJson
+  removePackageFromPackageJson,
+  tsconfigFilePath,
+  updateJson
 } from '../utils';
+import { jest } from '../versions';
+
+import { NgEssentialsOptions } from './schema';
 
 export function addJest(options: NgEssentialsOptions): Rule {
   if (!options.jest || !options.firstRun) {

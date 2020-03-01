@@ -1,17 +1,16 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 
-import { NgEssentialsOptions } from './schema';
-
-import { addKarma } from './karma';
-import { addJest } from './jest';
-import { addCypress } from './cypress';
-import { addTestcafe } from './testcafe';
-import { addEssentials } from './essentials';
-
 import { ANGULAR_JSON, NG_ESSENTIALS } from '../constants';
 import { installPackage, runNpmPackageInstall } from '../utils';
 
-export default function(options: NgEssentialsOptions): Rule {
+import { addCypress } from './cypress';
+import { addEssentials } from './essentials';
+import { addJest } from './jest';
+import { addKarma } from './karma';
+import { NgEssentialsOptions } from './schema';
+import { addTestcafe } from './testcafe';
+
+export function essentials(options: NgEssentialsOptions): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     options = readNgEssentialsOptionsFromAngularJson(tree, options);
 

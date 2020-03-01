@@ -1,9 +1,9 @@
-import { Rule, chain } from '@angular-devkit/schematics';
+import { chain, Rule } from '@angular-devkit/schematics';
+
+import { addPackageToPackageJson, addScriptToPackageJson, copyConfigFiles } from '../utils';
+import { cypress } from '../versions';
 
 import { NgEssentialsOptions } from './schema';
-
-import { cypress } from '../versions';
-import { addPackageToPackageJson, addScriptToPackageJson, copyConfigFiles } from '../utils';
 
 export function addCypress(options: NgEssentialsOptions): Rule {
   if (!options.cypress || !options.firstRun) {

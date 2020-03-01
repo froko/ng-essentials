@@ -1,9 +1,9 @@
-import { Rule, chain } from '@angular-devkit/schematics';
+import { chain, Rule } from '@angular-devkit/schematics';
+
+import { addPackageToPackageJson, addScriptToPackageJson, copyConfigFiles } from '../utils';
+import { testcafe } from '../versions';
 
 import { NgEssentialsOptions } from './schema';
-
-import { testcafe } from '../versions';
-import { addPackageToPackageJson, addScriptToPackageJson, copyConfigFiles } from '../utils';
 
 export function addTestcafe(options: NgEssentialsOptions): Rule {
   if (!options.testcafe || !options.firstRun) {

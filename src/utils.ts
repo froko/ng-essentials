@@ -1,3 +1,4 @@
+import { strings } from '@angular-devkit/core';
 import {
   apply,
   MergeStrategy,
@@ -8,11 +9,10 @@ import {
   Tree,
   url
 } from '@angular-devkit/schematics';
-import { strings } from '@angular-devkit/core';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodePackageInstallTaskOptions } from '@angular-devkit/schematics/tasks/node-package/install-task';
 
-import { PACKAGE_JSON, ANGULAR_JSON, NG_ESSENTIALS } from './constants';
+import { ANGULAR_JSON, NG_ESSENTIALS, PACKAGE_JSON } from './constants';
 
 export type DependencyType = 'dependencies' | 'devDependencies';
 
@@ -126,6 +126,14 @@ export function findNewProjectRootInAngularJson(host: Tree): string {
   const newProjectRoot = angularJson['newProjectRoot'];
 
   return newProjectRoot ? newProjectRoot : 'projects';
+}
+
+export function findElementPrefixInAngularJson(host: Tree, projectName: string): string {
+  const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+  const angularJson = JSON.parse(sourceText);
+  const elementPrefix = angularJson['projects'][projectName]['prefix'];
+
+  return elementPrefix ? elementPrefix : 'app';
 }
 
 export function findJestOptionInAngularJson(host: Tree): boolean {

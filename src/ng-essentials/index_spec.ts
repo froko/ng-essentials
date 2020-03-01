@@ -1,10 +1,11 @@
 import { Tree } from '@angular-devkit/schematics';
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
+
 import { createAppModule } from '@schematics/angular/utility/test/create-app-module';
 
 import { ANGULAR_JSON, PACKAGE_JSON, TSLINT_JSON } from '../constants';
-import { essentials, jest, cypress, testcafe, karma, wallaby } from '../versions';
 import { runSchematic } from '../testing';
+import { cypress, essentials, jest, karma, testcafe } from '../versions';
 
 describe('ng-essentials', () => {
   let appTree: Tree;
@@ -125,13 +126,19 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(TSLINT_JSON)).toContain('"tslint-angular"');
         expect(testTree.readContent(TSLINT_JSON)).toContain('"tslint-config-prettier"');
 
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"codelyzer"');
+
         expect(testTree.readContent(TSLINT_JSON)).not.toContain('eofline');
         expect(testTree.readContent(TSLINT_JSON)).not.toContain('whitespace');
 
         expect(testTree.readContent(TSLINT_JSON)).toContain('"directive-selector"');
         expect(testTree.readContent(TSLINT_JSON)).toContain('"component-selector"');
         expect(testTree.readContent(TSLINT_JSON)).toContain('"no-console"');
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"interface-name"');
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"max-classes-per-file"');
         expect(testTree.readContent(TSLINT_JSON)).toContain('"ordered-imports"');
+
+        expect(testTree.readContent(TSLINT_JSON)).toContain('"app"');
       });
 
       it('updates development environment file', () => {

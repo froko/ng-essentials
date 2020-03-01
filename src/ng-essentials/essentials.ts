@@ -1,26 +1,27 @@
-import { Rule, chain, Tree, SchematicContext, SchematicsException } from '@angular-devkit/schematics';
-import { addProviderToModule } from '@schematics/angular/utility/ast-utils';
-import { InsertChange } from '@schematics/angular/utility/change';
+import { chain, Rule, SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
 
 import * as ts from 'typescript';
 
-import { NgEssentialsOptions } from './schema';
+import { addProviderToModule } from '@schematics/angular/utility/ast-utils';
+import { InsertChange } from '@schematics/angular/utility/change';
 
-import { ANGULAR_JSON, NG_ESSENTIALS, TSLINT_JSON, PACKAGE_JSON, TSCONFIG_JSON } from '../constants';
-import { essentials } from '../versions';
+import { ANGULAR_JSON, NG_ESSENTIALS, PACKAGE_JSON, TSCONFIG_JSON, TSLINT_JSON } from '../constants';
 import {
-  findDefaultProjectNameInAngularJson,
-  findNewProjectRootInAngularJson,
-  removeArchitectNodeFromAngularJson,
-  removePackageFromPackageJson,
-  removeScriptFromPackageJson,
-  removeAutomaticUpdateSymbols,
   addPackageToPackageJson,
   addScriptToPackageJson,
   copyConfigFiles,
-  deleteFile,
+  findDefaultProjectNameInAngularJson,
+  findElementPrefixInAngularJson,
+  findNewProjectRootInAngularJson,
+  removeArchitectNodeFromAngularJson,
+  removeAutomaticUpdateSymbols,
+  removePackageFromPackageJson,
+  removeScriptFromPackageJson,
   updateJson
 } from '../utils';
+import { essentials } from '../versions';
+
+import { NgEssentialsOptions } from './schema';
 
 export function addEssentials(options: NgEssentialsOptions): Rule {
   if (!options.firstRun) {
@@ -31,13 +32,13 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
     (tree: Tree, _context: SchematicContext) => {
       const defaultProjectName = findDefaultProjectNameInAngularJson(tree);
       const defaultProjectRoot = findNewProjectRootInAngularJson(tree);
+      const elementPrefix = findElementPrefixInAngularJson(tree, defaultProjectName);
 
       return chain([
         addDefaultSchematicsToAngularJson(),
         addNgEssentialsToAngularJson(options),
         removeEndToEndTsConfigNodeFromAngularJson(defaultProjectName),
         removeArchitectNodeFromAngularJson(defaultProjectName, 'e2e'),
-        removeEndToEndTestFiles(),
         removePackageFromPackageJson('devDependencies', '@types/jasminewd2'),
         removePackageFromPackageJson('devDependencies', 'protractor'),
         removeScriptFromPackageJson('e2e'),
@@ -69,13 +70,13 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('devDependencies', 'pretty-quick', essentials.prettyQuickVersion),
         addPackageToPackageJson('devDependencies', 'tslint-angular', essentials.tsLintAngularRulesVersion),
         addPackageToPackageJson('devDependencies', 'tslint-config-prettier', essentials.tsLintConfigPrettierVersion),
-        addScriptToPackageJson('format', '"prettier --write "./**/*{.ts,.js,.json,.css,.scss}""'),
+        addScriptToPackageJson('format', 'prettier --write ./**/*{.ts,.js,.json,.css,.scss}'),
         addScriptToPackageJson('format:fix', 'pretty-quick --staged'),
         updateDevelopmentEnvironmentFile('src'),
         updateProductionEnvironmentFile('src'),
         addEnvProvidersToAppModule('src'),
         addHuskyConfigToPackageJson(),
-        editTsLintConfigJson(),
+        editTsLintConfigJson(elementPrefix),
         editTsConfigJson(),
         createLaunchJson(options),
         copyConfigFiles('./essentials')
@@ -99,15 +100,6 @@ function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string): Rul
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
 
     return host;
-  };
-}
-
-function removeEndToEndTestFiles(): Rule {
-  return (_: Tree, __: SchematicContext) => {
-    deleteFile('e2e/src/app.e2e-spec.ts');
-    deleteFile('e2e/src/app.po.ts');
-    deleteFile('e2e/protractor.conf.js');
-    deleteFile('e2e/tsconfig.json');
   };
 }
 
@@ -242,16 +234,19 @@ function addHuskyConfigToPackageJson(): Rule {
   };
 }
 
-function editTsLintConfigJson(): Rule {
+function editTsLintConfigJson(elementPrefix: string): Rule {
   return (host: Tree, _: SchematicContext) => {
     const sourceText = host.read(TSLINT_JSON).toString('utf-8');
     const tslintJson = JSON.parse(sourceText);
 
     tslintJson['extends'] = ['tslint:recommended', 'tslint-angular', 'tslint-config-prettier'];
+    tslintJson['rulesDirectory'] = ['codelyzer'];
     tslintJson['rules'] = {
-      'directive-selector': [true, 'attribute', 'app', 'camelCase'],
-      'component-selector': [true, 'element', 'app', 'kebab-case'],
+      'directive-selector': [true, 'attribute', elementPrefix, 'camelCase'],
+      'component-selector': [true, 'element', elementPrefix, 'kebab-case'],
       'no-console': [true, 'debug', 'info', 'time', 'timeEnd', 'trace'],
+      'interface-name': false,
+      'max-classes-per-file': false,
       'ordered-imports': [
         true,
         {
@@ -276,16 +271,17 @@ function editTsLintConfigJson(): Rule {
             {
               name: 'parent',
               match: '^../',
-              order: 3
+              order: 4
             },
             {
               name: 'silbing',
               match: '^./',
-              order: 4
+              order: 5
             },
             {
+              name: 'unknown',
               match: null,
-              order: 5
+              order: 6
             }
           ]
         }

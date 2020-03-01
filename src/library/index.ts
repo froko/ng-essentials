@@ -1,22 +1,21 @@
 import { dasherize } from '@angular-devkit/core/src/utils/strings';
-import { SchematicContext, Tree, chain, Rule, externalSchematic, noop } from '@angular-devkit/schematics';
+import { chain, externalSchematic, noop, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+
+import { prepareTsAppOrLibConfigForJest, prepareTsSpecConfigForJest } from '../ng-essentials/jest';
+import {
+  addPackageToPackageJson,
+  deleteFile,
+  findJestOptionInAngularJson,
+  findNewProjectRootInAngularJson,
+  removeArchitectNodeFromAngularJson,
+  removeAutomaticUpdateSymbols,
+  removePackageFromPackageJson
+} from '../utils';
+import { library } from '../versions';
 
 import { LibraryOptionsSchema } from './schema';
 
-import { library } from '../versions';
-import {
-  removeAutomaticUpdateSymbols,
-  addPackageToPackageJson,
-  deleteFile,
-  findNewProjectRootInAngularJson,
-  findJestOptionInAngularJson,
-  removePackageFromPackageJson,
-  removeArchitectNodeFromAngularJson
-} from '../utils';
-
-import { prepareTsAppOrLibConfigForJest, prepareTsSpecConfigForJest } from '../ng-essentials/jest';
-
-export default function(options: LibraryOptionsSchema): Rule {
+export function essentialsLibrary(options: LibraryOptionsSchema): Rule {
   return chain([
     externalSchematic('@schematics/angular', 'library', options),
     (tree: Tree, _context: SchematicContext) => {

@@ -1,26 +1,23 @@
-import { SchematicContext, Tree, chain, Rule, externalSchematic, noop } from '@angular-devkit/schematics';
-
-import { AngularApplicationOptionsSchema } from './schema';
+import { chain, externalSchematic, noop, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 
 import { ANGULAR_JSON } from '../constants';
-
+import {
+  addEnvProvidersToAppModule,
+  updateDevelopmentEnvironmentFile,
+  updateProductionEnvironmentFile
+} from '../ng-essentials/essentials';
+import { prepareTsAppOrLibConfigForJest, prepareTsSpecConfigForJest } from '../ng-essentials/jest';
 import {
   deleteFile,
-  findNewProjectRootInAngularJson,
   findJestOptionInAngularJson,
+  findNewProjectRootInAngularJson,
   removeArchitectNodeFromAngularJson,
   removePackageFromPackageJson
 } from '../utils';
 
-import {
-  updateDevelopmentEnvironmentFile,
-  updateProductionEnvironmentFile,
-  addEnvProvidersToAppModule
-} from '../ng-essentials/essentials';
+import { AngularApplicationOptionsSchema } from './schema';
 
-import { prepareTsAppOrLibConfigForJest, prepareTsSpecConfigForJest } from '../ng-essentials/jest';
-
-export default function(options: AngularApplicationOptionsSchema): Rule {
+export function essentialsApplication(options: AngularApplicationOptionsSchema): Rule {
   return chain([
     externalSchematic('@schematics/angular', 'application', options),
     (tree: Tree, _context: SchematicContext) => {

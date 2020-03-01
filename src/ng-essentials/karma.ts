@@ -1,9 +1,9 @@
-import { Rule, chain } from '@angular-devkit/schematics';
+import { chain, Rule } from '@angular-devkit/schematics';
+
+import { addPackageToPackageJson } from '../utils';
+import { karma } from '../versions';
 
 import { NgEssentialsOptions } from './schema';
-
-import { karma } from '../versions';
-import { addPackageToPackageJson } from '../utils';
 
 export function addKarma(options: NgEssentialsOptions): Rule {
   if (options.jest || !options.firstRun) {

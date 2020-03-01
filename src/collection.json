@@ -3,19 +3,19 @@
   "extends": ["@schematics/angular"],
   "schematics": {
     "ng-add": {
-      "factory": "./ng-essentials/index",
+      "factory": "./ng-essentials/index#essentials",
       "schema": "./ng-essentials/schema.json",
       "description": "Adds better defaults to an existing Angular application."
     },
     "library": {
       "aliases": ["lib"],
-      "factory": "./library",
+      "factory": "./library/index#essentialsLibrary",
       "schema": "./library/schema.json",
       "description": "Generate a library project for Angular."
     },
     "application": {
       "aliases": ["app"],
-      "factory": "./application",
+      "factory": "./application/index#essentialsApplication",
       "schema": "./application/schema.json",
       "description": "Create an Angular application."
     }
