@@ -1,20 +1,22 @@
-const tsconfig = require('./tsconfig.json');
-const moduleNameMapper = require('tsconfig-paths-jest')(tsconfig);
+const { pathsToModuleNameMapper } = require('ts-jest/utils');
+const { compilerOptions } = require('./tsconfig');
 
 module.exports = {
   preset: 'jest-preset-angular',
   roots: [''],
-  testPathIgnorePatterns: ['node_modules', 'cypress', 'testcafe'],
-  transformIgnorePatterns: ['^.+\\.js$'],
+  testPathIgnorePatterns: ['node_modules', 'dist', 'cypress'],
   setupFilesAfterEnv: ['<rootDir>/src/jest.ts'],
-  coverageReporters: ['html', 'text', 'text-summary'],
-  moduleNameMapper,
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, {
+    prefix: '<rootDir>/'
+  }),
   globals: {
     'ts-jest': {
-      tsConfig: './tsconfig.spec.json',
-      diagnostics: { warnOnly: true },
+      tsConfig: '<rootDir>/tsconfig.spec.json',
       stringifyContentPathRegex: '\\.html$',
-      astTransformers: ['jest-preset-angular/InlineHtmlStripStylesTransformer']
+      astTransformers: [
+        'jest-preset-angular/build/InlineFilesTransformer',
+        'jest-preset-angular/build/StripStylesTransformer'
+      ]
     }
   }
 };

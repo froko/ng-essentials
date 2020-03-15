@@ -14,7 +14,7 @@ import { NodePackageInstallTaskOptions } from '@angular-devkit/schematics/tasks/
 
 import { ANGULAR_JSON, NG_ESSENTIALS, PACKAGE_JSON } from './constants';
 
-export type DependencyType = 'dependencies' | 'devDependencies';
+export type DependencyType = 'dependencies' | 'devDependencies' | 'resolutions';
 
 export type AppOrLibType = 'app' | 'lib';
 
@@ -52,7 +52,6 @@ export function removePackageFromPackageJson(type: DependencyType, pkg: string):
       delete packageJson[type][pkg];
       host.overwrite(PACKAGE_JSON, JSON.stringify(packageJson, null, 2));
     }
-
     return host;
   };
 }
@@ -61,6 +60,10 @@ export function addPackageToPackageJson(type: DependencyType, pkg: string, versi
   return (host: Tree, _: SchematicContext) => {
     const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
     const packageJson = JSON.parse(sourceText);
+
+    if (!packageJson[type]) {
+      packageJson[type] = {};
+    }
 
     if (!packageJson[type][pkg]) {
       packageJson[type][pkg] = version;

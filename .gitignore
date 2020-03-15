@@ -4,7 +4,6 @@ src/**/*.js.map
 src/**/*.d.ts
 !src/ng-essentials/jest/**/*.js
 !src/ng-essentials/cypress/cypress/**/*.js
-!src/ng-essentials/testafe/testcafe/**/*.js
 
 # IDEs
 .idea/

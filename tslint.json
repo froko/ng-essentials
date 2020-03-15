@@ -6,7 +6,6 @@
       "src/**/essentials/**/*",
       "src/**/jest/**/*",
       "src/**/cypress/**/*",
-      "src/**/testcafe/**/*",
       "sandbox/**/*"
     ]
   },

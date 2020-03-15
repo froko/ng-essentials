@@ -14,11 +14,6 @@
       "description": "Include cypress",
       "default": false
     },
-    "testcafe": {
-      "type": "boolean",
-      "description": "Include testcafe",
-      "default": false
-    },
     "firstRun": {
       "type": "boolean",
       "description": "Indicates the first run of this schematic",

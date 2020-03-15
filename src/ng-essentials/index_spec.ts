@@ -5,7 +5,7 @@ import { createAppModule } from '@schematics/angular/utility/test/create-app-mod
 
 import { ANGULAR_JSON, PACKAGE_JSON, TSLINT_JSON } from '../constants';
 import { runSchematic } from '../testing';
-import { cypress, essentials, jest, karma, testcafe } from '../versions';
+import { cypress, essentials, jest, karma } from '../versions';
 
 describe('ng-essentials', () => {
   let appTree: Tree;
@@ -43,8 +43,6 @@ describe('ng-essentials', () => {
       it('adds ng-essentials options to angular.json', () => {
         expect(testTree.readContent(ANGULAR_JSON)).toContain('"jest": false');
         expect(testTree.readContent(ANGULAR_JSON)).toContain('"cypress": false');
-        expect(testTree.readContent(ANGULAR_JSON)).toContain('"testcafe": false');
-        expect(testTree.readContent(ANGULAR_JSON)).toContain('"wallaby": false');
       });
 
       it('removes e2e tsconfig.json in linting options from angular.json', () => {
@@ -64,10 +62,24 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(PACKAGE_JSON)).not.toContain('e2e');
       });
 
-      it('removes automatic update symbols from package.json', () => {
-        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('^');
-        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('~');
-        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('>=');
+      it('removes automatic update symbols in depencencies of package.json', () => {
+        const sourceText = testTree.read(PACKAGE_JSON).toString('utf-8');
+        const packageJson = JSON.parse(sourceText);
+        const depencencies = JSON.stringify(packageJson['dependencies']);
+
+        expect(depencencies).not.toContain('^');
+        expect(depencencies).not.toContain('~');
+        expect(depencencies).not.toContain('>=');
+      });
+
+      it('removes automatic update symbols in devDependencies of package.json', () => {
+        const sourceText = testTree.read(PACKAGE_JSON).toString('utf-8');
+        const packageJson = JSON.parse(sourceText);
+        const devDependencies = JSON.stringify(packageJson['devDependencies']);
+
+        expect(devDependencies).not.toContain('^');
+        expect(devDependencies).not.toContain('~');
+        expect(devDependencies).not.toContain('>=');
       });
 
       it('updates angular packages in package.json', () => {
@@ -271,25 +283,6 @@ describe('ng-essentials', () => {
         expect(testTree.files).toContain('/cypress/support/index.ts');
       });
     });
-
-    describe('with testcafe option', () => {
-      let testTree: UnitTestTree;
-
-      beforeEach(async () => {
-        testTree = await runSchematic('ng-add', { testcafe: true }, appTree);
-      });
-
-      it('adds testcafe packages to packages.json', () => {
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"testcafe": "${testcafe.testcafeVersion}"`);
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(
-          `"testcafe-angular-selectors": "${testcafe.angularSelectorsVersion}"`
-        );
-      });
-
-      it('adds testcafe files', () => {
-        expect(testTree.files).toContain('/testcafe/index.e2e-spec.js');
-      });
-    });
   });
 
   describe('when running for a subsequent time', () => {
@@ -301,7 +294,7 @@ describe('ng-essentials', () => {
       let testTree: UnitTestTree;
 
       beforeEach(async () => {
-        testTree = await runSchematic('ng-add', { jest: true, cypress: true, tesetcafe: true }, appTree);
+        testTree = await runSchematic('ng-add', { jest: true, cypress: true }, appTree);
       });
 
       it('does not add default collection to angular.json', () => {
@@ -337,23 +330,6 @@ describe('ng-essentials', () => {
         expect(testTree.files).not.toContain('/cypress/plugins/index.js');
         expect(testTree.files).not.toContain('/cypress/support/commands.ts');
         expect(testTree.files).not.toContain('/cypress/support/index.ts');
-      });
-
-      it('does not add testcafe packages to packages.json', () => {
-        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('testcafe');
-      });
-
-      it('does not add testcafe files', () => {
-        expect(testTree.files).not.toContain('/testcafe/index.e2e-spec.js');
-      });
-
-      it('does not add wallaby packages to packages.json', () => {
-        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('wallaby');
-      });
-
-      it('does not add wallaby files', () => {
-        expect(testTree.files).not.toContain('/wallaby.js');
-        expect(testTree.files).not.toContain('/src/wallabyTest.ts');
       });
     });
   });
@@ -422,9 +398,7 @@ function createAngularJsonForSubsequentRun(tree: Tree): Tree {
       "schematics": {
         "@froko/ng-essentials": {
           "jest": true,
-          "cypress": true,
-          "testcafe": true,
-          "wallaby": true
+          "cypress": true
         }
       }
     }`

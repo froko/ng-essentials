@@ -41,7 +41,6 @@ export function addJest(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('devDependencies', '@angular-builders/jest', jest.jestBuilderVersion),
         addPackageToPackageJson('devDependencies', '@types/jest', jest.jestTypeVersion),
         addPackageToPackageJson('devDependencies', 'jest', jest.jestVersion),
-        addPackageToPackageJson('devDependencies', 'tsconfig-paths-jest', jest.tsconfigPathsJestVersion),
         switchToJestBuilderInAngularJson(defaultProjectName),
         prepareTsAppOrLibConfigForJest('.', 'app'),
         prepareTsSpecConfigForJest('.'),

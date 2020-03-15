@@ -3,11 +3,11 @@ describe('Hello Angular', () => {
     cy.visit('http://localhost:4200');
   });
 
-  it('should display welcome message', () => {
-    cy.get('app-root h1').should('contain', 'Welcome');
+  it('should display welcome header', () => {
+    cy.get('.toolbar > span').should('contain', 'Welcome');
   });
 
-  it('has 3 links', () => {
-    cy.get('app-root li a').should('have.length', 3);
+  it('has 3 resources and 6 next steps', () => {
+    cy.get('.content > .card-container > .card').should('have.length', 9);
   });
 });

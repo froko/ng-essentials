@@ -8,7 +8,6 @@ import { addEssentials } from './essentials';
 import { addJest } from './jest';
 import { addKarma } from './karma';
 import { NgEssentialsOptions } from './schema';
-import { addTestcafe } from './testcafe';
 
 export function essentials(options: NgEssentialsOptions): Rule {
   return (tree: Tree, _context: SchematicContext) => {
@@ -18,7 +17,6 @@ export function essentials(options: NgEssentialsOptions): Rule {
       addKarma(options),
       addJest(options),
       addCypress(options),
-      addTestcafe(options),
       addEssentials(options),
       installPackage('@froko/ng-essentials'),
       runNpmPackageInstall()
@@ -44,8 +42,6 @@ function readNgEssentialsOptionsFromAngularJson(host: Tree, options: NgEssential
     options.firstRun = false;
     options.jest = optionsFromAngularJson.jest;
     options.cypress = optionsFromAngularJson.cypress;
-    options.testcafe = optionsFromAngularJson.testcafe;
-    options.wallaby = optionsFromAngularJson.wallaby;
   }
 
   return options;

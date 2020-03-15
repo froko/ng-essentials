@@ -10,6 +10,7 @@
   "license": "MIT",
   "schematics": "./src/collection.json",
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "prebuild": "npm run schema2ts && npm run verify",
     "build": "tsc -p tsconfig.json",
     "test": "jest --watch",
@@ -25,7 +26,7 @@
     "sandbox:clean": "git checkout HEAD -- sandbox && git clean -f -d sandbox && rimraf sandbox/.vscode",
     "sandbox:schematic": "npm link && cd sandbox && npm link @froko/ng-essentials",
     "sandbox:add:core": "npm run sandbox:schematic && cd sandbox && schematics @froko/ng-essentials:ng-add",
-    "sandbox:add:all": "npm run sandbox:schematic && cd sandbox && schematics @froko/ng-essentials:ng-add --jest --cypress --testcafe"
+    "sandbox:add:all": "npm run sandbox:schematic && cd sandbox && schematics @froko/ng-essentials:ng-add --jest --cypress"
   },
   "jest": {
     "testEnvironment": "node",
@@ -34,7 +35,7 @@
     },
     "testRegex": "(/__tests__/.*|(\\.|/|_)(test|spec))\\.(tsx?)$",
     "testPathIgnorePatterns": [
-      "<rootDir>/.*/(files|jest|cypress|testcafe)",
+      "<rootDir>/.*/(files|jest|cypress)",
       "<rootDir>/node_modules/",
       "<rootDir>/sandbox"
     ],
@@ -71,6 +72,7 @@
     "typescript": "3.7.5"
   },
   "resolutions": {
+    "acorn": "^7.1.1",
     "lodash": "^4.17.12",
     "handlebars": "^4.5.3"
   },

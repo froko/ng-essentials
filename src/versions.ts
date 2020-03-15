@@ -1,6 +1,6 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '9.0.4',
+  angularVersion: '9.0.6',
 
   // rxjs
   rxjsVersion: '6.5.4',
@@ -12,10 +12,10 @@ export const essentials = {
   zoneVersion: '0.10.2',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.900.4',
+  buildAngularVersion: '0.900.6',
 
   // @angular/cli
-  cliVersion: '8.3.21',
+  cliVersion: '9.0.6',
 
   // @types/node
   nodeVersion: '12.12.6',
@@ -27,7 +27,7 @@ export const essentials = {
   tsNodeVersion: '8.6.2',
 
   // tslint
-  tsLintVersion: '6.0.0',
+  tsLintVersion: '5.20.0',
 
   // tslint-angular
   tsLintAngularRulesVersion: '3.0.2',
@@ -53,7 +53,7 @@ export const essentials = {
 
 export const karma = {
   // @types/jasmine
-  jasmineTypeVersion: '3.5.7',
+  jasmineTypeVersion: '3.5.9',
 
   // jasmine-core
   jasmineCoreVersion: '3.5.0',
@@ -79,7 +79,7 @@ export const jest = {
   jestBuilderVersion: '9.0.0',
 
   // @types/jest
-  jestTypeVersion: '25.1.3',
+  jestTypeVersion: '25.1.4',
 
   // babel-core
   babelCoreVersion: '6.26.3',
@@ -88,21 +88,12 @@ export const jest = {
   babelJestVersion: '25.1.0',
 
   // jest
-  jestVersion: '25.1.0',
-
-  // jest-cli
-  jestCliVersion: '24.8.0',
-
-  // jest-preset-angular
-  angularPresetVersion: '8.0.0',
-
-  // tsconfig-paths-jest
-  tsconfigPathsJestVersion: '0.0.1'
+  jestVersion: '25.1.0'
 };
 
 export const cypress = {
   // @cypress/webpack-preprocessor
-  preprocessorVersion: '4.0.3',
+  preprocessorVersion: '4.1.3',
 
   // cypress
   cypressVersion: '4.1.0',
@@ -111,21 +102,18 @@ export const cypress = {
   tsLoaderVersion: '5.3.3'
 };
 
-export const testcafe = {
-  // testcafe
-  testcafeVersion: '1.8.2',
-
-  // testcafe-angular-selectors
-  angularSelectorsVersion: '0.3.2'
-};
-
 export const library = {
   // @angular-devkit/build-ng-packagr
-  buildNgPackagrVersion: '0.900.4',
+  buildNgPackagrVersion: '0.900.6',
 
   // ng-packagr
-  ngPackagrVersion: '9.0.2',
+  ngPackagrVersion: '9.0.3',
 
   // tsickle
-  tsickleVersion: '0.38.0'
+  tsickleVersion: '0.38.1'
+};
+
+export const resolutions = {
+  acornVersion: '^7.1.1',
+  kindOfVersion: '^6.0.3'
 };

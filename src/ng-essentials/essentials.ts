@@ -19,7 +19,7 @@ import {
   removeScriptFromPackageJson,
   updateJson
 } from '../utils';
-import { essentials } from '../versions';
+import { essentials, resolutions } from '../versions';
 
 import { NgEssentialsOptions } from './schema';
 
@@ -70,7 +70,9 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('devDependencies', 'pretty-quick', essentials.prettyQuickVersion),
         addPackageToPackageJson('devDependencies', 'tslint-angular', essentials.tsLintAngularRulesVersion),
         addPackageToPackageJson('devDependencies', 'tslint-config-prettier', essentials.tsLintConfigPrettierVersion),
-        addScriptToPackageJson('format', 'prettier --write ./**/*{.ts,.js,.json,.css,.scss}'),
+        addPackageToPackageJson('resolutions', 'acorn', resolutions.acornVersion),
+        addPackageToPackageJson('resolutions', 'kind-of', resolutions.kindOfVersion),
+        addScriptToPackageJson('format', 'prettier --write "./**/*{.ts,.js,.json,.css,.scss}"'),
         addScriptToPackageJson('format:fix', 'pretty-quick --staged'),
         updateDevelopmentEnvironmentFile('src'),
         updateProductionEnvironmentFile('src'),
@@ -204,9 +206,7 @@ function addNgEssentialsToAngularJson(options: NgEssentialsOptions): Rule {
 
     angularJson['schematics'][NG_ESSENTIALS] = {
       jest: options.jest ? options.jest.valueOf() : false,
-      cypress: options.cypress ? options.cypress.valueOf() : false,
-      testcafe: options.testcafe ? options.testcafe.valueOf() : false,
-      wallaby: options.wallaby ? options.wallaby.valueOf() : false
+      cypress: options.cypress ? options.cypress.valueOf() : false
     };
 
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
@@ -279,9 +279,8 @@ function editTsLintConfigJson(elementPrefix: string): Rule {
               order: 5
             },
             {
-              name: 'unknown',
               match: null,
-              order: 6
+              order: 5
             }
           ]
         }

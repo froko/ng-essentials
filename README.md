@@ -30,8 +30,6 @@ _ng-essentials_ comes with some configuration switches to add even more value:
 
 - `--cypress` adds e2e testing functionality with [Cypress.io](https://www.cypress.io/). Please note that `ng e2e` won't work anymore. Use `npm run cypress` or `yarn cypress` instead.
 
-- `--testcafe` adds e2e testing functionality with [Testcafe](https://devexpress.github.io/testcafe/). Please note that `ng e2e` won't work anymore. Use `npm run testcafe` or `yarn testcafe` instead.
-
 #### Adding a new library with jest support
 
 This schematic enhances the creation of a new library when the schematic was previously installed with the `--jest` option. By running

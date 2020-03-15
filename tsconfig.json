@@ -20,5 +20,5 @@
     "noUnusedParameters": true
   },
   "include": ["src/**/*"],
-  "exclude": ["src/**/essentials/**/*", "src/**/jest/**/*", "src/**/cypress/**/*", "src/**/testcafe/**/*"]
+  "exclude": ["src/**/essentials/**/*", "src/**/jest/**/*", "src/**/cypress/**/*"]
 }
