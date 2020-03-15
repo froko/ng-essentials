@@ -10,7 +10,6 @@
   "license": "MIT",
   "schematics": "./src/collection.json",
   "scripts": {
-    "preinstall": "npx npm-force-resolutions",
     "prebuild": "npm run schema2ts && npm run verify",
     "build": "tsc -p tsconfig.json",
     "test": "jest --watch",
