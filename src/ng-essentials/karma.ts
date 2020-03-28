@@ -18,6 +18,6 @@ export function addKarma(options: NgEssentialsOptions): Rule {
     addPackageToPackageJson('devDependencies', 'karma-chrome-launcher', karma.chromeLauncherVersion),
     addPackageToPackageJson('devDependencies', 'karma-coverage-istanbul-reporter', karma.coverageReporterVersion),
     addPackageToPackageJson('devDependencies', 'karma-jasmine', karma.karmaJasmineVersion),
-    addPackageToPackageJson('devDependencies', 'karma-jasmine-html-reporter', karma.htmlReporterVersion)
+    addPackageToPackageJson('devDependencies', 'karma-jasmine-html-reporter', karma.htmlReporterVersion),
   ]);
 }

@@ -4,7 +4,7 @@ import { ANGULAR_JSON } from '../constants';
 import {
   addEnvProvidersToAppModule,
   updateDevelopmentEnvironmentFile,
-  updateProductionEnvironmentFile
+  updateProductionEnvironmentFile,
 } from '../ng-essentials/essentials';
 import { prepareTsAppOrLibConfigForJest, prepareTsSpecConfigForJest } from '../ng-essentials/jest';
 import {
@@ -12,7 +12,7 @@ import {
   findJestOptionInAngularJson,
   findNewProjectRootInAngularJson,
   removeArchitectNodeFromAngularJson,
-  removePackageFromPackageJson
+  removePackageFromPackageJson,
 } from '../utils';
 
 import { AngularApplicationOptionsSchema } from './schema';
@@ -39,9 +39,9 @@ export function essentialsApplication(options: AngularApplicationOptionsSchema):
         hasJest ? deleteFile(`${applicationPath}/karma.conf.js`) : noop(),
         hasJest ? deleteFile(`${applicationPath}/src/test.ts`) : noop(),
         hasJest ? prepareTsAppOrLibConfigForJest(applicationPath, 'app') : noop(),
-        hasJest ? prepareTsSpecConfigForJest(applicationPath) : noop()
+        hasJest ? prepareTsSpecConfigForJest(applicationPath) : noop(),
       ]);
-    }
+    },
   ]);
 }
 
@@ -53,7 +53,7 @@ function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string, appl
     if (angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig']) {
       angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig'] = [
         `${applicationPath}/tsconfig.app.json`,
-        `${applicationPath}/tsconfig.spec.json`
+        `${applicationPath}/tsconfig.spec.json`,
       ];
     }
 

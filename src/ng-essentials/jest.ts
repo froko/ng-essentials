@@ -10,7 +10,7 @@ import {
   findDefaultProjectNameInAngularJson,
   removePackageFromPackageJson,
   tsconfigFilePath,
-  updateJson
+  updateJson,
 } from '../utils';
 import { jest } from '../versions';
 
@@ -45,23 +45,23 @@ export function addJest(options: NgEssentialsOptions): Rule {
         prepareTsAppOrLibConfigForJest('.', 'app'),
         prepareTsSpecConfigForJest('.'),
         createLaunchJson(),
-        copyConfigFiles('jest')
+        copyConfigFiles('jest'),
       ]);
-    }
+    },
   ]);
 }
 
 export function prepareTsAppOrLibConfigForJest(rootPath: string, context: AppOrLibType): Rule {
-  return updateJson(tsconfigFilePath(rootPath, context), json => {
+  return updateJson(tsconfigFilePath(rootPath, context), (json) => {
     return {
       ...json,
-      exclude: ['**/*.spec.ts', 'src/jest.ts']
+      exclude: ['**/*.spec.ts', 'src/jest.ts'],
     };
   });
 }
 
 export function prepareTsSpecConfigForJest(rootPath: string): Rule {
-  return updateJson(tsconfigFilePath(rootPath, 'spec'), json => {
+  return updateJson(tsconfigFilePath(rootPath, 'spec'), (json) => {
     if (json['files']) {
       delete json['files'];
     }
@@ -71,17 +71,17 @@ export function prepareTsSpecConfigForJest(rootPath: string): Rule {
       compilerOptions: {
         emitDecoratorMetadata: true,
         esModuleInterop: true,
-        types: ['jest']
-      }
+        types: ['jest'],
+      },
     };
   });
 }
 
 export function switchToJestBuilderInAngularJson(projectName: string): Rule {
-  return updateJson(ANGULAR_JSON, json => {
+  return updateJson(ANGULAR_JSON, (json) => {
     json['projects'][projectName]['architect']['test'].builder = '@angular-builders/jest:run';
     json['projects'][projectName]['architect']['test'].options = {
-      detectOpenHandles: true
+      detectOpenHandles: true,
     };
 
     return json;

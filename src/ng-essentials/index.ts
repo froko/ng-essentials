@@ -19,7 +19,7 @@ export function essentials(options: NgEssentialsOptions): Rule {
       addCypress(options),
       addEssentials(options),
       installPackage('@froko/ng-essentials'),
-      runNpmPackageInstall()
+      runNpmPackageInstall(),
     ]);
 
     return rule(tree, _context);

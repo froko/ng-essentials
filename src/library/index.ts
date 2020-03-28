@@ -9,7 +9,7 @@ import {
   findNewProjectRootInAngularJson,
   removeArchitectNodeFromAngularJson,
   removeAutomaticUpdateSymbols,
-  removePackageFromPackageJson
+  removePackageFromPackageJson,
 } from '../utils';
 import { library } from '../versions';
 
@@ -35,8 +35,8 @@ export function essentialsLibrary(options: LibraryOptionsSchema): Rule {
         hasJest ? deleteFile(`${libraryPath}/karma.conf.js`) : noop(),
         hasJest ? deleteFile(`${libraryPath}/src/test.ts`) : noop(),
         hasJest ? prepareTsAppOrLibConfigForJest(libraryPath, 'lib') : noop(),
-        hasJest ? prepareTsSpecConfigForJest(libraryPath) : noop()
+        hasJest ? prepareTsSpecConfigForJest(libraryPath) : noop(),
       ]);
-    }
+    },
   ]);
 }
