@@ -72,6 +72,7 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('devDependencies', 'tslint-config-prettier', essentials.tsLintConfigPrettierVersion),
         addPackageToPackageJson('resolutions', 'acorn', resolutions.acornVersion),
         addPackageToPackageJson('resolutions', 'kind-of', resolutions.kindOfVersion),
+        addPackageToPackageJson('resolutions', 'minimist', resolutions.minimistVersion),
         addScriptToPackageJson('format', 'prettier --write "./**/*{.ts,.js,.json,.css,.scss}"'),
         addScriptToPackageJson('format:fix', 'pretty-quick --staged'),
         updateDevelopmentEnvironmentFile('src'),

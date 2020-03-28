@@ -16,7 +16,7 @@
     "clean": "rimraf src/**/*.js src/**/*.js.map",
     "clean:mac": "find . -name \".DS_Store\" -depth -exec rm {} \\;",
     "lint": "tslint --project tsconfig.json --format codeFrame --fix",
-    "format": "prettier --write \"src/**/*{.ts,.js,.json}\"",
+    "format": "prettier --write src/**/*{.ts,.js,.json}",
     "format:fix": "pretty-quick --staged",
     "verify": "npm run format && npm run lint && jest --bail",
     "schema2ts": "node scripts/generate-schema-defs.js",

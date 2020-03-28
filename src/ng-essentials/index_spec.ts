@@ -191,6 +191,9 @@ describe('ng-essentials', () => {
       it('updates jasmine packages in package.json', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@types/jasmine": "${karma.jasmineTypeVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jasmine-core": "${karma.jasmineCoreVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(
+          `"jasmine-spec-reporter": "${karma.jasmineSpecReporterVersion}"`
+        );
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"karma": "${karma.karmaVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(
           `"karma-coverage-istanbul-reporter": "${karma.coverageReporterVersion}"`

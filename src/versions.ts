@@ -1,6 +1,6 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '9.0.6',
+  angularVersion: '9.1.0',
 
   // rxjs
   rxjsVersion: '6.5.4',
@@ -9,22 +9,22 @@ export const essentials = {
   tslibVersion: '1.11.1',
 
   // zone.js
-  zoneVersion: '0.10.2',
+  zoneVersion: '0.10.3',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.900.6',
+  buildAngularVersion: '0.901.0',
 
   // @angular/cli
-  cliVersion: '9.0.6',
+  cliVersion: '9.1.0',
 
   // @types/node
   nodeVersion: '12.12.6',
 
   // codelizer
-  codelizerVersion: '5.2.1',
+  codelizerVersion: '5.2.2',
 
   // ts-node
-  tsNodeVersion: '8.6.2',
+  tsNodeVersion: '8.8.1',
 
   // tslint
   tsLintVersion: '5.20.0',
@@ -33,7 +33,7 @@ export const essentials = {
   tsLintAngularRulesVersion: '3.0.2',
 
   // typescript
-  typescriptVersion: '3.7.5',
+  typescriptVersion: '3.8.3',
 
   // husky
   huskyVersion: '4.2.3',
@@ -42,7 +42,7 @@ export const essentials = {
   npmRunAllVersion: '4.1.5',
 
   // prettier
-  prettierVersion: '1.19.1',
+  prettierVersion: '2.0.2',
 
   // pretty-quick
   prettyQuickVersion: '2.0.1',
@@ -53,10 +53,13 @@ export const essentials = {
 
 export const karma = {
   // @types/jasmine
-  jasmineTypeVersion: '3.5.9',
+  jasmineTypeVersion: '3.5.10',
 
   // jasmine-core
   jasmineCoreVersion: '3.5.0',
+
+  // jasmine-spec-reporter
+  jasmineSpecReporterVersion: '5.0.1',
 
   // karma
   karmaVersion: '4.4.1',
@@ -71,7 +74,7 @@ export const karma = {
   karmaJasmineVersion: '3.1.1',
 
   // karma-jasmine-html-reporter
-  htmlReporterVersion: '1.5.2' // was 1.4.2
+  htmlReporterVersion: '1.5.3'
 };
 
 export const jest = {
@@ -85,10 +88,10 @@ export const jest = {
   babelCoreVersion: '6.26.3',
 
   // babel-jest
-  babelJestVersion: '25.1.0',
+  babelJestVersion: '25.2.3',
 
   // jest
-  jestVersion: '25.1.0'
+  jestVersion: '25.2.3'
 };
 
 export const cypress = {
@@ -96,7 +99,7 @@ export const cypress = {
   preprocessorVersion: '4.1.3',
 
   // cypress
-  cypressVersion: '4.1.0',
+  cypressVersion: '4.2.0',
 
   // ts-loader
   tsLoaderVersion: '5.3.3'
@@ -104,10 +107,10 @@ export const cypress = {
 
 export const library = {
   // @angular-devkit/build-ng-packagr
-  buildNgPackagrVersion: '0.900.6',
+  buildNgPackagrVersion: '0.901.0',
 
   // ng-packagr
-  ngPackagrVersion: '9.0.3',
+  ngPackagrVersion: '9.1.0',
 
   // tsickle
   tsickleVersion: '0.38.1'
@@ -115,5 +118,6 @@ export const library = {
 
 export const resolutions = {
   acornVersion: '^7.1.1',
-  kindOfVersion: '^6.0.3'
+  kindOfVersion: '^6.0.3',
+  minimistVersion: '^1.2.3'
 };
