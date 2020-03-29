@@ -73,6 +73,7 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('resolutions', 'acorn', resolutions.acornVersion),
         addPackageToPackageJson('resolutions', 'kind-of', resolutions.kindOfVersion),
         addPackageToPackageJson('resolutions', 'minimist', resolutions.minimistVersion),
+        addScriptToPackageJson('preinstall', 'npx npm-force-resolutions'),
         addScriptToPackageJson('format', 'prettier --write "./**/*{.ts,.js,.json,.css,.scss}"'),
         addScriptToPackageJson('format:fix', 'pretty-quick --staged'),
         updateDevelopmentEnvironmentFile('src'),
