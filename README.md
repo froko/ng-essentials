@@ -5,7 +5,7 @@ Adds better defaults to a new Angular application generated with the Angular-CLI
 - [@davinkevin/jest](https://github.com/davinkevin/jest)
 - [@martin_hotell/schematics](https://github.com/Hotell/ng-cli-schematics)
 
-It includes many of the ideas of the following blog post, also written by Martin Hotell: [Use React tools for better Angular apps](https://medium.com/@martin_hotell/use-react-tools-for-better-angular-apps-b0f14f3f8114).
+It includes many of the ideas of the following blog post, also written by Martin Hochel: [Use React tools for better Angular apps](https://medium.com/@martin_hotell/use-react-tools-for-better-angular-apps-b0f14f3f8114).
 
 ### Usage
 
