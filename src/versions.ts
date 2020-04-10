@@ -1,9 +1,9 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '9.1.0',
+  angularVersion: '9.1.1',
 
   // rxjs
-  rxjsVersion: '6.5.4',
+  rxjsVersion: '6.5.5',
 
   // tslib
   tslibVersion: '1.11.1',
@@ -12,10 +12,10 @@ export const essentials = {
   zoneVersion: '0.10.3',
 
   // @angular-devkit/build-angular
-  buildAngularVersion: '0.901.0',
+  buildAngularVersion: '0.901.1',
 
   // @angular/cli
-  cliVersion: '9.1.0',
+  cliVersion: '9.1.1',
 
   // @types/node
   nodeVersion: '12.12.6',
@@ -24,7 +24,7 @@ export const essentials = {
   codelizerVersion: '5.2.2',
 
   // ts-node
-  tsNodeVersion: '8.8.1',
+  tsNodeVersion: '8.8.2',
 
   // tslint
   tsLintVersion: '5.20.0',
@@ -36,13 +36,13 @@ export const essentials = {
   typescriptVersion: '3.8.3',
 
   // husky
-  huskyVersion: '4.2.3',
+  huskyVersion: '4.2.5',
 
   // npm-run-all
   npmRunAllVersion: '4.1.5',
 
   // prettier
-  prettierVersion: '2.0.2',
+  prettierVersion: '2.0.4',
 
   // pretty-quick
   prettyQuickVersion: '2.0.1',
@@ -62,7 +62,7 @@ export const karma = {
   jasmineSpecReporterVersion: '5.0.1',
 
   // karma
-  karmaVersion: '4.4.1',
+  karmaVersion: '5.0.1',
 
   // karma-chrome-launcher
   chromeLauncherVersion: '3.1.0',
@@ -79,27 +79,27 @@ export const karma = {
 
 export const jest = {
   // @angular-builders/jest
-  jestBuilderVersion: '9.0.0',
+  jestBuilderVersion: '9.0.1',
 
   // @types/jest
-  jestTypeVersion: '25.1.4',
+  jestTypeVersion: '25.2.1',
 
   // babel-core
   babelCoreVersion: '6.26.3',
 
   // babel-jest
-  babelJestVersion: '25.2.3',
+  babelJestVersion: '25.3.0',
 
   // jest
-  jestVersion: '25.2.3'
+  jestVersion: '25.3.0'
 };
 
 export const cypress = {
   // @cypress/webpack-preprocessor
-  preprocessorVersion: '4.1.3',
+  preprocessorVersion: '5.1.1',
 
   // cypress
-  cypressVersion: '4.2.0',
+  cypressVersion: '4.3.0',
 
   // ts-loader
   tsLoaderVersion: '5.3.3'
@@ -107,7 +107,7 @@ export const cypress = {
 
 export const library = {
   // @angular-devkit/build-ng-packagr
-  buildNgPackagrVersion: '0.901.0',
+  buildNgPackagrVersion: '0.901.1',
 
   // ng-packagr
   ngPackagrVersion: '9.1.0',
