@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+      "angular.ng-template",
+      "coenraads.bracket-pair-colorizer",
+      "editorconfig.editorconfig",
+      "msjsdiag.debugger-for-chrome",
+      "esbenp.prettier-vscode",
+      "ms-vscode.vscode-typescript-tslint-plugin"
+    ]
+  }
