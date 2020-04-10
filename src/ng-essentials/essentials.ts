@@ -31,13 +31,13 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
   return chain([
     (tree: Tree, _context: SchematicContext) => {
       const defaultProjectName = findDefaultProjectNameInAngularJson(tree);
-      const defaultProjectRoot = findNewProjectRootInAngularJson(tree);
       const elementPrefix = findElementPrefixInAngularJson(tree, defaultProjectName);
 
       return chain([
         addDefaultSchematicsToAngularJson(),
         addNgEssentialsToAngularJson(options),
         removeEndToEndTsConfigNodeFromAngularJson(defaultProjectName),
+        removeEndToEndTestFiles(),
         removeArchitectNodeFromAngularJson(defaultProjectName, 'e2e'),
         removePackageFromPackageJson('devDependencies', '@types/jasminewd2'),
         removePackageFromPackageJson('devDependencies', 'protractor'),
@@ -104,6 +104,15 @@ function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string): Rul
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
 
     return host;
+  };
+}
+
+function removeEndToEndTestFiles(): Rule {
+  return (host: Tree, __: SchematicContext) => {
+    host.delete('e2e/src/app.e2e-spec.ts');
+    host.delete('e2e/src/app.po.ts');
+    host.delete('e2e/protractor.conf.js');
+    host.delete('e2e/tsconfig.json');
   };
 }
 
