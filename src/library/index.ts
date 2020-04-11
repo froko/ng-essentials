@@ -1,7 +1,12 @@
 import { dasherize } from '@angular-devkit/core/src/utils/strings';
 import { chain, externalSchematic, noop, Rule, Tree } from '@angular-devkit/schematics';
 
-import { createJestConfig, deleteTsSpecConfig, prepareTsAppOrLibConfigForJest, switchToJestBuilderInAngularJson } from '../ng-essentials/jest';
+import {
+  createJestConfig,
+  deleteTsSpecConfig,
+  prepareTsAppOrLibConfigForJest,
+  switchToJestBuilderInAngularJson,
+} from '../ng-essentials/jest';
 import {
   addPackageToPackageJson,
   deleteFile,

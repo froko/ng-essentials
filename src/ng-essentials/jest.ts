@@ -1,4 +1,4 @@
-import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { chain, Rule, Tree } from '@angular-devkit/schematics';
 
 import { ANGULAR_JSON } from '../constants';
 import {
@@ -22,7 +22,7 @@ export function addJest(options: NgEssentialsOptions): Rule {
   }
 
   return chain([
-    (tree: Tree, _context: SchematicContext) => {
+    (tree: Tree) => {
       const defaultProjectName = findDefaultProjectNameInAngularJson(tree);
 
       return chain([
@@ -66,7 +66,7 @@ export function prepareTsSpecConfigForJest(): Rule {
       delete json['files'];
     }
 
-    if(json['include']) {
+    if (json['include']) {
       delete json['include'];
     }
 
@@ -82,7 +82,7 @@ export function prepareTsSpecConfigForJest(): Rule {
 }
 
 export function deleteTsSpecConfig(rootPath: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     host.delete(`${rootPath}/tsconfig.spec.json`);
   };
 }
@@ -99,7 +99,7 @@ export function switchToJestBuilderInAngularJson(projectName: string): Rule {
 }
 
 export function createJestConfig(rootPath: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     host.create(
       `${rootPath}/jest.config.js`,
       `const { pathsToModuleNameMapper } = require('ts-jest/utils');
@@ -115,7 +115,7 @@ module.exports = {
 }
 
 function createLaunchJson(): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     host.create(
       './.vscode/launch.json',
       `{

@@ -21,7 +21,7 @@ export type AppOrLibType = 'app' | 'lib';
 export type TsConfigContext = 'app' | 'spec' | 'lib';
 
 export function removeAutomaticUpdateSymbols(): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
     const packageJson = JSON.parse(sourceText);
 
@@ -44,7 +44,7 @@ export function removeAutomaticUpdateSymbols(): Rule {
 }
 
 export function removePackageFromPackageJson(type: DependencyType, pkg: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
     const packageJson = JSON.parse(sourceText);
 
@@ -57,7 +57,7 @@ export function removePackageFromPackageJson(type: DependencyType, pkg: string):
 }
 
 export function addPackageToPackageJson(type: DependencyType, pkg: string, version: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
     const packageJson = JSON.parse(sourceText);
 
@@ -80,7 +80,7 @@ export function addPackageToPackageJson(type: DependencyType, pkg: string, versi
 }
 
 export function removeScriptFromPackageJson(key: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
     const packageJson = JSON.parse(sourceText);
 
@@ -95,7 +95,7 @@ export function removeScriptFromPackageJson(key: string): Rule {
 }
 
 export function addScriptToPackageJson(key: string, command: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
     const packageJson = JSON.parse(sourceText);
 
@@ -152,7 +152,7 @@ export function findJestOptionInAngularJson(host: Tree): boolean {
 }
 
 export function removeArchitectNodeFromAngularJson(applicationName: string, node: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
     const angularJson = JSON.parse(sourceText);
 
@@ -171,7 +171,7 @@ export function tsconfigFilePath(rootPath: string, context: TsConfigContext): st
 }
 
 export function updateJson<T = any, O = T>(filePath: string, callback: (json: T) => O): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     if (!host.exists(filePath)) {
       return host;
     }
@@ -185,8 +185,8 @@ export function updateJson<T = any, O = T>(filePath: string, callback: (json: T)
   };
 }
 
-export function deleteFile(file: string) {
-  return (host: Tree, _: SchematicContext) => {
+export function deleteFile(file: string): Rule {
+  return (host: Tree) => {
     if (host.exists(file)) {
       host.delete(file);
     }
@@ -208,7 +208,7 @@ export function copyConfigFiles(path: string): Rule {
   );
 }
 
-export function runNpmPackageInstall() {
+export function runNpmPackageInstall(): Rule {
   return (host: Tree, context: SchematicContext) => {
     context.addTask(new NodePackageInstallTask());
     return host;

@@ -6,7 +6,12 @@ import {
   updateDevelopmentEnvironmentFile,
   updateProductionEnvironmentFile,
 } from '../ng-essentials/essentials';
-import { createJestConfig, deleteTsSpecConfig, prepareTsAppOrLibConfigForJest, switchToJestBuilderInAngularJson } from '../ng-essentials/jest';
+import {
+  createJestConfig,
+  deleteTsSpecConfig,
+  prepareTsAppOrLibConfigForJest,
+  switchToJestBuilderInAngularJson,
+} from '../ng-essentials/jest';
 import {
   deleteFile,
   findJestOptionInAngularJson,

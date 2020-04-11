@@ -1,4 +1,4 @@
-import { chain, Rule, SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
+import { chain, Rule, SchematicsException, Tree } from '@angular-devkit/schematics';
 
 import * as ts from 'typescript';
 
@@ -12,7 +12,6 @@ import {
   copyConfigFiles,
   findDefaultProjectNameInAngularJson,
   findElementPrefixInAngularJson,
-  findNewProjectRootInAngularJson,
   removeArchitectNodeFromAngularJson,
   removeAutomaticUpdateSymbols,
   removePackageFromPackageJson,
@@ -29,7 +28,7 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
   }
 
   return chain([
-    (tree: Tree, _context: SchematicContext) => {
+    (tree: Tree) => {
       const defaultProjectName = findDefaultProjectNameInAngularJson(tree);
       const elementPrefix = findElementPrefixInAngularJson(tree, defaultProjectName);
 
@@ -90,7 +89,7 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
 }
 
 function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
     const angularJson = JSON.parse(sourceText);
 
@@ -108,7 +107,7 @@ function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string): Rul
 }
 
 function removeEndToEndTestFiles(): Rule {
-  return (host: Tree, __: SchematicContext) => {
+  return (host: Tree) => {
     host.delete('e2e/src/app.e2e-spec.ts');
     host.delete('e2e/src/app.po.ts');
     host.delete('e2e/protractor.conf.js');
@@ -184,7 +183,7 @@ export function addEnvProvidersToAppModule(sourceDirectory: string): Rule {
 }
 
 function addDefaultSchematicsToAngularJson(): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
     const angularJson = JSON.parse(sourceText);
 
@@ -203,7 +202,7 @@ function addDefaultSchematicsToAngularJson(): Rule {
 }
 
 function addNgEssentialsToAngularJson(options: NgEssentialsOptions): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
     const angularJson = JSON.parse(sourceText);
 
@@ -227,7 +226,7 @@ function addNgEssentialsToAngularJson(options: NgEssentialsOptions): Rule {
 }
 
 function addHuskyConfigToPackageJson(): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
     const packageJson = JSON.parse(sourceText);
 
@@ -246,7 +245,7 @@ function addHuskyConfigToPackageJson(): Rule {
 }
 
 function editTsLintConfigJson(elementPrefix: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     const sourceText = host.read(TSLINT_JSON).toString('utf-8');
     const tslintJson = JSON.parse(sourceText);
 
@@ -319,7 +318,7 @@ function editTsConfigJson(): Rule {
 }
 
 function createLaunchJson(options: NgEssentialsOptions): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     if (!options.jest) {
       host.create(
         './.vscode/launch.json',

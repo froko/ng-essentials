@@ -1,4 +1,4 @@
-import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { chain, Rule, Tree } from '@angular-devkit/schematics';
 
 import { ANGULAR_JSON, NG_ESSENTIALS } from '../constants';
 import { installPackage, runNpmPackageInstall } from '../utils';
@@ -10,10 +10,10 @@ import { addKarma } from './karma';
 import { NgEssentialsOptions } from './schema';
 
 export function essentials(options: NgEssentialsOptions): Rule {
-  return (tree: Tree, _context: SchematicContext) => {
+  return (tree: Tree) => {
     options = readNgEssentialsOptionsFromAngularJson(tree, options);
 
-    const rule = chain([
+    return chain([
       addKarma(options),
       addJest(options),
       addCypress(options),
@@ -21,8 +21,6 @@ export function essentials(options: NgEssentialsOptions): Rule {
       installPackage('@froko/ng-essentials'),
       runNpmPackageInstall(),
     ]);
-
-    return rule(tree, _context);
   };
 }
 
