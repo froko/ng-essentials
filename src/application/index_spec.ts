@@ -58,6 +58,11 @@ describe('application', () => {
       expect(testTree.files).not.toContain(`/libs/${appName}/tsconfig.spec.json`);
     });
 
+    it('patches TsLint config in angular.json', () => {
+      expect(testTree.readContent(ANGULAR_JSON)).toContain('"libs/myApp/tsconfig.app.json"');
+      expect(testTree.readContent(ANGULAR_JSON)).toContain('"tsconfig.spec.json"');
+    });
+
     it('switches to jest builder in angular.json', () => {
       expect(testTree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
     });

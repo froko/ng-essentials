@@ -87,6 +87,17 @@ export function deleteTsSpecConfig(rootPath: string): Rule {
   };
 }
 
+export function patchTsLintOptionsInAngularJson(projectName: string, projectPath: string, context: AppOrLibType): Rule {
+  return updateJson(ANGULAR_JSON, (json) => {
+    json['projects'][projectName]['architect']['lint']['options']['tsConfig'] = [
+      `${projectPath}/tsconfig.${context}.json`,
+      'tsconfig.spec.json',
+    ];
+
+    return json;
+  });
+}
+
 export function switchToJestBuilderInAngularJson(projectName: string): Rule {
   return updateJson(ANGULAR_JSON, (json) => {
     json['projects'][projectName]['architect']['test'].builder = '@angular-builders/jest:run';

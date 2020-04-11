@@ -4,6 +4,7 @@ import { chain, externalSchematic, noop, Rule, Tree } from '@angular-devkit/sche
 import {
   createJestConfig,
   deleteTsSpecConfig,
+  patchTsLintOptionsInAngularJson,
   prepareTsAppOrLibConfigForJest,
   switchToJestBuilderInAngularJson,
 } from '../ng-essentials/jest';
@@ -38,6 +39,7 @@ export function essentialsLibrary(options: LibraryOptionsSchema): Rule {
         hasJest ? deleteFile(`${libraryPath}/src/test.ts`) : noop(),
         hasJest ? prepareTsAppOrLibConfigForJest(libraryPath, 'lib') : noop(),
         hasJest ? deleteTsSpecConfig(libraryPath) : noop(),
+        hasJest ? patchTsLintOptionsInAngularJson(libraryName, libraryPath, 'lib') : noop(),
         hasJest ? createJestConfig(libraryPath) : noop(),
       ]);
     },

@@ -9,6 +9,7 @@ import {
 import {
   createJestConfig,
   deleteTsSpecConfig,
+  patchTsLintOptionsInAngularJson,
   prepareTsAppOrLibConfigForJest,
   switchToJestBuilderInAngularJson,
 } from '../ng-essentials/jest';
@@ -43,6 +44,7 @@ export function essentialsApplication(options: AngularApplicationOptionsSchema):
         hasJest ? deleteFile(`${applicationPath}/src/test.ts`) : noop(),
         hasJest ? prepareTsAppOrLibConfigForJest(applicationPath, 'app') : noop(),
         hasJest ? deleteTsSpecConfig(applicationPath) : noop(),
+        hasJest ? patchTsLintOptionsInAngularJson(applicationName, applicationPath, 'app') : noop(),
         hasJest ? createJestConfig(applicationPath) : noop(),
       ]);
     },

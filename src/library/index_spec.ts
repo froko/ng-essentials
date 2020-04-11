@@ -71,6 +71,11 @@ describe('library', () => {
       expect(testTree.files).not.toContain(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`);
     });
 
+    it('patches TsLint config in angular.json', () => {
+      expect(testTree.readContent(ANGULAR_JSON)).toContain(`"libs/${dasherizedLibraryName}/tsconfig.lib.json"`);
+      expect(testTree.readContent(ANGULAR_JSON)).toContain('"tsconfig.spec.json"');
+    });
+
     it('switches to jest builder in angular.json', () => {
       expect(testTree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
     });
