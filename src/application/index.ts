@@ -1,4 +1,4 @@
-import { chain, externalSchematic, noop, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { chain, externalSchematic, noop, Rule, Tree } from '@angular-devkit/schematics';
 
 import { ANGULAR_JSON } from '../constants';
 import {
@@ -6,13 +6,12 @@ import {
   updateDevelopmentEnvironmentFile,
   updateProductionEnvironmentFile,
 } from '../ng-essentials/essentials';
-import { prepareTsAppOrLibConfigForJest, prepareTsSpecConfigForJest } from '../ng-essentials/jest';
+import { createJestConfig, deleteTsSpecConfig, prepareTsAppOrLibConfigForJest, switchToJestBuilderInAngularJson } from '../ng-essentials/jest';
 import {
   deleteFile,
   findJestOptionInAngularJson,
   findNewProjectRootInAngularJson,
   removeArchitectNodeFromAngularJson,
-  removePackageFromPackageJson,
 } from '../utils';
 
 import { AngularApplicationOptionsSchema } from './schema';
@@ -20,7 +19,7 @@ import { AngularApplicationOptionsSchema } from './schema';
 export function essentialsApplication(options: AngularApplicationOptionsSchema): Rule {
   return chain([
     externalSchematic('@schematics/angular', 'application', options),
-    (tree: Tree, _context: SchematicContext) => {
+    (tree: Tree) => {
       const hasJest = findJestOptionInAngularJson(tree);
       const applicationName = options.name;
       const newProjectRoot = findNewProjectRootInAngularJson(tree);
@@ -34,19 +33,19 @@ export function essentialsApplication(options: AngularApplicationOptionsSchema):
         updateDevelopmentEnvironmentFile(applicationSourcePath),
         updateProductionEnvironmentFile(applicationSourcePath),
         addEnvProvidersToAppModule(applicationSourcePath),
-        removePackageFromPackageJson('devDependencies', 'tslib'),
-        hasJest ? removeArchitectNodeFromAngularJson(applicationName, 'test') : noop(),
+        hasJest ? switchToJestBuilderInAngularJson(applicationName) : noop(),
         hasJest ? deleteFile(`${applicationPath}/karma.conf.js`) : noop(),
         hasJest ? deleteFile(`${applicationPath}/src/test.ts`) : noop(),
         hasJest ? prepareTsAppOrLibConfigForJest(applicationPath, 'app') : noop(),
-        hasJest ? prepareTsSpecConfigForJest(applicationPath) : noop(),
+        hasJest ? deleteTsSpecConfig(applicationPath) : noop(),
+        hasJest ? createJestConfig(applicationPath) : noop(),
       ]);
     },
   ]);
 }
 
 function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string, applicationPath: string): Rule {
-  return (host: Tree, _: SchematicContext) => {
+  return (host: Tree) => {
     const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
     const angularJson = JSON.parse(sourceText);
 
@@ -64,7 +63,7 @@ function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string, appl
 }
 
 function removeEndToEndTestFiles(applicationPath: string): Rule {
-  return (host: Tree, __: SchematicContext) => {
+  return (host: Tree) => {
     host.delete(`${applicationPath}/e2e/src/app.e2e-spec.ts`);
     host.delete(`${applicationPath}/e2e/src/app.po.ts`);
     host.delete(`${applicationPath}/e2e/protractor.conf.js`);

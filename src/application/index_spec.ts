@@ -30,7 +30,7 @@ describe('application', () => {
       expect(testTree.files).toContain(`/libs/${appName}/src/test.ts`);
     });
 
-    it('removes e2e files from the origina @angular/schematics command', () => {
+    it('removes e2e files from the original @angular/schematics command', () => {
       expect(testTree.files).not.toContain(`/libs/${appName}/e2e/tsconfig.json`);
       expect(testTree.files).not.toContain(`/libs/${appName}/e2e/protractor.conf.js`);
       expect(testTree.files).not.toContain(`/libs/${appName}/e2e/src/app.e2e-spec.ts`);
@@ -54,19 +54,20 @@ describe('application', () => {
       expect(testTree.files).not.toContain(`/libs/${appName}/src/test.ts`);
     });
 
-    it('removes test node in angular.json', () => {
-      expect(testTree.readContent(ANGULAR_JSON)).not.toContain('test');
+    it('removes spec typescript config file in library folder', () => {
+      expect(testTree.files).not.toContain(`/libs/${appName}/tsconfig.spec.json`);
+    });
+
+    it('switches to jest builder in angular.json', () => {
+      expect(testTree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
     });
 
     it('updates application typescript config file in src folder', () => {
       expect(testTree.readContent(`/libs/${appName}/tsconfig.app.json`)).not.toContain('test.ts');
     });
 
-    it('updates spec typescript config file in application folder', () => {
-      expect(testTree.readContent(`/libs/${appName}/tsconfig.spec.json`)).not.toContain('files');
-      expect(testTree.readContent(`/libs/${appName}/tsconfig.spec.json`)).not.toContain('jasmine');
-
-      expect(testTree.readContent(`/libs/${appName}/tsconfig.spec.json`)).toContain('jest');
+    it('adds jest config file', () => {
+      expect(testTree.files).toContain(`/libs/${appName}/jest.config.js`);
     });
   });
 });

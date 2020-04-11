@@ -43,7 +43,7 @@ export function addJest(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('devDependencies', 'jest', jest.jestVersion),
         switchToJestBuilderInAngularJson(defaultProjectName),
         prepareTsAppOrLibConfigForJest('.', 'app'),
-        prepareTsSpecConfigForJest('.'),
+        prepareTsSpecConfigForJest(),
         createLaunchJson(),
         copyConfigFiles('jest'),
       ]);
@@ -55,15 +55,19 @@ export function prepareTsAppOrLibConfigForJest(rootPath: string, context: AppOrL
   return updateJson(tsconfigFilePath(rootPath, context), (json) => {
     return {
       ...json,
-      exclude: ['**/*.spec.ts', 'src/jest.ts'],
+      exclude: ['**/*.spec.ts'],
     };
   });
 }
 
-export function prepareTsSpecConfigForJest(rootPath: string): Rule {
-  return updateJson(tsconfigFilePath(rootPath, 'spec'), (json) => {
+export function prepareTsSpecConfigForJest(): Rule {
+  return updateJson(tsconfigFilePath('.', 'spec'), (json) => {
     if (json['files']) {
       delete json['files'];
+    }
+
+    if(json['include']) {
+      delete json['include'];
     }
 
     return {
@@ -77,6 +81,12 @@ export function prepareTsSpecConfigForJest(rootPath: string): Rule {
   });
 }
 
+export function deleteTsSpecConfig(rootPath: string): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    host.delete(`${rootPath}/tsconfig.spec.json`);
+  };
+}
+
 export function switchToJestBuilderInAngularJson(projectName: string): Rule {
   return updateJson(ANGULAR_JSON, (json) => {
     json['projects'][projectName]['architect']['test'].builder = '@angular-builders/jest:run';
@@ -86,6 +96,22 @@ export function switchToJestBuilderInAngularJson(projectName: string): Rule {
 
     return json;
   });
+}
+
+export function createJestConfig(rootPath: string): Rule {
+  return (host: Tree, _: SchematicContext) => {
+    host.create(
+      `${rootPath}/jest.config.js`,
+      `const { pathsToModuleNameMapper } = require('ts-jest/utils');
+const { compilerOptions } = require('../../tsconfig');
+
+module.exports = {
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, {
+    prefix: '<rootDir>/',
+  }),
+};`
+    );
+  };
 }
 
 function createLaunchJson(): Rule {

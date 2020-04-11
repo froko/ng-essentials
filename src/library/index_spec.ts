@@ -67,19 +67,20 @@ describe('library', () => {
       expect(testTree.files).not.toContain(`/libs/${dasherizedLibraryName}/src/test.ts`);
     });
 
-    it('removes test node in angular.json', () => {
-      expect(testTree.readContent(ANGULAR_JSON)).not.toContain('test');
+    it('removes spec typescript config file in library folder', () => {
+      expect(testTree.files).not.toContain(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`);
+    });
+
+    it('switches to jest builder in angular.json', () => {
+      expect(testTree.readContent(ANGULAR_JSON)).toContain('@angular-builders/jest:run');
     });
 
     it('updates application typescript config file in library folder', () => {
       expect(testTree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.lib.json`)).not.toContain('test.ts');
     });
 
-    it('updates spec typescript config file in library folder', () => {
-      expect(testTree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).not.toContain('files');
-      expect(testTree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).not.toContain('jasmine');
-
-      expect(testTree.readContent(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`)).toContain('jest');
+    it('adds jest config file', () => {
+      expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/jest.config.js`);
     });
   });
 });

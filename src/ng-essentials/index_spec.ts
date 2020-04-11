@@ -253,8 +253,12 @@ describe('ng-essentials', () => {
         );
       });
 
+      it('adds jest config file', () => {
+        expect(testTree.files).toContain('/jest.config.js');
+      });
+
       it('adds jest setup file', () => {
-        expect(testTree.files).toContain('/src/jest.ts');
+        expect(testTree.files).toContain('/jest.setup.ts');
       });
     });
 
