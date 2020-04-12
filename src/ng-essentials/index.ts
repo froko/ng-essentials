@@ -1,7 +1,7 @@
 import { chain, Rule, Tree } from '@angular-devkit/schematics';
 
 import { ANGULAR_JSON, NG_ESSENTIALS } from '../constants';
-import { installPackage, runNpmPackageInstall } from '../utils';
+import { installPackage, runNpmPackageInstall, runNpmScript } from '../utils';
 
 import { addCypress } from './cypress';
 import { addEssentials } from './essentials';
@@ -18,6 +18,9 @@ export function essentials(options: NgEssentialsOptions): Rule {
       addJest(options),
       addCypress(options),
       addEssentials(options),
+      // The following rules are being executed in reverse order (latest first)
+      runNpmScript('lint', '--', '--fix'),
+      runNpmScript('format'),
       installPackage('@froko/ng-essentials'),
       runNpmPackageInstall(),
     ]);

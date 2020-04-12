@@ -5,12 +5,18 @@ import {
   mergeWith,
   Rule,
   SchematicContext,
+  TaskConfigurationGenerator,
+  TaskExecutor,
+  TaskExecutorFactory,
   template,
   Tree,
-  url
+  url,
 } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodePackageInstallTaskOptions } from '@angular-devkit/schematics/tasks/node-package/install-task';
+
+import { spawn, SpawnOptions } from 'child_process';
+import { Observable } from 'rxjs';
 
 import { ANGULAR_JSON, NG_ESSENTIALS, PACKAGE_JSON } from './constants';
 
@@ -101,12 +107,12 @@ export function addScriptToPackageJson(key: string, command: string): Rule {
 
     packageJson['scripts'] = {
       ...Object.keys(packageJson['scripts'])
-        .filter(existingKey => existingKey !== key)
+        .filter((existingKey) => existingKey !== key)
         .reduce((obj, key) => {
           obj[key] = packageJson['scripts'][key];
           return obj;
         }, {}),
-      [key]: command
+      [key]: command,
     };
 
     host.overwrite(PACKAGE_JSON, JSON.stringify(packageJson, null, 2));
@@ -201,8 +207,8 @@ export function copyConfigFiles(path: string): Rule {
       template({
         utils: strings,
         dot: '.',
-        tmpl: ''
-      })
+        tmpl: '',
+      }),
     ]),
     MergeStrategy.Overwrite
   );
@@ -222,5 +228,87 @@ export function installPackage(packageName: string) {
 
     context.addTask(new NodePackageInstallTask(options));
     return host;
+  };
+}
+
+let taskRegistered = false;
+
+export function runNpmScript(scriptName: string, ...args: string[]): Rule {
+  return (_host: Tree, context: SchematicContext) => {
+    if (!context.engine.workflow) {
+      return;
+    }
+
+    if (!taskRegistered) {
+      const engineHost = (context.engine.workflow as any)._engineHost;
+      engineHost.registerTaskExecutor(createRunNpmScript());
+
+      taskRegistered = true;
+    }
+
+    (context.engine as any)._taskSchedulers.forEach((scheduler: any) => {
+      if (
+        scheduler._queue.peek() &&
+        scheduler._queue.peek().configuration.name === 'RunNpmScript' &&
+        scheduler._queue.peek().configuration.options.scriptName === scriptName
+      ) {
+        scheduler._queue.pop();
+      }
+    });
+
+    context.addTask(new RunNpmScript(scriptName, args));
+  };
+}
+
+interface NpmScriptOptions {
+  scriptName: string;
+  args: string[]
+}
+
+class RunNpmScript implements TaskConfigurationGenerator<NpmScriptOptions> {
+  constructor(private taskName: string, private args: string[]) {}
+
+  toConfiguration() {
+    return {
+      name: 'RunNpmScript',
+      options: {
+        scriptName: this.taskName,
+        args: this.args
+      },
+    };
+  }
+}
+
+function createRunNpmScript(): TaskExecutorFactory<NpmScriptOptions> {
+  return {
+    name: 'RunNpmScript',
+    create: () => {
+      return Promise.resolve<TaskExecutor<NpmScriptOptions>>((options: NpmScriptOptions, _context: SchematicContext) => {
+        const args: string[] = [];
+        args.push('run');
+        args.push(options.scriptName);
+        args.push(...options.args);
+
+        const outputStream = process.stdout;
+        const errorStream = process.stderr;
+        const spawnOptions: SpawnOptions = {
+          stdio: [process.stdin, outputStream, errorStream],
+          shell: true,
+          cwd: process.cwd(),
+        };
+
+        return new Observable((obs) => {
+          spawn('npm', args, spawnOptions).on('close', (code: number) => {
+            if (code === 0) {
+              obs.next();
+              obs.complete();
+            } else {
+              const message = 'npm task failed, see above.';
+              obs.error(new Error(message));
+            }
+          });
+        });
+      });
+    },
   };
 }
