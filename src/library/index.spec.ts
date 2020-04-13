@@ -4,7 +4,7 @@ import { UnitTestTree } from '@angular-devkit/schematics/testing';
 
 import { ANGULAR_JSON, PACKAGE_JSON } from '../constants';
 import { runSchematic } from '../testing';
-import { library } from '../versions';
+import { essentials, library } from '../versions';
 
 describe('library', () => {
   const libraryName = 'myLib';
@@ -44,7 +44,7 @@ describe('library', () => {
 
     it('updates angular packages in package.json', () => {
       expect(testTree.readContent(PACKAGE_JSON)).toContain(
-        `"@angular-devkit/build-ng-packagr": "${library.buildNgPackagrVersion}"`
+        `"@angular-devkit/build-ng-packagr": "${essentials.angularDevKitVersion}"`
       );
       expect(testTree.readContent(PACKAGE_JSON)).toContain(`"ng-packagr": "${library.ngPackagrVersion}"`);
       expect(testTree.readContent(PACKAGE_JSON)).toContain(`"tsickle": "${library.tsickleVersion}"`);

@@ -72,9 +72,9 @@ describe('ng-essentials', () => {
       expect(testTree.readContent(PACKAGE_JSON)).toContain(`"rxjs": "${essentials.rxjsVersion}"`);
       expect(testTree.readContent(PACKAGE_JSON)).toContain(`"zone.js": "${essentials.zoneVersion}"`);
       expect(testTree.readContent(PACKAGE_JSON)).toContain(
-        `"@angular-devkit/build-angular": "${essentials.buildAngularVersion}"`
+        `"@angular-devkit/build-angular": "${essentials.angularDevKitVersion}"`
       );
-      expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/cli": "${essentials.cliVersion}"`);
+      expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/cli": "${essentials.angularVersion}"`);
       expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/compiler-cli": "${essentials.angularVersion}"`);
       expect(testTree.readContent(PACKAGE_JSON)).toContain(
         `"@angular/language-service": "${essentials.angularVersion}"`
@@ -170,7 +170,7 @@ describe('ng-essentials', () => {
       expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@types/jest": "${jest.jestTypeVersion}"`);
       expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jest": "${jest.jestVersion}"`);
     });
-    
+
     it('adds launch.json with debug option for jest', () => {
       expect(testTree.readContent('/.vscode/launch.json')).toContain(
         '"program": "${workspaceFolder}/node_modules/@angular/cli/bin/ng"'
@@ -186,8 +186,8 @@ describe('ng-essentials', () => {
     });
 
     it('adds spec typescript config file', () => {
-        expect(testTree.readContent('./tsconfig.spec.json')).toContain('jest');
-      });
+      expect(testTree.readContent('./tsconfig.spec.json')).toContain('jest');
+    });
   });
 
   describe('with cypress option', () => {

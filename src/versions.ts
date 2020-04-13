@@ -2,6 +2,9 @@ export const essentials = {
   // Angular base version
   angularVersion: '9.1.1',
 
+  // @angular-devkit/*
+  angularDevKitVersion: '0.901.1',
+
   // rxjs
   rxjsVersion: '6.5.5',
 
@@ -10,12 +13,6 @@ export const essentials = {
 
   // zone.js
   zoneVersion: '0.10.3',
-
-  // @angular-devkit/build-angular
-  buildAngularVersion: '0.901.1',
-
-  // @angular/cli
-  cliVersion: '9.1.1',
 
   // @types/node
   nodeVersion: '12.12.6',
@@ -106,9 +103,6 @@ export const cypress = {
 };
 
 export const library = {
-  // @angular-devkit/build-ng-packagr
-  buildNgPackagrVersion: '0.901.1',
-
   // ng-packagr
   ngPackagrVersion: '9.1.0',
 

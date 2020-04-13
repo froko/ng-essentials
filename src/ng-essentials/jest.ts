@@ -46,7 +46,7 @@ export function addJest(options: NgEssentialsOptions): Rule {
         copyConfigFiles('jest'),
         hasDefaultApplication ? deleteFile('src/test.ts') : noop(),
         hasDefaultApplication ? switchToJestBuilderInAngularJson(defaultProjectName) : noop(),
-        hasDefaultApplication ? prepareTsAppOrLibConfigForJest('.', 'app') : noop()
+        hasDefaultApplication ? prepareTsAppOrLibConfigForJest('.', 'app') : noop(),
       ]);
     },
   ]);

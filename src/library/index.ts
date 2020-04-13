@@ -17,7 +17,7 @@ import {
   removeAutomaticUpdateSymbols,
   runNpmScript,
 } from '../utils';
-import { library } from '../versions';
+import { essentials, library } from '../versions';
 
 import { LibraryOptionsSchema } from './schema';
 
@@ -33,7 +33,7 @@ export function essentialsLibrary(options: LibraryOptionsSchema): Rule {
 
       return chain([
         removeAutomaticUpdateSymbols(),
-        addPackageToPackageJson('devDependencies', '@angular-devkit/build-ng-packagr', library.buildNgPackagrVersion),
+        addPackageToPackageJson('devDependencies', '@angular-devkit/build-ng-packagr', essentials.angularDevKitVersion),
         addPackageToPackageJson('devDependencies', 'ng-packagr', library.ngPackagrVersion),
         addPackageToPackageJson('devDependencies', 'tsickle', library.tsickleVersion),
         hasJest ? switchToJestBuilderInAngularJson(libraryName) : noop(),
