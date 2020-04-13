@@ -22,10 +22,14 @@
     "schema2ts": "node scripts/generate-schema-defs.js",
     "preversion": "npm run build",
     "postversion": "git push && git push --tags",
-    "sandbox:clean": "git checkout HEAD -- sandbox && git clean -f -d sandbox && rimraf sandbox/.vscode",
-    "sandbox:schematic": "npm link && cd sandbox && npm link @froko/ng-essentials",
-    "sandbox:add:core": "npm run sandbox:schematic && cd sandbox && schematics @froko/ng-essentials:ng-add",
-    "sandbox:add:all": "npm run sandbox:schematic && cd sandbox && schematics @froko/ng-essentials:ng-add --jest --cypress --husky"
+    "sandbox-app:clean": "git checkout HEAD -- sandbox-app && git clean -f -d sandbox-app && rimraf sandbox-app/.vscode",
+    "sandbox-app:schematic": "npm link && cd sandbox-app && npm link @froko/ng-essentials",
+    "sandbox-app:add:core": "npm run sandbox-app:schematic && cd sandbox-app && schematics @froko/ng-essentials:ng-add",
+    "sandbox-app:add:all": "npm run sandbox-app:schematic && cd sandbox-app && schematics @froko/ng-essentials:ng-add --jest --cypress --husky",
+    "sandbox-workspace:clean": "git checkout HEAD -- sandbox-workspace && git clean -f -d sandbox-workspace && rimraf sandbox-workspace/.vscode",
+    "sandbox-workspace:schematic": "npm link && cd sandbox-workspace && npm link @froko/ng-essentials",
+    "sandbox-workspace:add:core": "npm run sandbox-workspace:schematic && cd sandbox-workspace && schematics @froko/ng-essentials:ng-add",
+    "sandbox-workspace:add:all": "npm run sandbox-workspace:schematic && cd sandbox-workspace && schematics @froko/ng-essentials:ng-add --jest --cypress --husky"
   },
   "jest": {
     "testEnvironment": "node",
