@@ -1,6 +1,6 @@
 {
   "name": "@froko/ng-essentials",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "An essentials schematics for new Angular applications",
   "keywords": [
     "schematics"
