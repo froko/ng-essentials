@@ -1,4 +1,4 @@
-import { chain, Rule, SchematicsException, Tree } from '@angular-devkit/schematics';
+import { chain, noop, Rule, SchematicsException, Tree } from '@angular-devkit/schematics';
 
 import * as ts from 'typescript';
 
@@ -30,14 +30,12 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
   return chain([
     (tree: Tree) => {
       const defaultProjectName = findDefaultProjectNameInAngularJson(tree);
-      const elementPrefix = findElementPrefixInAngularJson(tree, defaultProjectName);
+      const hasDefaultApplication = defaultProjectName !== '';
+      const elementPrefix = hasDefaultApplication ? findElementPrefixInAngularJson(tree, defaultProjectName) : 'app';
 
       return chain([
         addDefaultSchematicsToAngularJson(),
         addNgEssentialsToAngularJson(options),
-        removeEndToEndTsConfigNodeFromAngularJson(defaultProjectName),
-        removeEndToEndTestFiles(),
-        removeArchitectNodeFromAngularJson(defaultProjectName, 'e2e'),
         removePackageFromPackageJson('devDependencies', '@types/jasminewd2'),
         removePackageFromPackageJson('devDependencies', 'protractor'),
         removeScriptFromPackageJson('e2e'),
@@ -71,13 +69,16 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('resolutions', 'minimist', resolutions.minimistVersion),
         addScriptToPackageJson('preinstall', 'npx npm-force-resolutions'),
         addScriptToPackageJson('format', 'prettier --write "./**/*{.ts,.js,.json,.css,.scss}"'),
-        updateDevelopmentEnvironmentFile('src'),
-        updateProductionEnvironmentFile('src'),
-        addEnvProvidersToAppModule('src'),
         editTsLintConfigJson(elementPrefix),
         editTsConfigJson(),
         createLaunchJson(options),
         copyConfigFiles('./essentials'),
+        hasDefaultApplication ? removeEndToEndTsConfigNodeFromAngularJson(defaultProjectName) : noop(),
+        hasDefaultApplication ? removeEndToEndTestFiles() : noop(),
+        hasDefaultApplication ? removeArchitectNodeFromAngularJson(defaultProjectName, 'e2e') : noop(),
+        hasDefaultApplication ? updateDevelopmentEnvironmentFile('src') : noop(),
+        hasDefaultApplication ? updateProductionEnvironmentFile('src') : noop(),
+        hasDefaultApplication ? addEnvProvidersToAppModule('src') : noop(),
       ]);
     },
   ]);
@@ -152,17 +153,19 @@ export function addEnvProvidersToAppModule(sourceDirectory: string): Rule {
 
 function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string): Rule {
   return (host: Tree) => {
-    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
-    const angularJson = JSON.parse(sourceText);
+    if (applicationName) {
+      const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+      const angularJson = JSON.parse(sourceText);
 
-    if (angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig']) {
-      angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig'] = [
-        'tsconfig.app.json',
-        'tsconfig.spec.json',
-      ];
+      if (angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig']) {
+        angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig'] = [
+          'tsconfig.app.json',
+          'tsconfig.spec.json',
+        ];
+      }
+
+      host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
     }
-
-    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
 
     return host;
   };

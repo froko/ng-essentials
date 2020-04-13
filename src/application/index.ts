@@ -10,6 +10,7 @@ import {
   createJestConfig,
   deleteTsSpecConfig,
   patchTsLintOptionsInAngularJson,
+  prepareGlobalTsSpecConfigForJest,
   prepareTsAppOrLibConfigForJest,
   switchToJestBuilderInAngularJson,
 } from '../ng-essentials/jest';
@@ -18,6 +19,7 @@ import {
   findJestOptionInAngularJson,
   findNewProjectRootInAngularJson,
   removeArchitectNodeFromAngularJson,
+  runNpmScript,
 } from '../utils';
 
 import { AngularApplicationOptionsSchema } from './schema';
@@ -44,8 +46,11 @@ export function essentialsApplication(options: AngularApplicationOptionsSchema):
         hasJest ? deleteFile(`${applicationPath}/src/test.ts`) : noop(),
         hasJest ? prepareTsAppOrLibConfigForJest(applicationPath, 'app') : noop(),
         hasJest ? deleteTsSpecConfig(applicationPath) : noop(),
+        hasJest ? prepareGlobalTsSpecConfigForJest() : noop(),
         hasJest ? patchTsLintOptionsInAngularJson(applicationName, applicationPath, 'app') : noop(),
         hasJest ? createJestConfig(applicationPath) : noop(),
+        runNpmScript('lint', '--', '--fix'),
+        runNpmScript('format'),
       ]);
     },
   ]);

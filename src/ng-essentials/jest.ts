@@ -1,4 +1,4 @@
-import { chain, Rule, Tree } from '@angular-devkit/schematics';
+import { chain, noop, Rule, Tree } from '@angular-devkit/schematics';
 
 import { ANGULAR_JSON } from '../constants';
 import {
@@ -24,10 +24,10 @@ export function addJest(options: NgEssentialsOptions): Rule {
   return chain([
     (tree: Tree) => {
       const defaultProjectName = findDefaultProjectNameInAngularJson(tree);
+      const hasDefaultApplication = defaultProjectName !== '';
 
       return chain([
         deleteFile('karma.conf.js'),
-        deleteFile('src/test.ts'),
         addScriptToPackageJson('test', 'ng test --coverage'),
         addScriptToPackageJson('test:watch', 'ng test --watch'),
         removePackageFromPackageJson('devDependencies', '@types/jasmine'),
@@ -41,11 +41,12 @@ export function addJest(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('devDependencies', '@angular-builders/jest', jest.jestBuilderVersion),
         addPackageToPackageJson('devDependencies', '@types/jest', jest.jestTypeVersion),
         addPackageToPackageJson('devDependencies', 'jest', jest.jestVersion),
-        switchToJestBuilderInAngularJson(defaultProjectName),
-        prepareTsAppOrLibConfigForJest('.', 'app'),
-        prepareTsSpecConfigForJest(),
         createLaunchJson(),
+        prepareGlobalTsSpecConfigForJest(),
         copyConfigFiles('jest'),
+        hasDefaultApplication ? deleteFile('src/test.ts') : noop(),
+        hasDefaultApplication ? switchToJestBuilderInAngularJson(defaultProjectName) : noop(),
+        hasDefaultApplication ? prepareTsAppOrLibConfigForJest('.', 'app') : noop()
       ]);
     },
   ]);
@@ -60,25 +61,42 @@ export function prepareTsAppOrLibConfigForJest(rootPath: string, context: AppOrL
   });
 }
 
-export function prepareTsSpecConfigForJest(): Rule {
-  return updateJson(tsconfigFilePath('.', 'spec'), (json) => {
-    if (json['files']) {
-      delete json['files'];
-    }
+export function prepareGlobalTsSpecConfigForJest(): Rule {
+  return (host: Tree) => {
+    const specConfigFile = tsconfigFilePath('.', 'spec');
+    if (host.exists(specConfigFile)) {
+      return updateJson(specConfigFile, (json) => {
+        if (json['files']) {
+          delete json['files'];
+        }
 
-    if (json['include']) {
-      delete json['include'];
-    }
+        if (json['include']) {
+          delete json['include'];
+        }
 
-    return {
-      ...json,
-      compilerOptions: {
-        emitDecoratorMetadata: true,
-        esModuleInterop: true,
-        types: ['jest'],
-      },
-    };
-  });
+        return {
+          ...json,
+          compilerOptions: {
+            emitDecoratorMetadata: true,
+            esModuleInterop: true,
+            types: ['jest'],
+          },
+        };
+      });
+    } else {
+      host.create(
+        specConfigFile,
+        `{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "types": ["jest"]
+  }
+}`
+      );
+    }
+  };
 }
 
 export function deleteTsSpecConfig(rootPath: string): Rule {

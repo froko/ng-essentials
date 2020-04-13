@@ -1,7 +1,7 @@
-import { chain, Rule, Tree } from '@angular-devkit/schematics';
+import { chain, noop, Rule, Tree } from '@angular-devkit/schematics';
 
 import { ANGULAR_JSON, NG_ESSENTIALS } from '../constants';
-import { installPackage, runNpmPackageInstall, runNpmScript } from '../utils';
+import { findDefaultProjectNameInAngularJson, installPackage, runNpmPackageInstall, runNpmScript } from '../utils';
 
 import { addCypress } from './cypress';
 import { addEssentials } from './essentials';
@@ -14,6 +14,9 @@ export function essentials(options: NgEssentialsOptions): Rule {
   return (tree: Tree) => {
     options = readNgEssentialsOptionsFromAngularJson(tree, options);
 
+    const defaultProjectName = findDefaultProjectNameInAngularJson(tree);
+    const hasDefaultApplication = defaultProjectName !== '';
+
     return chain([
       addKarma(options),
       addJest(options),
@@ -21,7 +24,7 @@ export function essentials(options: NgEssentialsOptions): Rule {
       addEssentials(options),
       addHusky(options),
       // The following rules are being executed in reverse order (latest first)
-      runNpmScript('lint', '--', '--fix'),
+      hasDefaultApplication ? runNpmScript('lint', '--', '--fix') : noop(),
       runNpmScript('format'),
       installPackage('@froko/ng-essentials'),
       runNpmPackageInstall(),

@@ -5,6 +5,7 @@ import {
   createJestConfig,
   deleteTsSpecConfig,
   patchTsLintOptionsInAngularJson,
+  prepareGlobalTsSpecConfigForJest,
   prepareTsAppOrLibConfigForJest,
   switchToJestBuilderInAngularJson,
 } from '../ng-essentials/jest';
@@ -14,6 +15,7 @@ import {
   findJestOptionInAngularJson,
   findNewProjectRootInAngularJson,
   removeAutomaticUpdateSymbols,
+  runNpmScript,
 } from '../utils';
 import { library } from '../versions';
 
@@ -39,8 +41,11 @@ export function essentialsLibrary(options: LibraryOptionsSchema): Rule {
         hasJest ? deleteFile(`${libraryPath}/src/test.ts`) : noop(),
         hasJest ? prepareTsAppOrLibConfigForJest(libraryPath, 'lib') : noop(),
         hasJest ? deleteTsSpecConfig(libraryPath) : noop(),
+        hasJest ? prepareGlobalTsSpecConfigForJest() : noop(),
         hasJest ? patchTsLintOptionsInAngularJson(libraryName, libraryPath, 'lib') : noop(),
         hasJest ? createJestConfig(libraryPath) : noop(),
+        runNpmScript('lint', '--', '--fix'),
+        runNpmScript('format'),
       ]);
     },
   ]);
