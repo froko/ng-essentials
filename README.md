@@ -26,7 +26,7 @@ The above command does the following:
 - Adds an `ENV_PROVIDERS` configuration array with the current environment name and a base URL to the `environment.ts` and `environment.prod.ts` files and provides this array in the AppModules's `providers` array.
 - Removes e2e testing functionality with `protractor`. See below how to add a better alternative.
 - Formats the code with `prettier` after the installation
-- Lints the code and fixes issues after the intallation
+- Lints the code and fixes issues after the installation
 
 _ng-essentials_ comes with some configuration switches to add even more value:
 
