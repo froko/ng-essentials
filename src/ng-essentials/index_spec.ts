@@ -113,11 +113,8 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"typescript": "${essentials.typescriptVersion}"`);
       });
 
-      it('adds additional packages in package.json', () => {
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"husky": "${essentials.huskyVersion}"`);
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"npm-run-all": "${essentials.npmRunAllVersion}"`);
+      it('adds prettier packages in package.json', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"prettier": "${essentials.prettierVersion}"`);
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"pretty-quick": "${essentials.prettyQuickVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(
           `"tslint-config-prettier": "${essentials.tsLintConfigPrettierVersion}"`
         );
@@ -126,12 +123,6 @@ describe('ng-essentials', () => {
       it('adds additional scripts in package.json', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain('npx npm-force-resolutions');
         expect(testTree.readContent(PACKAGE_JSON)).toContain('format');
-        expect(testTree.readContent(PACKAGE_JSON)).toContain('format:fix');
-      });
-
-      it('adds husky config in package.json', () => {
-        expect(testTree.readContent(PACKAGE_JSON)).toContain('hooks');
-        expect(testTree.readContent(PACKAGE_JSON)).toContain('"pre-commit": "run-s format:fix lint"');
       });
 
       it('updates global tslint.json', () => {
@@ -291,6 +282,25 @@ describe('ng-essentials', () => {
         expect(testTree.files).toContain('/cypress/support/index.ts');
       });
     });
+
+    describe('with husky option', () => {
+      let testTree: UnitTestTree;
+
+      beforeEach(async () => {
+        testTree = await runSchematic('ng-add', { husky: true }, appTree);
+      });
+
+      it('adds husky related packages in package.json', () => {
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"husky": "${essentials.huskyVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"npm-run-all": "${essentials.npmRunAllVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"pretty-quick": "${essentials.prettyQuickVersion}"`);
+      });
+
+      it('adds husky config in package.json', () => {
+        expect(testTree.readContent(PACKAGE_JSON)).toContain('hooks');
+        expect(testTree.readContent(PACKAGE_JSON)).toContain('"pre-commit": "run-s format:fix lint"');
+      });
+    });
   });
 
   describe('when running for a subsequent time', () => {
@@ -302,7 +312,7 @@ describe('ng-essentials', () => {
       let testTree: UnitTestTree;
 
       beforeEach(async () => {
-        testTree = await runSchematic('ng-add', { jest: true, cypress: true }, appTree);
+        testTree = await runSchematic('ng-add', { jest: true, cypress: true, husky: true }, appTree);
       });
 
       it('does not add default collection to angular.json', () => {
@@ -338,6 +348,17 @@ describe('ng-essentials', () => {
         expect(testTree.files).not.toContain('/cypress/plugins/index.js');
         expect(testTree.files).not.toContain('/cypress/support/commands.ts');
         expect(testTree.files).not.toContain('/cypress/support/index.ts');
+      });
+
+      it('adds husky related packages in package.json', () => {
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"husky": "${essentials.huskyVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"npm-run-all": "${essentials.npmRunAllVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"pretty-quick": "${essentials.prettyQuickVersion}"`);
+      });
+
+      it('adds husky config in package.json', () => {
+        expect(testTree.readContent(PACKAGE_JSON)).toContain('hooks');
+        expect(testTree.readContent(PACKAGE_JSON)).toContain('"pre-commit": "run-s format:fix lint"');
       });
     });
   });

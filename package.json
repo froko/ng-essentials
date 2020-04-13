@@ -25,7 +25,7 @@
     "sandbox:clean": "git checkout HEAD -- sandbox && git clean -f -d sandbox && rimraf sandbox/.vscode",
     "sandbox:schematic": "npm link && cd sandbox && npm link @froko/ng-essentials",
     "sandbox:add:core": "npm run sandbox:schematic && cd sandbox && schematics @froko/ng-essentials:ng-add",
-    "sandbox:add:all": "npm run sandbox:schematic && cd sandbox && schematics @froko/ng-essentials:ng-add --jest --cypress"
+    "sandbox:add:all": "npm run sandbox:schematic && cd sandbox && schematics @froko/ng-essentials:ng-add --jest --cypress --husky"
   },
   "jest": {
     "testEnvironment": "node",

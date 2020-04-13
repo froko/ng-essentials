@@ -5,6 +5,7 @@ import { installPackage, runNpmPackageInstall, runNpmScript } from '../utils';
 
 import { addCypress } from './cypress';
 import { addEssentials } from './essentials';
+import { addHusky } from './husky';
 import { addJest } from './jest';
 import { addKarma } from './karma';
 import { NgEssentialsOptions } from './schema';
@@ -18,6 +19,7 @@ export function essentials(options: NgEssentialsOptions): Rule {
       addJest(options),
       addCypress(options),
       addEssentials(options),
+      addHusky(options),
       // The following rules are being executed in reverse order (latest first)
       runNpmScript('lint', '--', '--fix'),
       runNpmScript('format'),

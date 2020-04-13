@@ -5,7 +5,7 @@ import * as ts from 'typescript';
 import { addProviderToModule } from '@schematics/angular/utility/ast-utils';
 import { InsertChange } from '@schematics/angular/utility/change';
 
-import { ANGULAR_JSON, NG_ESSENTIALS, PACKAGE_JSON, TSCONFIG_JSON, TSLINT_JSON } from '../constants';
+import { ANGULAR_JSON, NG_ESSENTIALS, TSCONFIG_JSON, TSLINT_JSON } from '../constants';
 import {
   addPackageToPackageJson,
   addScriptToPackageJson,
@@ -63,10 +63,7 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('devDependencies', 'ts-node', essentials.tsNodeVersion),
         addPackageToPackageJson('devDependencies', 'tslint', essentials.tsLintVersion),
         addPackageToPackageJson('devDependencies', 'typescript', essentials.typescriptVersion),
-        addPackageToPackageJson('devDependencies', 'husky', essentials.huskyVersion),
-        addPackageToPackageJson('devDependencies', 'npm-run-all', essentials.npmRunAllVersion),
         addPackageToPackageJson('devDependencies', 'prettier', essentials.prettierVersion),
-        addPackageToPackageJson('devDependencies', 'pretty-quick', essentials.prettyQuickVersion),
         addPackageToPackageJson('devDependencies', 'tslint-angular', essentials.tsLintAngularRulesVersion),
         addPackageToPackageJson('devDependencies', 'tslint-config-prettier', essentials.tsLintConfigPrettierVersion),
         addPackageToPackageJson('resolutions', 'acorn', resolutions.acornVersion),
@@ -74,11 +71,9 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('resolutions', 'minimist', resolutions.minimistVersion),
         addScriptToPackageJson('preinstall', 'npx npm-force-resolutions'),
         addScriptToPackageJson('format', 'prettier --write "./**/*{.ts,.js,.json,.css,.scss}"'),
-        addScriptToPackageJson('format:fix', 'pretty-quick --staged'),
         updateDevelopmentEnvironmentFile('src'),
         updateProductionEnvironmentFile('src'),
         addEnvProvidersToAppModule('src'),
-        addHuskyConfigToPackageJson(),
         editTsLintConfigJson(elementPrefix),
         editTsConfigJson(),
         createLaunchJson(options),
@@ -86,33 +81,6 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
       ]);
     },
   ]);
-}
-
-function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string): Rule {
-  return (host: Tree) => {
-    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
-    const angularJson = JSON.parse(sourceText);
-
-    if (angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig']) {
-      angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig'] = [
-        'tsconfig.app.json',
-        'tsconfig.spec.json',
-      ];
-    }
-
-    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
-
-    return host;
-  };
-}
-
-function removeEndToEndTestFiles(): Rule {
-  return (host: Tree) => {
-    host.delete('e2e/src/app.e2e-spec.ts');
-    host.delete('e2e/src/app.po.ts');
-    host.delete('e2e/protractor.conf.js');
-    host.delete('e2e/tsconfig.json');
-  };
 }
 
 export function updateDevelopmentEnvironmentFile(sourceDirectory: string): Rule {
@@ -182,6 +150,33 @@ export function addEnvProvidersToAppModule(sourceDirectory: string): Rule {
   };
 }
 
+function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string): Rule {
+  return (host: Tree) => {
+    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
+    const angularJson = JSON.parse(sourceText);
+
+    if (angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig']) {
+      angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig'] = [
+        'tsconfig.app.json',
+        'tsconfig.spec.json',
+      ];
+    }
+
+    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
+
+    return host;
+  };
+}
+
+function removeEndToEndTestFiles(): Rule {
+  return (host: Tree) => {
+    host.delete('e2e/src/app.e2e-spec.ts');
+    host.delete('e2e/src/app.po.ts');
+    host.delete('e2e/protractor.conf.js');
+    host.delete('e2e/tsconfig.json');
+  };
+}
+
 function addDefaultSchematicsToAngularJson(): Rule {
   return (host: Tree) => {
     const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
@@ -220,25 +215,6 @@ function addNgEssentialsToAngularJson(options: NgEssentialsOptions): Rule {
     };
 
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
-
-    return host;
-  };
-}
-
-function addHuskyConfigToPackageJson(): Rule {
-  return (host: Tree) => {
-    const sourceText = host.read(PACKAGE_JSON).toString('utf-8');
-    const packageJson = JSON.parse(sourceText);
-
-    if (!packageJson['husky']) {
-      packageJson['husky'] = {
-        hooks: {
-          'pre-commit': 'run-s format:fix lint',
-        },
-      };
-    }
-
-    host.overwrite(PACKAGE_JSON, JSON.stringify(packageJson, null, 2));
 
     return host;
   };
