@@ -7,7 +7,7 @@ Adds better defaults to a new Angular application generated with the Angular-CLI
 
 It includes many of the ideas of the following blog post, also written by Martin Hochel: [Use React tools for better Angular apps](https://medium.com/@martin_hotell/use-react-tools-for-better-angular-apps-b0f14f3f8114).
 
-### Usage
+## Usage
 
 This schematic uses the `ng add` command to add it's value to a new Angular application:
 
@@ -25,6 +25,8 @@ The above command does the following:
 - Adds common Visual Studio Code plugin recommendations
 - Adds an `ENV_PROVIDERS` configuration array with the current environment name and a base URL to the `environment.ts` and `environment.prod.ts` files and provides this array in the AppModules's `providers` array.
 - Removes e2e testing functionality with `protractor`. See below how to add a better alternative.
+- Formats the code with `prettier` after the installation
+- Lints the code and fixes issues after the intallation
 
 _ng-essentials_ comes with some configuration switches to add even more value:
 
@@ -34,7 +36,9 @@ _ng-essentials_ comes with some configuration switches to add even more value:
 
 - `--husky` installs [husky](https://openbase.io/js/husky) which formats and lints staged files (pre-commit hook).
 
-#### Adding a new library with jest support
+This schematic also works with an empty Angular workspace, created with `ng new app-name --createApplication=false`.
+
+### Adding a new library with jest support
 
 This schematic enhances the creation of a new library when the schematic was previously installed with the `--jest` option. By running
 
@@ -44,7 +48,7 @@ ng generate lib myAwesomeLib
 
 it will delete the karma/jasmine configuration and add jest support for the new library as well.
 
-#### Adding a new application with jest support
+### Adding a new application with jest support
 
 This schematic enhances the creation of a new application when the schematic was previously installed with the `--jest` option. By running
 
