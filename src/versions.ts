@@ -1,9 +1,12 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '9.1.1',
+  angularVersion: '9.1.9',
+
+  // @angular/cli
+  angularCliVersion: '9.1.7',
 
   // @angular-devkit/*
-  angularDevKitVersion: '0.901.1',
+  angularDevKitVersion: '0.901.7',
 
   // rxjs
   rxjsVersion: '6.5.5',
@@ -21,7 +24,7 @@ export const essentials = {
   codelizerVersion: '5.2.2',
 
   // ts-node
-  tsNodeVersion: '8.8.2',
+  tsNodeVersion: '8.10.1',
 
   // tslint
   tsLintVersion: '5.20.0',
@@ -39,7 +42,7 @@ export const essentials = {
   npmRunAllVersion: '4.1.5',
 
   // prettier
-  prettierVersion: '2.0.4',
+  prettierVersion: '2.0.5',
 
   // pretty-quick
   prettyQuickVersion: '2.0.1',
@@ -56,22 +59,22 @@ export const karma = {
   jasmineCoreVersion: '3.5.0',
 
   // jasmine-spec-reporter
-  jasmineSpecReporterVersion: '5.0.1',
+  jasmineSpecReporterVersion: '5.0.2',
 
   // karma
-  karmaVersion: '5.0.1',
+  karmaVersion: '5.0.9',
 
   // karma-chrome-launcher
   chromeLauncherVersion: '3.1.0',
 
   // karma-coverage-istanbul-reporter
-  coverageReporterVersion: '2.1.1',
+  coverageReporterVersion: '3.0.2',
 
   // karma-jasmine
   karmaJasmineVersion: '3.1.1',
 
   // karma-jasmine-html-reporter
-  htmlReporterVersion: '1.5.3'
+  htmlReporterVersion: '1.5.4'
 };
 
 export const jest = {
@@ -79,24 +82,24 @@ export const jest = {
   jestBuilderVersion: '9.0.1',
 
   // @types/jest
-  jestTypeVersion: '25.2.1',
+  jestTypeVersion: '25.2.3',
 
   // babel-core
   babelCoreVersion: '6.26.3',
 
   // babel-jest
-  babelJestVersion: '25.3.0',
+  babelJestVersion: '26.0.1',
 
   // jest
-  jestVersion: '25.3.0'
+  jestVersion: '26.0.1'
 };
 
 export const cypress = {
   // @cypress/webpack-preprocessor
-  preprocessorVersion: '5.1.1',
+  preprocessorVersion: '5.4.1',
 
   // cypress
-  cypressVersion: '4.3.0',
+  cypressVersion: '4.6.0',
 
   // ts-loader
   tsLoaderVersion: '5.3.3'
@@ -104,7 +107,7 @@ export const cypress = {
 
 export const library = {
   // ng-packagr
-  ngPackagrVersion: '9.1.0',
+  ngPackagrVersion: '9.1.5',
 
   // tsickle
   tsickleVersion: '0.38.1'

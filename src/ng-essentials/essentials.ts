@@ -53,7 +53,7 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('dependencies', 'tslib', essentials.tslibVersion),
         addPackageToPackageJson('dependencies', 'zone.js', essentials.zoneVersion),
         addPackageToPackageJson('devDependencies', '@angular-devkit/build-angular', essentials.angularDevKitVersion),
-        addPackageToPackageJson('devDependencies', '@angular/cli', essentials.angularVersion),
+        addPackageToPackageJson('devDependencies', '@angular/cli', essentials.angularCliVersion),
         addPackageToPackageJson('devDependencies', '@angular/compiler-cli', essentials.angularVersion),
         addPackageToPackageJson('devDependencies', '@angular/language-service', essentials.angularVersion),
         addPackageToPackageJson('devDependencies', '@types/node', essentials.nodeVersion),
