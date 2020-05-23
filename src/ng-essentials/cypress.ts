@@ -16,6 +16,6 @@ export function addCypress(options: NgEssentialsOptions): Rule {
     addPackageToPackageJson('devDependencies', 'ts-loader', cypress.tsLoaderVersion),
     addScriptToPackageJson('cypress', 'run-p start cypress:open'),
     addScriptToPackageJson('cypress:open', 'cypress open'),
-    copyConfigFiles('./cypress'),
+    copyConfigFiles('./cypress')
   ]);
 }

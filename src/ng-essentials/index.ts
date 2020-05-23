@@ -27,7 +27,7 @@ export function essentials(options: NgEssentialsOptions): Rule {
       hasDefaultApplication ? runNpmScript('lint', '--', '--fix') : noop(),
       runNpmScript('format'),
       installPackage('@froko/ng-essentials'),
-      runNpmPackageInstall(),
+      runNpmPackageInstall()
     ]);
   };
 }

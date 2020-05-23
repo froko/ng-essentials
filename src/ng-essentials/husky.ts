@@ -16,7 +16,7 @@ export function addHusky(options: NgEssentialsOptions): Rule {
     addPackageToPackageJson('devDependencies', 'npm-run-all', essentials.npmRunAllVersion),
     addPackageToPackageJson('devDependencies', 'pretty-quick', essentials.prettyQuickVersion),
     addScriptToPackageJson('format:fix', 'pretty-quick --staged'),
-    addHuskyConfigToPackageJson(),
+    addHuskyConfigToPackageJson()
   ]);
 }
 
@@ -28,8 +28,8 @@ function addHuskyConfigToPackageJson(): Rule {
     if (!packageJson['husky']) {
       packageJson['husky'] = {
         hooks: {
-          'pre-commit': 'run-s format:fix lint',
-        },
+          'pre-commit': 'run-s format:fix lint'
+        }
       };
     }
 

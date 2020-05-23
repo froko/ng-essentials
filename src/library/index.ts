@@ -7,7 +7,7 @@ import {
   patchTsLintOptionsInAngularJson,
   prepareGlobalTsSpecConfigForJest,
   prepareTsAppOrLibConfigForJest,
-  switchToJestBuilderInAngularJson,
+  switchToJestBuilderInAngularJson
 } from '../ng-essentials/jest';
 import {
   addPackageToPackageJson,
@@ -15,7 +15,7 @@ import {
   findJestOptionInAngularJson,
   findNewProjectRootInAngularJson,
   removeAutomaticUpdateSymbols,
-  runNpmScript,
+  runNpmScript
 } from '../utils';
 import { essentials, library } from '../versions';
 
@@ -45,8 +45,8 @@ export function essentialsLibrary(options: LibraryOptionsSchema): Rule {
         hasJest ? patchTsLintOptionsInAngularJson(libraryName, libraryPath, 'lib') : noop(),
         hasJest ? createJestConfig(libraryPath) : noop(),
         runNpmScript('lint', '--', '--fix'),
-        runNpmScript('format'),
+        runNpmScript('format')
       ]);
-    },
+    }
   ]);
 }

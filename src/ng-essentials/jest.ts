@@ -10,7 +10,7 @@ import {
   findDefaultProjectNameInAngularJson,
   removePackageFromPackageJson,
   tsconfigFilePath,
-  updateJson,
+  updateJson
 } from '../utils';
 import { jest } from '../versions';
 
@@ -46,9 +46,9 @@ export function addJest(options: NgEssentialsOptions): Rule {
         copyConfigFiles('jest'),
         hasDefaultApplication ? deleteFile('src/test.ts') : noop(),
         hasDefaultApplication ? switchToJestBuilderInAngularJson(defaultProjectName) : noop(),
-        hasDefaultApplication ? prepareTsAppOrLibConfigForJest('.', 'app') : noop(),
+        hasDefaultApplication ? prepareTsAppOrLibConfigForJest('.', 'app') : noop()
       ]);
-    },
+    }
   ]);
 }
 
@@ -56,7 +56,7 @@ export function prepareTsAppOrLibConfigForJest(rootPath: string, context: AppOrL
   return updateJson(tsconfigFilePath(rootPath, context), (json) => {
     return {
       ...json,
-      exclude: ['**/*.spec.ts'],
+      exclude: ['**/*.spec.ts']
     };
   });
 }
@@ -79,8 +79,8 @@ export function prepareGlobalTsSpecConfigForJest(): Rule {
           compilerOptions: {
             emitDecoratorMetadata: true,
             esModuleInterop: true,
-            types: ['jest'],
-          },
+            types: ['jest']
+          }
         };
       });
     } else {
@@ -109,7 +109,7 @@ export function patchTsLintOptionsInAngularJson(projectName: string, projectPath
   return updateJson(ANGULAR_JSON, (json) => {
     json['projects'][projectName]['architect']['lint']['options']['tsConfig'] = [
       `${projectPath}/tsconfig.${context}.json`,
-      'tsconfig.spec.json',
+      'tsconfig.spec.json'
     ];
 
     return json;
@@ -120,7 +120,7 @@ export function switchToJestBuilderInAngularJson(projectName: string): Rule {
   return updateJson(ANGULAR_JSON, (json) => {
     json['projects'][projectName]['architect']['test'].builder = '@angular-builders/jest:run';
     json['projects'][projectName]['architect']['test'].options = {
-      detectOpenHandles: true,
+      detectOpenHandles: true
     };
 
     return json;

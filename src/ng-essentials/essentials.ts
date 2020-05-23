@@ -16,7 +16,7 @@ import {
   removeAutomaticUpdateSymbols,
   removePackageFromPackageJson,
   removeScriptFromPackageJson,
-  updateJson,
+  updateJson
 } from '../utils';
 import { essentials, resolutions } from '../versions';
 
@@ -78,9 +78,9 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
         hasDefaultApplication ? removeArchitectNodeFromAngularJson(defaultProjectName, 'e2e') : noop(),
         hasDefaultApplication ? updateDevelopmentEnvironmentFile('src') : noop(),
         hasDefaultApplication ? updateProductionEnvironmentFile('src') : noop(),
-        hasDefaultApplication ? addEnvProvidersToAppModule('src') : noop(),
+        hasDefaultApplication ? addEnvProvidersToAppModule('src') : noop()
       ]);
-    },
+    }
   ]);
 }
 
@@ -160,7 +160,7 @@ function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string): Rul
       if (angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig']) {
         angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig'] = [
           'tsconfig.app.json',
-          'tsconfig.spec.json',
+          'tsconfig.spec.json'
         ];
       }
 
@@ -214,7 +214,7 @@ function addNgEssentialsToAngularJson(options: NgEssentialsOptions): Rule {
 
     angularJson['schematics'][NG_ESSENTIALS] = {
       jest: options.jest ? options.jest.valueOf() : false,
-      cypress: options.cypress ? options.cypress.valueOf() : false,
+      cypress: options.cypress ? options.cypress.valueOf() : false
     };
 
     host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
@@ -244,36 +244,36 @@ function editTsLintConfigJson(elementPrefix: string): Rule {
             {
               name: 'angular',
               match: '^@angular',
-              order: 1,
+              order: 1
             },
 
             {
               name: 'scoped_paths',
               match: '^@',
-              order: 3,
+              order: 3
             },
             {
               name: 'node_modules',
               match: '^[a-zA-Z]',
-              order: 2,
+              order: 2
             },
             {
               name: 'parent',
               match: '^../',
-              order: 4,
+              order: 4
             },
             {
               name: 'silbing',
               match: '^./',
-              order: 5,
+              order: 5
             },
             {
               match: null,
-              order: 5,
-            },
-          ],
-        },
-      ],
+              order: 5
+            }
+          ]
+        }
+      ]
     };
 
     host.overwrite(TSLINT_JSON, JSON.stringify(tslintJson, null, 2));
@@ -290,8 +290,8 @@ function editTsConfigJson(): Rule {
       ...json,
       compilerOptions: {
         ...compilerOptions,
-        paths: {},
-      },
+        paths: {}
+      }
     };
   });
 }
