@@ -11,6 +11,7 @@ module.exports = {
   }),
   globals: {
     'ts-jest': {
+      isolatedModules: true,
       tsConfig: '<rootDir>/tsconfig.spec.json',
       stringifyContentPathRegex: '\\.html$',
       astTransformers: [

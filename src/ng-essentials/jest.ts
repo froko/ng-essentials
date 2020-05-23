@@ -41,6 +41,8 @@ export function addJest(options: NgEssentialsOptions): Rule {
         addPackageToPackageJson('devDependencies', '@angular-builders/jest', jest.jestBuilderVersion),
         addPackageToPackageJson('devDependencies', '@types/jest', jest.jestTypeVersion),
         addPackageToPackageJson('devDependencies', 'jest', jest.jestVersion),
+        addPackageToPackageJson('devDependencies', 'jest-preset-angular', jest.presetAngularVersion),
+        addPackageToPackageJson('devDependencies', 'ts-jest', jest.tsJestVersion),
         createLaunchJson(),
         prepareGlobalTsSpecConfigForJest(),
         copyConfigFiles('jest'),
@@ -119,9 +121,7 @@ export function patchTsLintOptionsInAngularJson(projectName: string, projectPath
 export function switchToJestBuilderInAngularJson(projectName: string): Rule {
   return updateJson(ANGULAR_JSON, (json) => {
     json['projects'][projectName]['architect']['test'].builder = '@angular-builders/jest:run';
-    json['projects'][projectName]['architect']['test'].options = {
-      detectOpenHandles: true
-    };
+    json['projects'][projectName]['architect']['test'].options = {};
 
     return json;
   });

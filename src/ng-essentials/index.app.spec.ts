@@ -101,7 +101,7 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain(
           `"@angular-devkit/build-angular": "${essentials.angularDevKitVersion}"`
         );
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/cli": "${essentials.angularVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/cli": "${essentials.angularCliVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/compiler-cli": "${essentials.angularVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(
           `"@angular/language-service": "${essentials.angularVersion}"`
@@ -221,6 +221,8 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular-builders/jest": "${jest.jestBuilderVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@types/jest": "${jest.jestTypeVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jest": "${jest.jestVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jest-preset-angular": "${jest.presetAngularVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"ts-jest": "${jest.tsJestVersion}"`);
       });
 
       it('switches to jest builder in angular.json', () => {

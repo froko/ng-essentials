@@ -91,7 +91,13 @@ export const jest = {
   babelJestVersion: '26.0.1',
 
   // jest
-  jestVersion: '26.0.1'
+  jestVersion: '26.0.1',
+
+  // jest-preset-angular
+  presetAngularVersion: '8.2.0',
+
+  // ts-jest
+  tsJestVersion: '26.0.0'
 };
 
 export const cypress = {

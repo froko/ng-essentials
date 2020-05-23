@@ -74,7 +74,7 @@ describe('ng-essentials', () => {
       expect(testTree.readContent(PACKAGE_JSON)).toContain(
         `"@angular-devkit/build-angular": "${essentials.angularDevKitVersion}"`
       );
-      expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/cli": "${essentials.angularVersion}"`);
+      expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/cli": "${essentials.angularCliVersion}"`);
       expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@angular/compiler-cli": "${essentials.angularVersion}"`);
       expect(testTree.readContent(PACKAGE_JSON)).toContain(
         `"@angular/language-service": "${essentials.angularVersion}"`
