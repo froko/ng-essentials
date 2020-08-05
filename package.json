@@ -50,7 +50,8 @@
     ]
   },
   "dependencies": {
-    "@schematics/angular": "10.0.5"
+    "@schematics/angular": "10.0.5",
+    "decomment": "0.9.3"
   },
   "devDependencies": {
     "@angular-devkit/core": "10.0.5",
@@ -61,7 +62,6 @@
     "babel-core": "6.26.3",
     "babel-jest": "26.2.2",
     "chalk": "4.1.0",
-    "decomment": "0.9.3",
     "glob": "7.1.6",
     "husky": "4.2.5",
     "jest": "26.2.2",
