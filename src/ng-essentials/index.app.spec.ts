@@ -3,8 +3,15 @@ import { UnitTestTree } from '@angular-devkit/schematics/testing';
 
 import { createAppModule } from '@schematics/angular/utility/test/create-app-module';
 
-import { ANGULAR_JSON, PACKAGE_JSON, TSLINT_JSON } from '../constants';
-import { runSchematic } from '../testing';
+import { ANGULAR_JSON, PACKAGE_JSON, TSCONFIG_BASE_JSON, TSCONFIG_JSON, TSLINT_JSON } from '../constants';
+import {
+  createPackageJson,
+  createTsConfig,
+  createTsConfigApp,
+  createTsConfigBase,
+  createTsConfigSpec,
+  runSchematic
+} from '../testing';
 import { cypress, essentials, jest, karma } from '../versions';
 
 describe('ng-essentials', () => {
@@ -19,6 +26,8 @@ describe('ng-essentials', () => {
     appTree = createProductionEnvironmentFile(appTree);
     appTree = createKarmaConfig(appTree);
     appTree = createTestTypescriptFile(appTree);
+    appTree = createTsConfig(appTree);
+    appTree = createTsConfigBase(appTree);
     appTree = createTsConfigApp(appTree);
     appTree = createTsConfigSpec(appTree);
     appTree = createEndToEndTestingFiles(appTree);
@@ -34,32 +43,6 @@ describe('ng-essentials', () => {
 
       beforeEach(async () => {
         testTree = await runSchematic('ng-add', {}, appTree);
-      });
-
-      it('adds default collection to angular.json', () => {
-        expect(testTree.readContent(ANGULAR_JSON)).toContain('"defaultCollection": "@froko/ng-essentials"');
-      });
-
-      it('adds ng-essentials options to angular.json', () => {
-        expect(testTree.readContent(ANGULAR_JSON)).toContain('"jest": false');
-        expect(testTree.readContent(ANGULAR_JSON)).toContain('"cypress": false');
-      });
-
-      it('removes e2e tsconfig.json in linting options from angular.json', () => {
-        expect(testTree.readContent(ANGULAR_JSON)).not.toContain('e2e/tsconfig.json');
-      });
-
-      it('removes e2e test node from angular.json', () => {
-        expect(testTree.readContent(ANGULAR_JSON)).not.toContain('"e2e": {');
-      });
-
-      it('removes protractor packages from angular.json', () => {
-        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('protractor');
-        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('@types/jasminewd2');
-      });
-
-      it('removes e2e script from package.json', () => {
-        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('e2e');
       });
 
       it('removes automatic update symbols in depencencies of package.json', () => {
@@ -113,6 +96,22 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"typescript": "${essentials.typescriptVersion}"`);
       });
 
+      it('updates jasmine packages in package.json', () => {
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@types/jasmine": "${karma.jasmineTypeVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jasmine-core": "${karma.jasmineCoreVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(
+          `"jasmine-spec-reporter": "${karma.jasmineSpecReporterVersion}"`
+        );
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"karma": "${karma.karmaVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(
+          `"karma-coverage-istanbul-reporter": "${karma.coverageReporterVersion}"`
+        );
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"karma-jasmine": "${karma.karmaJasmineVersion}"`);
+        expect(testTree.readContent(PACKAGE_JSON)).toContain(
+          `"karma-jasmine-html-reporter": "${karma.htmlReporterVersion}"`
+        );
+      });
+
       it('adds prettier packages in package.json', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"prettier": "${essentials.prettierVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(
@@ -123,6 +122,15 @@ describe('ng-essentials', () => {
       it('adds additional scripts in package.json', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain('npx npm-force-resolutions');
         expect(testTree.readContent(PACKAGE_JSON)).toContain('format');
+      });
+
+      it('adds default collection to angular.json', () => {
+        expect(testTree.readContent(ANGULAR_JSON)).toContain('"defaultCollection": "@froko/ng-essentials"');
+      });
+
+      it('adds ng-essentials options to angular.json', () => {
+        expect(testTree.readContent(ANGULAR_JSON)).toContain('"jest": false');
+        expect(testTree.readContent(ANGULAR_JSON)).toContain('"cypress": false');
       });
 
       it('updates global tslint.json', () => {
@@ -143,6 +151,10 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(TSLINT_JSON)).toContain('"ordered-imports"');
 
         expect(testTree.readContent(TSLINT_JSON)).toContain('"app"');
+      });
+
+      it('adds paths collection to tsconfig.base.json', () => {
+        expect(testTree.readContent(TSCONFIG_BASE_JSON)).toContain('paths');
       });
 
       it('updates development environment file', () => {
@@ -180,20 +192,25 @@ describe('ng-essentials', () => {
         expect(testTree.files).toContain('/.vscode/settings.json');
       });
 
-      it('updates jasmine packages in package.json', () => {
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@types/jasmine": "${karma.jasmineTypeVersion}"`);
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jasmine-core": "${karma.jasmineCoreVersion}"`);
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(
-          `"jasmine-spec-reporter": "${karma.jasmineSpecReporterVersion}"`
-        );
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"karma": "${karma.karmaVersion}"`);
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(
-          `"karma-coverage-istanbul-reporter": "${karma.coverageReporterVersion}"`
-        );
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"karma-jasmine": "${karma.karmaJasmineVersion}"`);
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(
-          `"karma-jasmine-html-reporter": "${karma.htmlReporterVersion}"`
-        );
+      it('removes e2e tsconfig.json in linting options from angular.json', () => {
+        expect(testTree.readContent(ANGULAR_JSON)).not.toContain('e2e/tsconfig.json');
+      });
+
+      it('removes e2e test node from angular.json', () => {
+        expect(testTree.readContent(ANGULAR_JSON)).not.toContain('"e2e": {');
+      });
+
+      it('removes protractor packages from angular.json', () => {
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('protractor');
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('@types/jasminewd2');
+      });
+
+      it('removes e2e script from package.json', () => {
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('e2e');
+      });
+
+      it('removes e2e entry from tsconfig.json', () => {
+        expect(testTree.readContent(TSCONFIG_JSON)).not.toContain('e2e/tsconfig.json');
       });
     });
 
@@ -202,14 +219,6 @@ describe('ng-essentials', () => {
 
       beforeEach(async () => {
         testTree = await runSchematic('ng-add', { jest: true }, appTree);
-      });
-
-      it('removes karma config file', () => {
-        expect(testTree.files).not.toContain('/karma.conf.js');
-      });
-
-      it('removes test typescript file', () => {
-        expect(testTree.files).not.toContain('/src/test.ts');
       });
 
       it('removes jasmine and karma packages from packages.json', () => {
@@ -223,6 +232,11 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jest": "${jest.jestVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"jest-preset-angular": "${jest.presetAngularVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"ts-jest": "${jest.tsJestVersion}"`);
+      });
+
+      it('adds test scripts in package.json', () => {
+        expect(testTree.readContent(PACKAGE_JSON)).toContain('"test": "ng test --coverage"');
+        expect(testTree.readContent(PACKAGE_JSON)).toContain('"test:watch": "ng test --watch"');
       });
 
       it('switches to jest builder in angular.json', () => {
@@ -253,6 +267,14 @@ describe('ng-essentials', () => {
       it('adds jest setup file', () => {
         expect(testTree.files).toContain('/jest.setup.ts');
       });
+
+      it('removes karma config file', () => {
+        expect(testTree.files).not.toContain('/karma.conf.js');
+      });
+
+      it('removes test typescript file', () => {
+        expect(testTree.files).not.toContain('/src/test.ts');
+      });
     });
 
     describe('with cypress option', () => {
@@ -270,7 +292,7 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"ts-loader": "${cypress.tsLoaderVersion}"`);
       });
 
-      it('adds cypress script to package.json', () => {
+      it('adds cypress scripts in package.json', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"cypress": "run-p start cypress:open"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"cypress:open": "cypress open"`);
       });
@@ -438,58 +460,6 @@ function createAngularJsonForSubsequentRun(tree: Tree): Tree {
   return tree;
 }
 
-function createPackageJson(tree: Tree): Tree {
-  tree.create(
-    PACKAGE_JSON,
-    `{
-      "scripts": {
-        "ng": "ng",
-        "start": "ng serve",
-        "build": "ng build",
-        "test": "ng test",
-        "lint": "ng lint",
-        "e2e": "ng e2e"
-      },
-      "dependencies": {
-        "@angular/animations": "~9.0.3",
-        "@angular/common": "~9.0.3",
-        "@angular/compiler": "~9.0.3",
-        "@angular/core": "~9.0.3",
-        "@angular/forms": "~9.0.3",
-        "@angular/platform-browser": "~9.0.3",
-        "@angular/platform-browser-dynamic": "~9.0.3",
-        "@angular/router": "~9.0.3",
-        "rxjs": "~6.5.4",
-        "tslib": "^1.10.0",
-        "zone.js": "~0.10.2"
-      },
-      "devDependencies": {
-        "@angular-devkit/build-angular": "~0.900.4",
-        "@angular/cli": "~9.0.4",
-        "@angular/compiler-cli": "~9.0.3",
-        "@angular/language-service": "~9.0.3",
-        "@types/node": "^12.11.1",
-        "@types/jasmine": "~3.5.0",
-        "@types/jasminewd2": "~2.0.3",
-        "codelyzer": "^5.1.2",
-        "jasmine-core": "~3.5.0",
-        "jasmine-spec-reporter": "~4.2.1",
-        "karma": "~4.3.0",
-        "karma-chrome-launcher": "~3.1.0",
-        "karma-coverage-istanbul-reporter": "~2.1.0",
-        "karma-jasmine": "~2.0.1",
-        "karma-jasmine-html-reporter": "^1.4.2",
-        "protractor": "~5.4.3",
-        "ts-node": "~8.3.0",
-        "tslint": "~5.18.0",
-        "typescript": "~3.7.5"
-      }
-    }`
-  );
-
-  return tree;
-}
-
 function createGlobalTsLintJson(tree: Tree): Tree {
   tree.create(
     TSLINT_JSON,
@@ -542,51 +512,6 @@ function createKarmaConfig(tree: Tree): Tree {
 
 function createTestTypescriptFile(tree: Tree): Tree {
   tree.create('src/test.ts', "import { getTestBed } from '@angular/core/testing';");
-
-  return tree;
-}
-
-function createTsConfigApp(tree: Tree): Tree {
-  tree.create(
-    'tsconfig.app.json',
-    `{
-      "extends": "../tsconfig.json",
-      "compilerOptions": {
-        "outDir": "../out-tsc/app",
-        "types": []
-      },
-      "exclude": [
-        "test.ts",
-        "**/*.spec.ts"
-      ]
-    }`
-  );
-
-  return tree;
-}
-
-function createTsConfigSpec(tree: Tree): Tree {
-  tree.create(
-    'tsconfig.spec.json',
-    `{
-      "extends": "../tsconfig.json",
-      "compilerOptions": {
-        "outDir": "../out-tsc/spec",
-        "types": [
-          "jasmine",
-          "node"
-        ]
-      },
-      "files": [
-        "test.ts",
-        "polyfills.ts"
-      ],
-      "include": [
-        "**/*.spec.ts",
-        "**/*.d.ts"
-      ]
-    }`
-  );
 
   return tree;
 }

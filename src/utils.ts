@@ -5,20 +5,26 @@ import {
   mergeWith,
   Rule,
   SchematicContext,
+  SchematicsException,
   TaskConfigurationGenerator,
   TaskExecutor,
   TaskExecutorFactory,
   template,
   Tree,
-  url,
+  url
 } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
-import { NodePackageInstallTaskOptions } from '@angular-devkit/schematics/tasks/node-package/install-task';
+import { NodePackageInstallTaskOptions } from '@angular-devkit/schematics/tasks/package-manager/install-task';
 
 import { spawn, SpawnOptions } from 'child_process';
+import decomment = require('decomment');
 import { Observable } from 'rxjs';
+import ts = require('typescript');
 
-import { ANGULAR_JSON, NG_ESSENTIALS, PACKAGE_JSON } from './constants';
+import { addProviderToModule } from '@schematics/angular/utility/ast-utils';
+import { InsertChange } from '@schematics/angular/utility/change';
+
+import { ANGULAR_JSON, NG_ESSENTIALS, PACKAGE_JSON, TSCONFIG_JSON } from './constants';
 
 export type DependencyType = 'dependencies' | 'devDependencies' | 'resolutions';
 
@@ -112,7 +118,7 @@ export function addScriptToPackageJson(key: string, command: string): Rule {
           obj[key] = packageJson['scripts'][key];
           return obj;
         }, {}),
-      [key]: command,
+      [key]: command
     };
 
     host.overwrite(PACKAGE_JSON, JSON.stringify(packageJson, null, 2));
@@ -183,7 +189,7 @@ export function updateJson<T = any, O = T>(filePath: string, callback: (json: T)
     }
 
     const fileContent = host.read(filePath).toString('utf-8');
-    const json = JSON.parse(fileContent);
+    const json = JSON.parse(decomment(fileContent));
 
     host.overwrite(filePath, JSON.stringify(callback(json), null, 2));
 
@@ -207,11 +213,117 @@ export function copyConfigFiles(path: string): Rule {
       template({
         utils: strings,
         dot: '.',
-        tmpl: '',
-      }),
+        tmpl: ''
+      })
     ]),
     MergeStrategy.Overwrite
   );
+}
+
+export function updateDevelopmentEnvironmentFile(sourceDirectory: string): Rule {
+  return (host: Tree) => {
+    host.overwrite(
+      `${sourceDirectory}/environments/environment.ts`,
+      `const providers: any[] = [
+  { provide: 'environment', useValue: 'Development' },
+  { provide: 'baseUrl', useValue: 'http://localhost:3000' }
+];
+
+export const ENV_PROVIDERS = providers;
+
+export const environment = {
+  production: false
+};
+`
+    );
+
+    return host;
+  };
+}
+
+export function updateProductionEnvironmentFile(sourceDirectory: string): Rule {
+  return (host: Tree) => {
+    host.overwrite(
+      `${sourceDirectory}/environments/environment.prod.ts`,
+      `const providers: any[] = [
+  { provide: 'environment', useValue: 'Production' },
+  { provide: 'baseUrl', useValue: 'http://localhost:3000' }
+];
+
+export const ENV_PROVIDERS = providers;
+
+export const environment = {
+  production: true
+};
+`
+    );
+
+    return host;
+  };
+}
+
+export function addEnvProvidersToAppModule(sourceDirectory: string): Rule {
+  return (host: Tree) => {
+    const modulePath = `${sourceDirectory}/app/app.module.ts`;
+    const text = host.read(modulePath);
+
+    if (!text) {
+      throw new SchematicsException(`File ${modulePath} does not exist.`);
+    }
+
+    const sourceText = text.toString('utf-8');
+    const source = ts.createSourceFile(modulePath, sourceText, ts.ScriptTarget.Latest, true);
+    const changes = addProviderToModule(source, modulePath, 'ENV_PROVIDERS', '../environments/environment');
+
+    const recorder = host.beginUpdate(modulePath);
+    for (const change of changes) {
+      if (change instanceof InsertChange) {
+        recorder.insertLeft(change.pos, change.toAdd);
+      }
+    }
+    host.commitUpdate(recorder);
+
+    return host;
+  };
+}
+
+export function removeEndToEndTsConfigReferenceFromTsConfigJson(path: string = '.'): Rule {
+  return updateJson(TSCONFIG_JSON, (json) => {
+    const references = json.references.filter((r) => r.path !== `${path}/e2e/tsconfig.json`);
+    return { ...json, references };
+  });
+}
+
+export function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string, applicationPath: string = ''): Rule {
+  return updateJson(ANGULAR_JSON, (angularJson) => {
+    if (applicationName) {
+      if (applicationPath && !applicationPath.endsWith('/')) {
+        applicationPath = applicationPath + '/';
+      }
+
+      if (angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig']) {
+        angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig'] = [
+          `${applicationPath}tsconfig.app.json`,
+          `${applicationPath}tsconfig.spec.json`
+        ];
+      }
+    }
+
+    return angularJson;
+  });
+}
+
+export function removeEndToEndTestFiles(applicationPath: string = ''): Rule {
+  if (applicationPath && !applicationPath.endsWith('/')) {
+    applicationPath = applicationPath + '/';
+  }
+
+  return (host: Tree) => {
+    host.delete(`${applicationPath}e2e/src/app.e2e-spec.ts`);
+    host.delete(`${applicationPath}e2e/src/app.po.ts`);
+    host.delete(`${applicationPath}e2e/protractor.conf.js`);
+    host.delete(`${applicationPath}e2e/tsconfig.json`);
+  };
 }
 
 export function runNpmPackageInstall(): Rule {
@@ -226,7 +338,7 @@ export function installPackage(packageName: string) {
     const options = new NodePackageInstallTaskOptions();
     options.packageName = packageName;
 
-    context.addTask(new NodePackageInstallTask(options));
+    context.addTask(new NodePackageInstallTask());
     return host;
   };
 }
@@ -262,7 +374,7 @@ export function runNpmScript(scriptName: string, ...args: string[]): Rule {
 
 interface NpmScriptOptions {
   scriptName: string;
-  args: string[]
+  args: string[];
 }
 
 class RunNpmScript implements TaskConfigurationGenerator<NpmScriptOptions> {
@@ -274,7 +386,7 @@ class RunNpmScript implements TaskConfigurationGenerator<NpmScriptOptions> {
       options: {
         scriptName: this.taskName,
         args: this.args
-      },
+      }
     };
   }
 }
@@ -283,32 +395,34 @@ function createRunNpmScript(): TaskExecutorFactory<NpmScriptOptions> {
   return {
     name: 'RunNpmScript',
     create: () => {
-      return Promise.resolve<TaskExecutor<NpmScriptOptions>>((options: NpmScriptOptions, _context: SchematicContext) => {
-        const args: string[] = [];
-        args.push('run');
-        args.push(options.scriptName);
-        args.push(...options.args);
+      return Promise.resolve<TaskExecutor<NpmScriptOptions>>(
+        (options: NpmScriptOptions, _context: SchematicContext) => {
+          const args: string[] = [];
+          args.push('run');
+          args.push(options.scriptName);
+          args.push(...options.args);
 
-        const outputStream = process.stdout;
-        const errorStream = process.stderr;
-        const spawnOptions: SpawnOptions = {
-          stdio: [process.stdin, outputStream, errorStream],
-          shell: true,
-          cwd: process.cwd(),
-        };
+          const outputStream = process.stdout;
+          const errorStream = process.stderr;
+          const spawnOptions: SpawnOptions = {
+            stdio: [process.stdin, outputStream, errorStream],
+            shell: true,
+            cwd: process.cwd()
+          };
 
-        return new Observable((obs) => {
-          spawn('npm', args, spawnOptions).on('close', (code: number) => {
-            if (code === 0) {
-              obs.next();
-              obs.complete();
-            } else {
-              const message = 'npm task failed, see above.';
-              obs.error(new Error(message));
-            }
+          return new Observable((obs) => {
+            spawn('npm', args, spawnOptions).on('close', (code: number) => {
+              if (code === 0) {
+                obs.next();
+                obs.complete();
+              } else {
+                const message = 'npm task failed, see above.';
+                obs.error(new Error(message));
+              }
+            });
           });
-        });
-      });
-    },
+        }
+      );
+    }
   };
 }

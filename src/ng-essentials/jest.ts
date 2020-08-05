@@ -1,6 +1,6 @@
 import { chain, noop, Rule, Tree } from '@angular-devkit/schematics';
 
-import { ANGULAR_JSON } from '../constants';
+import { ANGULAR_JSON, TSCONFIG_JSON } from '../constants';
 import {
   addPackageToPackageJson,
   addScriptToPackageJson,
@@ -27,43 +27,57 @@ export function addJest(options: NgEssentialsOptions): Rule {
       const hasDefaultApplication = defaultProjectName !== '';
 
       return chain([
-        deleteFile('karma.conf.js'),
-        addScriptToPackageJson('test', 'ng test --coverage'),
-        addScriptToPackageJson('test:watch', 'ng test --watch'),
-        removePackageFromPackageJson('devDependencies', '@types/jasmine'),
-        removePackageFromPackageJson('devDependencies', 'jasmine-core'),
-        removePackageFromPackageJson('devDependencies', 'jasmine-spec-reporter'),
-        removePackageFromPackageJson('devDependencies', 'karma'),
-        removePackageFromPackageJson('devDependencies', 'karma-chrome-launcher'),
-        removePackageFromPackageJson('devDependencies', 'karma-coverage-istanbul-reporter'),
-        removePackageFromPackageJson('devDependencies', 'karma-jasmine'),
-        removePackageFromPackageJson('devDependencies', 'karma-jasmine-html-reporter'),
-        addPackageToPackageJson('devDependencies', '@angular-builders/jest', jest.jestBuilderVersion),
-        addPackageToPackageJson('devDependencies', '@types/jest', jest.jestTypeVersion),
-        addPackageToPackageJson('devDependencies', 'jest', jest.jestVersion),
-        addPackageToPackageJson('devDependencies', 'jest-preset-angular', jest.presetAngularVersion),
-        addPackageToPackageJson('devDependencies', 'ts-jest', jest.tsJestVersion),
-        createLaunchJson(),
-        prepareGlobalTsSpecConfigForJest(),
-        copyConfigFiles('jest'),
-        hasDefaultApplication ? deleteFile('src/test.ts') : noop(),
-        hasDefaultApplication ? switchToJestBuilderInAngularJson(defaultProjectName) : noop(),
-        hasDefaultApplication ? prepareTsAppOrLibConfigForJest('.', 'app') : noop()
+        preparePackageJson(),
+        prepareAngularJson(hasDefaultApplication, defaultProjectName),
+        prepareTsConfig(hasDefaultApplication),
+        addConfigFiles(),
+        removeKarmaAssets(hasDefaultApplication)
       ]);
     }
   ]);
 }
 
-export function prepareTsAppOrLibConfigForJest(rootPath: string, context: AppOrLibType): Rule {
-  return updateJson(tsconfigFilePath(rootPath, context), (json) => {
-    return {
-      ...json,
-      exclude: ['**/*.spec.ts']
-    };
+function preparePackageJson(): Rule {
+  return chain([
+    removePackageFromPackageJson('devDependencies', '@types/jasmine'),
+    removePackageFromPackageJson('devDependencies', 'jasmine-core'),
+    removePackageFromPackageJson('devDependencies', 'jasmine-spec-reporter'),
+    removePackageFromPackageJson('devDependencies', 'karma'),
+    removePackageFromPackageJson('devDependencies', 'karma-chrome-launcher'),
+    removePackageFromPackageJson('devDependencies', 'karma-coverage-istanbul-reporter'),
+    removePackageFromPackageJson('devDependencies', 'karma-jasmine'),
+    removePackageFromPackageJson('devDependencies', 'karma-jasmine-html-reporter'),
+    addPackageToPackageJson('devDependencies', '@angular-builders/jest', jest.jestBuilderVersion),
+    addPackageToPackageJson('devDependencies', '@types/jest', jest.jestTypeVersion),
+    addPackageToPackageJson('devDependencies', 'jest', jest.jestVersion),
+    addPackageToPackageJson('devDependencies', 'jest-preset-angular', jest.presetAngularVersion),
+    addPackageToPackageJson('devDependencies', 'ts-jest', jest.tsJestVersion),
+    addScriptToPackageJson('test', 'ng test --coverage'),
+    addScriptToPackageJson('test:watch', 'ng test --watch')
+  ]);
+}
+
+function prepareAngularJson(hasDefaultApplication: boolean, defaultProjectName: string): Rule {
+  return chain([hasDefaultApplication ? switchToJestBuilderInAngularJson(defaultProjectName) : noop()]);
+}
+
+export function switchToJestBuilderInAngularJson(projectName: string): Rule {
+  return updateJson(ANGULAR_JSON, (json) => {
+    json['projects'][projectName]['architect']['test'].builder = '@angular-builders/jest:run';
+    json['projects'][projectName]['architect']['test'].options = {};
+
+    return json;
   });
 }
 
-export function prepareGlobalTsSpecConfigForJest(): Rule {
+function prepareTsConfig(hasDefaultApplication: boolean): Rule {
+  return chain([
+    prepareGlobalTsSpecConfigForJest(),
+    hasDefaultApplication ? prepareTsAppOrLibConfigForJest('.', 'app') : noop()
+  ]);
+}
+
+function prepareGlobalTsSpecConfigForJest(): Rule {
   return (host: Tree) => {
     const specConfigFile = tsconfigFilePath('.', 'spec');
     if (host.exists(specConfigFile)) {
@@ -101,46 +115,17 @@ export function prepareGlobalTsSpecConfigForJest(): Rule {
   };
 }
 
-export function deleteTsSpecConfig(rootPath: string): Rule {
-  return (host: Tree) => {
-    host.delete(`${rootPath}/tsconfig.spec.json`);
-  };
-}
-
-export function patchTsLintOptionsInAngularJson(projectName: string, projectPath: string, context: AppOrLibType): Rule {
-  return updateJson(ANGULAR_JSON, (json) => {
-    json['projects'][projectName]['architect']['lint']['options']['tsConfig'] = [
-      `${projectPath}/tsconfig.${context}.json`,
-      'tsconfig.spec.json'
-    ];
-
-    return json;
+function prepareTsAppOrLibConfigForJest(rootPath: string, context: AppOrLibType): Rule {
+  return updateJson(tsconfigFilePath(rootPath, context), (json) => {
+    return {
+      ...json,
+      exclude: ['**/*.spec.ts']
+    };
   });
 }
 
-export function switchToJestBuilderInAngularJson(projectName: string): Rule {
-  return updateJson(ANGULAR_JSON, (json) => {
-    json['projects'][projectName]['architect']['test'].builder = '@angular-builders/jest:run';
-    json['projects'][projectName]['architect']['test'].options = {};
-
-    return json;
-  });
-}
-
-export function createJestConfig(rootPath: string): Rule {
-  return (host: Tree) => {
-    host.create(
-      `${rootPath}/jest.config.js`,
-      `const { pathsToModuleNameMapper } = require('ts-jest/utils');
-const { compilerOptions } = require('../../tsconfig');
-
-module.exports = {
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, {
-    prefix: '<rootDir>/',
-  }),
-};`
-    );
-  };
+function addConfigFiles(): Rule {
+  return chain([createLaunchJson, copyConfigFiles('jest')]);
 }
 
 function createLaunchJson(): Rule {
@@ -171,5 +156,63 @@ function createLaunchJson(): Rule {
     );
 
     return host;
+  };
+}
+
+function removeKarmaAssets(hasDefaultApplication: boolean): Rule {
+  return chain([deleteFile('karma.conf.js'), hasDefaultApplication ? deleteFile('src/test.ts') : noop()]);
+}
+
+export function prepareJest(projectName: string, projectPath: string, context: AppOrLibType): Rule {
+  return chain([
+    switchToJestBuilderInAngularJson(projectName),
+    patchTsLintOptionsInAngularJson(projectName, projectPath, context),
+    deleteFile(`${projectPath}/karma.conf.js`),
+    deleteFile(`${projectPath}/src/test.ts`),
+    prepareTsAppOrLibConfigForJest(projectPath, context),
+    deleteTsSpecConfig(projectPath),
+    removeTsSpecConfigReferenceFromTsConfigJson(projectPath),
+    prepareGlobalTsSpecConfigForJest(),
+    createJestConfig(projectPath)
+  ]);
+}
+
+function patchTsLintOptionsInAngularJson(projectName: string, projectPath: string, context: AppOrLibType): Rule {
+  return updateJson(ANGULAR_JSON, (json) => {
+    json['projects'][projectName]['architect']['lint']['options']['tsConfig'] = [
+      `${projectPath}/tsconfig.${context}.json`,
+      'tsconfig.spec.json'
+    ];
+
+    return json;
+  });
+}
+
+function deleteTsSpecConfig(rootPath: string): Rule {
+  return (host: Tree) => {
+    host.delete(`${rootPath}/tsconfig.spec.json`);
+  };
+}
+
+function removeTsSpecConfigReferenceFromTsConfigJson(projectPath: string): Rule {
+  return updateJson(TSCONFIG_JSON, (json) => {
+    const references = json.references.filter((r) => r.path !== `./${projectPath}/tsconfig.spec.json`);
+    return { ...json, references };
+  });
+}
+
+function createJestConfig(rootPath: string): Rule {
+  return (host: Tree) => {
+    host.create(
+      `${rootPath}/jest.config.js`,
+      `const { pathsToModuleNameMapper } = require('ts-jest/utils');
+const { compilerOptions } = require('../../tsconfig');
+
+module.exports = {
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, {
+    prefix: '<rootDir>/',
+  }),
+};`
+    );
   };
 }

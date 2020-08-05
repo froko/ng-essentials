@@ -1,25 +1,16 @@
 import { chain, externalSchematic, noop, Rule, Tree } from '@angular-devkit/schematics';
 
-import { ANGULAR_JSON } from '../constants';
+import { prepareJest } from '../ng-essentials/jest';
 import {
   addEnvProvidersToAppModule,
-  updateDevelopmentEnvironmentFile,
-  updateProductionEnvironmentFile
-} from '../ng-essentials/essentials';
-import {
-  createJestConfig,
-  deleteTsSpecConfig,
-  patchTsLintOptionsInAngularJson,
-  prepareGlobalTsSpecConfigForJest,
-  prepareTsAppOrLibConfigForJest,
-  switchToJestBuilderInAngularJson
-} from '../ng-essentials/jest';
-import {
-  deleteFile,
   findJestOptionInAngularJson,
   findNewProjectRootInAngularJson,
   removeArchitectNodeFromAngularJson,
-  runNpmScript
+  removeEndToEndTestFiles,
+  removeEndToEndTsConfigReferenceFromTsConfigJson,
+  runNpmScript,
+  updateDevelopmentEnvironmentFile,
+  updateProductionEnvironmentFile
 } from '../utils';
 
 import { AngularApplicationOptionsSchema } from './schema';
@@ -35,20 +26,9 @@ export function essentialsApplication(options: AngularApplicationOptionsSchema):
       const applicationSourcePath = `${applicationPath}/src`;
 
       return chain([
-        removeArchitectNodeFromAngularJson(applicationName, 'e2e'),
-        removeEndToEndTsConfigNodeFromAngularJson(applicationName, applicationPath),
-        removeEndToEndTestFiles(applicationPath),
-        updateDevelopmentEnvironmentFile(applicationSourcePath),
-        updateProductionEnvironmentFile(applicationSourcePath),
-        addEnvProvidersToAppModule(applicationSourcePath),
-        hasJest ? switchToJestBuilderInAngularJson(applicationName) : noop(),
-        hasJest ? deleteFile(`${applicationPath}/karma.conf.js`) : noop(),
-        hasJest ? deleteFile(`${applicationPath}/src/test.ts`) : noop(),
-        hasJest ? prepareTsAppOrLibConfigForJest(applicationPath, 'app') : noop(),
-        hasJest ? deleteTsSpecConfig(applicationPath) : noop(),
-        hasJest ? prepareGlobalTsSpecConfigForJest() : noop(),
-        hasJest ? patchTsLintOptionsInAngularJson(applicationName, applicationPath, 'app') : noop(),
-        hasJest ? createJestConfig(applicationPath) : noop(),
+        prepareEnvironments(applicationSourcePath),
+        hasJest ? prepareJest(applicationName, applicationPath, 'app') : noop(),
+        removeEndToEndTestingAssets(applicationName, applicationPath),
         runNpmScript('lint', '--', '--fix'),
         runNpmScript('format')
       ]);
@@ -56,29 +36,18 @@ export function essentialsApplication(options: AngularApplicationOptionsSchema):
   ]);
 }
 
-function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string, applicationPath: string): Rule {
-  return (host: Tree) => {
-    const sourceText = host.read(ANGULAR_JSON).toString('utf-8');
-    const angularJson = JSON.parse(sourceText);
-
-    if (angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig']) {
-      angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig'] = [
-        `${applicationPath}/tsconfig.app.json`,
-        `${applicationPath}/tsconfig.spec.json`
-      ];
-    }
-
-    host.overwrite(ANGULAR_JSON, JSON.stringify(angularJson, null, 2));
-
-    return host;
-  };
+function prepareEnvironments(applicationSourcePath: string): Rule {
+  return chain([
+    updateDevelopmentEnvironmentFile(applicationSourcePath),
+    updateProductionEnvironmentFile(applicationSourcePath),
+    addEnvProvidersToAppModule(applicationSourcePath)
+  ]);
 }
 
-function removeEndToEndTestFiles(applicationPath: string): Rule {
-  return (host: Tree) => {
-    host.delete(`${applicationPath}/e2e/src/app.e2e-spec.ts`);
-    host.delete(`${applicationPath}/e2e/src/app.po.ts`);
-    host.delete(`${applicationPath}/e2e/protractor.conf.js`);
-    host.delete(`${applicationPath}/e2e/tsconfig.json`);
-  };
+function removeEndToEndTestingAssets(applicationName: string, applicationPath: string): Rule {
+  return chain([
+    removeEndToEndTsConfigReferenceFromTsConfigJson(applicationPath),
+    removeEndToEndTestFiles(applicationPath),
+    removeArchitectNodeFromAngularJson(applicationName, 'e2e')
+  ]);
 }
