@@ -1,18 +1,18 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '10.0.8',
+  angularVersion: '10.0.9',
 
   // @angular/cli
-  angularCliVersion: '10.0.5',
+  angularCliVersion: '10.0.6',
 
   // @angular-devkit/*
-  angularDevKitVersion: '0.1000.5',
+  angularDevKitVersion: '0.1000.6',
 
   // rxjs
   rxjsVersion: '6.6.2',
 
   // tslib
-  tslibVersion: '2.0.0',
+  tslibVersion: '2.0.1',
 
   // zone.js
   zoneVersion: '0.10.3',
@@ -30,7 +30,7 @@ export const essentials = {
   tsLintVersion: '6.1.3',
 
   // tslint-angular
-  tsLintAngularRulesVersion: '3.0.2',
+  tsLintAngularRulesVersion: '3.0.3',
 
   // typescript
   typescriptVersion: '3.9.7',
@@ -71,7 +71,7 @@ export const karma = {
   coverageReporterVersion: '3.0.3',
 
   // karma-jasmine
-  karmaJasmineVersion: '3.3.1',
+  karmaJasmineVersion: '4.0.1',
 
   // karma-jasmine-html-reporter
   htmlReporterVersion: '1.5.4'
@@ -82,7 +82,7 @@ export const jest = {
   jestBuilderVersion: '10.0.0',
 
   // @types/jest
-  jestTypeVersion: '26.0.8',
+  jestTypeVersion: '26.0.10',
 
   // babel-core
   babelCoreVersion: '6.26.3',
@@ -91,29 +91,29 @@ export const jest = {
   babelJestVersion: '26.0.1',
 
   // jest
-  jestVersion: '26.2.2',
+  jestVersion: '26.4.0',
 
   // jest-preset-angular
   presetAngularVersion: '8.2.1',
 
   // ts-jest
-  tsJestVersion: '26.1.4'
+  tsJestVersion: '26.2.0'
 };
 
 export const cypress = {
   // @cypress/webpack-preprocessor
-  preprocessorVersion: '5.4.2',
+  preprocessorVersion: '5.4.4',
 
   // cypress
-  cypressVersion: '4.12.0',
+  cypressVersion: '4.12.1',
 
   // ts-loader
-  tsLoaderVersion: '5.3.3'
+  tsLoaderVersion: '8.0.2'
 };
 
 export const library = {
   // ng-packagr
-  ngPackagrVersion: '10.0.3',
+  ngPackagrVersion: '10.0.4',
 
   // tsickle
   tsickleVersion: '0.39.1'
