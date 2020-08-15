@@ -212,6 +212,7 @@ describe('ng-essentials', () => {
         `"@cypress/webpack-preprocessor": "${cypress.preprocessorVersion}"`
       );
       expect(testTree.readContent(PACKAGE_JSON)).toContain(`"cypress": "${cypress.cypressVersion}"`);
+      expect(testTree.readContent(PACKAGE_JSON)).toContain(`"npm-run-all": "${essentials.npmRunAllVersion}"`);
       expect(testTree.readContent(PACKAGE_JSON)).toContain(`"ts-loader": "${cypress.tsLoaderVersion}"`);
     });
 
@@ -227,6 +228,7 @@ describe('ng-essentials', () => {
       expect(testTree.files).toContain('/cypress/plugins/index.js');
       expect(testTree.files).toContain('/cypress/support/commands.ts');
       expect(testTree.files).toContain('/cypress/support/index.ts');
+      expect(testTree.files).toContain('/cypress.json');
     });
   });
 
