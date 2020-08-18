@@ -97,7 +97,7 @@ export const jest = {
   presetAngularVersion: '8.2.1',
 
   // ts-jest
-  tsJestVersion: '26.2.0'
+  tsJestVersion: '26.1.4'
 };
 
 export const cypress = {
