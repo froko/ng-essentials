@@ -1,8 +1,7 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "types": ["cypress"],
-    "target": "es5"
+    "types": ["cypress"]
   },
   "include": ["**/*.ts"]
 }
