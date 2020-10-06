@@ -1,15 +1,15 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '10.0.9',
+  angularVersion: '10.1.4',
 
   // @angular/cli
-  angularCliVersion: '10.0.6',
+  angularCliVersion: '10.1.4',
 
   // @angular-devkit/*
-  angularDevKitVersion: '0.1000.6',
+  angularDevKitVersion: '0.1001.4',
 
   // rxjs
-  rxjsVersion: '6.6.2',
+  rxjsVersion: '6.6.3',
 
   // tslib
   tslibVersion: '2.0.1',
@@ -18,13 +18,13 @@ export const essentials = {
   zoneVersion: '0.10.3',
 
   // @types/node
-  nodeVersion: '12.12.6',
+  nodeVersion: '14.11.5',
 
   // codelizer
-  codelizerVersion: '6.0.0',
+  codelizerVersion: '6.0.1',
 
   // ts-node
-  tsNodeVersion: '8.10.2',
+  tsNodeVersion: '9.0.0',
 
   // tslint
   tsLintVersion: '6.1.3',
@@ -33,19 +33,19 @@ export const essentials = {
   tsLintAngularRulesVersion: '3.0.3',
 
   // typescript
-  typescriptVersion: '3.9.7',
+  typescriptVersion: '4.0.3',
 
   // husky
-  huskyVersion: '4.2.5',
+  huskyVersion: '4.3.0',
 
   // npm-run-all
   npmRunAllVersion: '4.1.5',
 
   // prettier
-  prettierVersion: '2.0.5',
+  prettierVersion: '2.1.2',
 
   // pretty-quick
-  prettyQuickVersion: '2.0.1',
+  prettyQuickVersion: '3.0.2',
 
   // tslint-config-prettier
   tsLintConfigPrettierVersion: '1.18.0'
@@ -53,16 +53,16 @@ export const essentials = {
 
 export const karma = {
   // @types/jasmine
-  jasmineTypeVersion: '3.5.12',
+  jasmineTypeVersion: '3.5.14',
 
   // jasmine-core
   jasmineCoreVersion: '3.6.0',
 
   // jasmine-spec-reporter
-  jasmineSpecReporterVersion: '5.0.2',
+  jasmineSpecReporterVersion: '6.0.0',
 
   // karma
-  karmaVersion: '5.1.1',
+  karmaVersion: '5.2.3',
 
   // karma-chrome-launcher
   chromeLauncherVersion: '3.1.0',
@@ -79,10 +79,10 @@ export const karma = {
 
 export const jest = {
   // @angular-builders/jest
-  jestBuilderVersion: '10.0.0',
+  jestBuilderVersion: '10.0.1',
 
   // @types/jest
-  jestTypeVersion: '26.0.10',
+  jestTypeVersion: '26.0.14',
 
   // babel-core
   babelCoreVersion: '6.26.3',
@@ -91,29 +91,29 @@ export const jest = {
   babelJestVersion: '26.0.1',
 
   // jest
-  jestVersion: '26.4.0',
+  jestVersion: '26.5.0',
 
   // jest-preset-angular
-  presetAngularVersion: '8.2.1',
+  presetAngularVersion: '8.3.1',
 
   // ts-jest
-  tsJestVersion: '26.1.4'
+  tsJestVersion: '26.4.1'
 };
 
 export const cypress = {
   // @cypress/webpack-preprocessor
-  preprocessorVersion: '5.4.4',
+  preprocessorVersion: '5.4.6',
 
   // cypress
-  cypressVersion: '4.12.1',
+  cypressVersion: '5.3.0',
 
   // ts-loader
-  tsLoaderVersion: '8.0.2'
+  tsLoaderVersion: '8.0.4'
 };
 
 export const library = {
   // ng-packagr
-  ngPackagrVersion: '10.0.4',
+  ngPackagrVersion: '10.1.2',
 
   // tsickle
   tsickleVersion: '0.39.1'
