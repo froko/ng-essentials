@@ -1,3 +1,4 @@
+import { dasherize } from '@angular-devkit/core/src/utils/strings';
 import { chain, externalSchematic, noop, Rule, Tree } from '@angular-devkit/schematics';
 
 import { prepareJest } from '../ng-essentials/jest';
@@ -7,7 +8,6 @@ import {
   findNewProjectRootInAngularJson,
   removeArchitectNodeFromAngularJson,
   removeEndToEndTestFiles,
-  removeEndToEndTsConfigReferenceFromTsConfigJson,
   runNpmScript,
   updateDevelopmentEnvironmentFile,
   updateProductionEnvironmentFile
@@ -22,7 +22,8 @@ export function essentialsApplication(options: AngularApplicationOptionsSchema):
       const hasJest = findJestOptionInAngularJson(tree);
       const applicationName = options.name;
       const newProjectRoot = findNewProjectRootInAngularJson(tree);
-      const applicationPath = `${newProjectRoot}/${applicationName}`;
+      const dasherizedApplicationName = dasherize(applicationName);
+      const applicationPath = `${newProjectRoot}/${dasherizedApplicationName}`;
       const applicationSourcePath = `${applicationPath}/src`;
 
       return chain([
@@ -45,9 +46,5 @@ function prepareEnvironments(applicationSourcePath: string): Rule {
 }
 
 function removeEndToEndTestingAssets(applicationName: string, applicationPath: string): Rule {
-  return chain([
-    removeEndToEndTsConfigReferenceFromTsConfigJson(applicationPath),
-    removeEndToEndTestFiles(applicationPath),
-    removeArchitectNodeFromAngularJson(applicationName, 'e2e')
-  ]);
+  return chain([removeEndToEndTestFiles(applicationPath), removeArchitectNodeFromAngularJson(applicationName, 'e2e')]);
 }

@@ -8,7 +8,6 @@ import {
   createAngularJsonWithoutJestOption,
   createPackageJson,
   createTsConfig,
-  createTsConfigBase,
   runSchematic
 } from '../testing';
 import { essentials, library } from '../versions';
@@ -23,7 +22,6 @@ describe('library', () => {
     appTree = Tree.empty();
     appTree = createPackageJson(appTree);
     appTree = createTsConfig(appTree);
-    appTree = createTsConfigBase(appTree);
   });
 
   describe('when creating a new library', () => {

@@ -65,28 +65,6 @@ export function createTsConfig(tree: Tree): Tree {
   tree.create(
     'tsconfig.json',
     `{
-      "files": [],
-      "references": [
-        {
-          "path": "./tsconfig.app.json"
-        },
-        {
-          "path": "./tsconfig.spec.json"
-        },
-        {
-          "path": "./e2e/tsconfig.json"
-        }
-    ]
-    }`
-  );
-
-  return tree;
-}
-
-export function createTsConfigBase(tree: Tree): Tree {
-  tree.create(
-    'tsconfig.base.json',
-    `{
       "compileOnSave": false,
       "compilerOptions": {
         "baseUrl": "./",
@@ -114,7 +92,7 @@ export function createTsConfigApp(tree: Tree): Tree {
   tree.create(
     'tsconfig.app.json',
     `{
-      "extends": "./tsconfig.base.json",
+      "extends": "./tsconfig.json",
       "compilerOptions": {
         "outDir": "./out-tsc/app",
         "types": []
@@ -136,7 +114,7 @@ export function createTsConfigSpec(tree: Tree): Tree {
   tree.create(
     'tsconfig.spec.json',
     `{
-      "extends": "./tsconfig.base.json",
+      "extends": "./tsconfig.json",
       "compilerOptions": {
         "outDir": "./out-tsc/spec",
         "types": [

@@ -1,3 +1,4 @@
+import { dasherize } from '@angular-devkit/core/src/utils/strings';
 import { Tree } from '@angular-devkit/schematics';
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
 
@@ -7,12 +8,12 @@ import {
   createAngularJsonWithoutJestOption,
   createPackageJson,
   createTsConfig,
-  createTsConfigBase,
   runSchematic
 } from '../testing';
 
 describe('application', () => {
   const appName = 'myApp';
+  const dasherizedAppName = dasherize(appName);
 
   let appTree: Tree;
 
@@ -20,7 +21,6 @@ describe('application', () => {
     appTree = Tree.empty();
     appTree = createPackageJson(appTree);
     appTree = createTsConfig(appTree);
-    appTree = createTsConfigBase(appTree);
   });
 
   describe('when creating a new application', () => {
@@ -32,18 +32,18 @@ describe('application', () => {
     });
 
     it('adds files from the original @angular/schematics command', () => {
-      expect(testTree.files).toContain(`/libs/${appName}/karma.conf.js`);
-      expect(testTree.files).toContain(`/libs/${appName}/tsconfig.app.json`);
-      expect(testTree.files).toContain(`/libs/${appName}/tsconfig.spec.json`);
-      expect(testTree.files).toContain(`/libs/${appName}/tslint.json`);
-      expect(testTree.files).toContain(`/libs/${appName}/src/test.ts`);
+      expect(testTree.files).toContain(`/libs/${dasherizedAppName}/karma.conf.js`);
+      expect(testTree.files).toContain(`/libs/${dasherizedAppName}/tsconfig.app.json`);
+      expect(testTree.files).toContain(`/libs/${dasherizedAppName}/tsconfig.spec.json`);
+      expect(testTree.files).toContain(`/libs/${dasherizedAppName}/tslint.json`);
+      expect(testTree.files).toContain(`/libs/${dasherizedAppName}/src/test.ts`);
     });
 
     it('removes e2e files from the original @angular/schematics command', () => {
-      expect(testTree.files).not.toContain(`/libs/${appName}/e2e/tsconfig.json`);
-      expect(testTree.files).not.toContain(`/libs/${appName}/e2e/protractor.conf.js`);
-      expect(testTree.files).not.toContain(`/libs/${appName}/e2e/src/app.e2e-spec.ts`);
-      expect(testTree.files).not.toContain(`/libs/${appName}/e2e/src/app.po.ts`);
+      expect(testTree.files).not.toContain(`/libs/${dasherizedAppName}/e2e/tsconfig.json`);
+      expect(testTree.files).not.toContain(`/libs/${dasherizedAppName}/e2e/protractor.conf.js`);
+      expect(testTree.files).not.toContain(`/libs/${dasherizedAppName}/e2e/src/app.e2e-spec.ts`);
+      expect(testTree.files).not.toContain(`/libs/${dasherizedAppName}/e2e/src/app.po.ts`);
     });
   });
 
@@ -56,19 +56,19 @@ describe('application', () => {
     });
 
     it('removes karma config of application', () => {
-      expect(testTree.files).not.toContain(`/libs/${appName}/karma.conf.js`);
+      expect(testTree.files).not.toContain(`/libs/${dasherizedAppName}/karma.conf.js`);
     });
 
     it('removes test typescript file of application', () => {
-      expect(testTree.files).not.toContain(`/libs/${appName}/src/test.ts`);
+      expect(testTree.files).not.toContain(`/libs/${dasherizedAppName}/src/test.ts`);
     });
 
     it('removes spec typescript config file in library folder', () => {
-      expect(testTree.files).not.toContain(`/libs/${appName}/tsconfig.spec.json`);
+      expect(testTree.files).not.toContain(`/libs/${dasherizedAppName}/tsconfig.spec.json`);
     });
 
     it('patches TsLint config in angular.json', () => {
-      expect(testTree.readContent(ANGULAR_JSON)).toContain(`"libs/${appName}/tsconfig.app.json"`);
+      expect(testTree.readContent(ANGULAR_JSON)).toContain(`"libs/${dasherizedAppName}/tsconfig.app.json"`);
       expect(testTree.readContent(ANGULAR_JSON)).toContain('"tsconfig.spec.json"');
     });
 
@@ -77,11 +77,11 @@ describe('application', () => {
     });
 
     it('updates application typescript config file in src folder', () => {
-      expect(testTree.readContent(`/libs/${appName}/tsconfig.app.json`)).not.toContain('test.ts');
+      expect(testTree.readContent(`/libs/${dasherizedAppName}/tsconfig.app.json`)).not.toContain('test.ts');
     });
 
     it('adds jest config file', () => {
-      expect(testTree.files).toContain(`/libs/${appName}/jest.config.js`);
+      expect(testTree.files).toContain(`/libs/${dasherizedAppName}/jest.config.js`);
     });
   });
 });

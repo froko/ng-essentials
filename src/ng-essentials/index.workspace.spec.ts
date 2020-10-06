@@ -1,8 +1,8 @@
 import { Tree } from '@angular-devkit/schematics';
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
 
-import { ANGULAR_JSON, PACKAGE_JSON, TSCONFIG_BASE_JSON, TSLINT_JSON } from '../constants';
-import { createTsConfigBase, runSchematic } from '../testing';
+import { ANGULAR_JSON, PACKAGE_JSON, TSCONFIG_JSON, TSLINT_JSON } from '../constants';
+import { createTsConfig, runSchematic } from '../testing';
 import { cypress, essentials, jest, karma } from '../versions';
 
 describe('ng-essentials', () => {
@@ -11,8 +11,8 @@ describe('ng-essentials', () => {
   beforeEach(() => {
     appTree = Tree.empty();
     appTree = createPackageJson(appTree);
+    appTree = createTsConfig(appTree);
     appTree = createGlobalTsLintJson(appTree);
-    appTree = createTsConfigBase(appTree);
     appTree = createAngularJsonForFirstRun(appTree);
   });
 
@@ -131,8 +131,8 @@ describe('ng-essentials', () => {
       expect(testTree.readContent(TSLINT_JSON)).toContain('"app"');
     });
 
-    it('adds paths collection to tsconfig.base.json', () => {
-      expect(testTree.readContent(TSCONFIG_BASE_JSON)).toContain('paths');
+    it('adds paths collection to tsconfig.json', () => {
+      expect(testTree.readContent(TSCONFIG_JSON)).toContain('paths');
     });
 
     it('adds launch.json with debug option for karma', () => {

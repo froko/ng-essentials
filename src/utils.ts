@@ -287,13 +287,6 @@ export function addEnvProvidersToAppModule(sourceDirectory: string): Rule {
   };
 }
 
-export function removeEndToEndTsConfigReferenceFromTsConfigJson(path: string = '.'): Rule {
-  return updateJson(TSCONFIG_JSON, (json) => {
-    const references = json.references.filter((r) => r.path !== `${path}/e2e/tsconfig.json`);
-    return { ...json, references };
-  });
-}
-
 export function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string, applicationPath: string = ''): Rule {
   return updateJson(ANGULAR_JSON, (angularJson) => {
     if (applicationName) {

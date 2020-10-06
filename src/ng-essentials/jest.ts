@@ -171,7 +171,6 @@ export function prepareJest(projectName: string, projectPath: string, context: A
     deleteFile(`${projectPath}/src/test.ts`),
     prepareTsAppOrLibConfigForJest(projectPath, context),
     deleteTsSpecConfig(projectPath),
-    removeTsSpecConfigReferenceFromTsConfigJson(projectPath),
     prepareGlobalTsSpecConfigForJest(),
     createJestConfig(projectPath)
   ]);
@@ -192,13 +191,6 @@ function deleteTsSpecConfig(rootPath: string): Rule {
   return (host: Tree) => {
     host.delete(`${rootPath}/tsconfig.spec.json`);
   };
-}
-
-function removeTsSpecConfigReferenceFromTsConfigJson(projectPath: string): Rule {
-  return updateJson(TSCONFIG_JSON, (json) => {
-    const references = json.references.filter((r) => r.path !== `./${projectPath}/tsconfig.spec.json`);
-    return { ...json, references };
-  });
 }
 
 function createJestConfig(rootPath: string): Rule {

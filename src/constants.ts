@@ -5,4 +5,3 @@ export const ANGULAR_JSON = 'angular.json';
 
 export const TSLINT_JSON = 'tslint.json';
 export const TSCONFIG_JSON = 'tsconfig.json';
-export const TSCONFIG_BASE_JSON = 'tsconfig.base.json';

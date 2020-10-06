@@ -3,15 +3,8 @@ import { UnitTestTree } from '@angular-devkit/schematics/testing';
 
 import { createAppModule } from '@schematics/angular/utility/test/create-app-module';
 
-import { ANGULAR_JSON, PACKAGE_JSON, TSCONFIG_BASE_JSON, TSCONFIG_JSON, TSLINT_JSON } from '../constants';
-import {
-  createPackageJson,
-  createTsConfig,
-  createTsConfigApp,
-  createTsConfigBase,
-  createTsConfigSpec,
-  runSchematic
-} from '../testing';
+import { ANGULAR_JSON, PACKAGE_JSON, TSCONFIG_JSON, TSLINT_JSON } from '../constants';
+import { createPackageJson, createTsConfig, createTsConfigApp, createTsConfigSpec, runSchematic } from '../testing';
 import { cypress, essentials, jest, karma } from '../versions';
 
 describe('ng-essentials', () => {
@@ -27,7 +20,6 @@ describe('ng-essentials', () => {
     appTree = createKarmaConfig(appTree);
     appTree = createTestTypescriptFile(appTree);
     appTree = createTsConfig(appTree);
-    appTree = createTsConfigBase(appTree);
     appTree = createTsConfigApp(appTree);
     appTree = createTsConfigSpec(appTree);
     appTree = createEndToEndTestingFiles(appTree);
@@ -153,8 +145,8 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(TSLINT_JSON)).toContain('"app"');
       });
 
-      it('adds paths collection to tsconfig.base.json', () => {
-        expect(testTree.readContent(TSCONFIG_BASE_JSON)).toContain('paths');
+      it('adds paths collection to tsconfig.json', () => {
+        expect(testTree.readContent(TSCONFIG_JSON)).toContain('paths');
       });
 
       it('updates development environment file', () => {

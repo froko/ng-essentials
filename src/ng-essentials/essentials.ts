@@ -1,6 +1,6 @@
 import { chain, noop, Rule, Tree } from '@angular-devkit/schematics';
 
-import { ANGULAR_JSON, NG_ESSENTIALS, TSCONFIG_BASE_JSON, TSLINT_JSON } from '../constants';
+import { ANGULAR_JSON, NG_ESSENTIALS, TSCONFIG_JSON, TSLINT_JSON } from '../constants';
 import {
   addEnvProvidersToAppModule,
   addPackageToPackageJson,
@@ -12,7 +12,6 @@ import {
   removeAutomaticUpdateSymbols,
   removeEndToEndTestFiles,
   removeEndToEndTsConfigNodeFromAngularJson,
-  removeEndToEndTsConfigReferenceFromTsConfigJson,
   removePackageFromPackageJson,
   removeScriptFromPackageJson,
   updateDevelopmentEnvironmentFile,
@@ -164,7 +163,7 @@ function prepareTsLint(elementPrefix: string): Rule {
 }
 
 function prepareTsConfig(): Rule {
-  return updateJson(TSCONFIG_BASE_JSON, (json) => {
+  return updateJson(TSCONFIG_JSON, (json) => {
     const compilerOptions = json['compilerOptions'];
 
     return {
@@ -226,7 +225,6 @@ function removeEndToEndTestingAssets(hasDefaultApplication: boolean, defaultProj
     removePackageFromPackageJson('devDependencies', 'protractor'),
     removeScriptFromPackageJson('e2e'),
     hasDefaultApplication ? removeEndToEndTsConfigNodeFromAngularJson(defaultProjectName) : noop(),
-    hasDefaultApplication ? removeEndToEndTsConfigReferenceFromTsConfigJson() : noop(),
     hasDefaultApplication ? removeEndToEndTestFiles() : noop(),
     hasDefaultApplication ? removeArchitectNodeFromAngularJson(defaultProjectName, 'e2e') : noop()
   ]);
