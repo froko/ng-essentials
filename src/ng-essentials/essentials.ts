@@ -72,9 +72,6 @@ function preparePackageJson(): Rule {
     addPackageToPackageJson('devDependencies', 'prettier', essentials.prettierVersion),
     addPackageToPackageJson('devDependencies', 'tslint-angular', essentials.tsLintAngularRulesVersion),
     addPackageToPackageJson('devDependencies', 'tslint-config-prettier', essentials.tsLintConfigPrettierVersion),
-    addPackageToPackageJson('resolutions', 'acorn', resolutions.acornVersion),
-    addPackageToPackageJson('resolutions', 'kind-of', resolutions.kindOfVersion),
-    addPackageToPackageJson('resolutions', 'minimist', resolutions.minimistVersion),
     addScriptToPackageJson('preinstall', 'npx npm-force-resolutions'),
     addScriptToPackageJson('format', 'prettier --write "./**/*{.ts,.js,.json,.css,.scss}"')
   ]);

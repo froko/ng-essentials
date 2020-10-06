@@ -119,8 +119,4 @@ export const library = {
   tsickleVersion: '0.39.1'
 };
 
-export const resolutions = {
-  acornVersion: '^7.1.1',
-  kindOfVersion: '^6.0.3',
-  minimistVersion: '^1.2.3'
-};
+export const resolutions = {};
