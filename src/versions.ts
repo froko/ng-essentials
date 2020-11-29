@@ -1,30 +1,30 @@
 export const essentials = {
   // Angular base version
-  angularVersion: '10.1.4',
+  angularVersion: '11.0.3',
 
   // @angular/cli
-  angularCliVersion: '10.1.4',
+  angularCliVersion: '11.0.3',
 
   // @angular-devkit/*
-  angularDevKitVersion: '0.1001.4',
+  angularDevKitVersion: '0.1100.3',
 
   // rxjs
   rxjsVersion: '6.6.3',
 
   // tslib
-  tslibVersion: '2.0.1',
+  tslibVersion: '2.0.3',
 
   // zone.js
   zoneVersion: '0.10.3',
 
   // @types/node
-  nodeVersion: '14.11.5',
+  nodeVersion: '14.14.10',
 
   // codelizer
   codelizerVersion: '6.0.1',
 
   // ts-node
-  tsNodeVersion: '9.0.0',
+  tsNodeVersion: '9.1.0',
 
   // tslint
   tsLintVersion: '6.1.3',
@@ -36,16 +36,16 @@ export const essentials = {
   typescriptVersion: '4.0.3',
 
   // husky
-  huskyVersion: '4.3.0',
+  huskyVersion: '4.3.4',
 
   // npm-run-all
   npmRunAllVersion: '4.1.5',
 
   // prettier
-  prettierVersion: '2.1.2',
+  prettierVersion: '2.2.1',
 
   // pretty-quick
-  prettyQuickVersion: '3.0.2',
+  prettyQuickVersion: '3.1.0',
 
   // tslint-config-prettier
   tsLintConfigPrettierVersion: '1.18.0'
@@ -82,7 +82,7 @@ export const jest = {
   jestBuilderVersion: '10.0.1',
 
   // @types/jest
-  jestTypeVersion: '26.0.14',
+  jestTypeVersion: '26.0.16',
 
   // babel-core
   babelCoreVersion: '6.26.3',
@@ -91,32 +91,29 @@ export const jest = {
   babelJestVersion: '26.0.1',
 
   // jest
-  jestVersion: '26.5.0',
+  jestVersion: '26.6.3',
 
   // jest-preset-angular
-  presetAngularVersion: '8.3.1',
+  presetAngularVersion: '8.3.2',
 
   // ts-jest
-  tsJestVersion: '26.4.1'
+  tsJestVersion: '26.4.4'
 };
 
 export const cypress = {
   // @cypress/webpack-preprocessor
-  preprocessorVersion: '5.4.6',
+  preprocessorVersion: '5.5.0',
 
   // cypress
-  cypressVersion: '5.3.0',
+  cypressVersion: '6.0.1',
 
   // ts-loader
-  tsLoaderVersion: '8.0.4'
+  tsLoaderVersion: '8.0.11'
 };
 
 export const library = {
   // ng-packagr
-  ngPackagrVersion: '10.1.2',
-
-  // tsickle
-  tsickleVersion: '0.39.1'
+  ngPackagrVersion: '11.0.3'
 };
 
 export const resolutions = {};

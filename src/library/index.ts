@@ -36,8 +36,6 @@ export function essentialsLibrary(options: LibraryOptionsSchema): Rule {
 function preparePackageJson(): Rule {
   return chain([
     removeAutomaticUpdateSymbols(),
-    addPackageToPackageJson('devDependencies', '@angular-devkit/build-ng-packagr', essentials.angularDevKitVersion),
-    addPackageToPackageJson('devDependencies', 'ng-packagr', library.ngPackagrVersion),
-    addPackageToPackageJson('devDependencies', 'tsickle', library.tsickleVersion)
+    addPackageToPackageJson('devDependencies', 'ng-packagr', library.ngPackagrVersion)
   ]);
 }

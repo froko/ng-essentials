@@ -10,7 +10,7 @@ import {
   createTsConfig,
   runSchematic
 } from '../testing';
-import { essentials, library } from '../versions';
+import { library } from '../versions';
 
 describe('library', () => {
   const libraryName = 'myLib';
@@ -50,11 +50,7 @@ describe('library', () => {
     });
 
     it('updates angular packages in package.json', () => {
-      expect(testTree.readContent(PACKAGE_JSON)).toContain(
-        `"@angular-devkit/build-ng-packagr": "${essentials.angularDevKitVersion}"`
-      );
       expect(testTree.readContent(PACKAGE_JSON)).toContain(`"ng-packagr": "${library.ngPackagrVersion}"`);
-      expect(testTree.readContent(PACKAGE_JSON)).toContain(`"tsickle": "${library.tsickleVersion}"`);
     });
   });
 
