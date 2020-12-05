@@ -4,6 +4,7 @@ import { ANGULAR_JSON, NG_ESSENTIALS } from '../constants';
 import { findDefaultProjectNameInAngularJson, installPackage, runNpmPackageInstall, runNpmScript } from '../utils';
 
 import { addCypress } from './cypress';
+import { addEsLint } from './eslint';
 import { addEssentials } from './essentials';
 import { addHusky } from './husky';
 import { addJest } from './jest';
@@ -21,6 +22,7 @@ export function essentials(options: NgEssentialsOptions): Rule {
       addKarma(options),
       addJest(options),
       addCypress(options),
+      addEsLint(options),
       addEssentials(options),
       addHusky(options),
       // The following rules are being executed in reverse order (latest first)

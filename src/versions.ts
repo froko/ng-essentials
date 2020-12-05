@@ -20,17 +20,8 @@ export const essentials = {
   // @types/node
   nodeVersion: '14.14.10',
 
-  // codelizer
-  codelizerVersion: '6.0.1',
-
   // ts-node
   tsNodeVersion: '9.1.0',
-
-  // tslint
-  tsLintVersion: '6.1.3',
-
-  // tslint-angular
-  tsLintAngularRulesVersion: '3.0.3',
 
   // typescript
   typescriptVersion: '4.0.3',
@@ -45,10 +36,35 @@ export const essentials = {
   prettierVersion: '2.2.1',
 
   // pretty-quick
-  prettyQuickVersion: '3.1.0',
+  prettyQuickVersion: '3.1.0'
+};
 
-  // tslint-config-prettier
-  tsLintConfigPrettierVersion: '1.18.0'
+export const eslint = {
+  // eslint
+  eslintVersion: '7.15.0',
+
+  // @angular-eslint/*
+  angularVersion: '0.8.0-beta.3',
+
+  // @typescript-eslint/*
+  typescriptVersion: '4.9.0',
+
+  // eslint-config-prettier
+  configPrettierVersion: '7.0.0',
+
+  plugin: {
+    // eslint-plugin-import
+    importVersion: '2.22.1',
+
+    // eslint-plugin-jsdoc
+    jsDocVersion: '30.7.8',
+
+    // eslint-plugin-prefer-arrow
+    preferArrowVersion: '1.2.2',
+
+    // eslint-plugin-prettier
+    prettierVersion: '3.2.0'
+  }
 };
 
 export const karma = {

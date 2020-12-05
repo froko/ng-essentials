@@ -5,6 +5,6 @@
       "editorconfig.editorconfig",
       "msjsdiag.debugger-for-chrome",
       "esbenp.prettier-vscode",
-      "ms-vscode.vscode-typescript-tslint-plugin"
+      "dbaeumer.vscode-eslint"
     ]
   }

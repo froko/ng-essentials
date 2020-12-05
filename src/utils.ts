@@ -25,6 +25,7 @@ import { addProviderToModule } from '@schematics/angular/utility/ast-utils';
 import { InsertChange } from '@schematics/angular/utility/change';
 
 import { ANGULAR_JSON, NG_ESSENTIALS, PACKAGE_JSON, TSCONFIG_JSON } from './constants';
+import { NgEssentialsOptions } from './ng-essentials/schema';
 
 export type DependencyType = 'dependencies' | 'devDependencies' | 'resolutions';
 
@@ -207,10 +208,11 @@ export function deleteFile(file: string): Rule {
   };
 }
 
-export function copyConfigFiles(path: string): Rule {
+export function copyConfigFiles(path: string, options: NgEssentialsOptions = undefined): Rule {
   return mergeWith(
     apply(url(path), [
       template({
+        ...options,
         utils: strings,
         dot: '.',
         tmpl: ''

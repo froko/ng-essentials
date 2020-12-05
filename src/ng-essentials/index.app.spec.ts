@@ -82,9 +82,7 @@ describe('ng-essentials', () => {
           `"@angular/language-service": "${essentials.angularVersion}"`
         );
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"@types/node": "${essentials.nodeVersion}"`);
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"codelyzer": "${essentials.codelizerVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"ts-node": "${essentials.tsNodeVersion}"`);
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(`"tslint": "${essentials.tsLintVersion}"`);
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"typescript": "${essentials.typescriptVersion}"`);
       });
 
@@ -106,9 +104,11 @@ describe('ng-essentials', () => {
 
       it('adds prettier packages in package.json', () => {
         expect(testTree.readContent(PACKAGE_JSON)).toContain(`"prettier": "${essentials.prettierVersion}"`);
-        expect(testTree.readContent(PACKAGE_JSON)).toContain(
-          `"tslint-config-prettier": "${essentials.tsLintConfigPrettierVersion}"`
-        );
+      });
+
+      it('removes tslint packages in package.json', () => {
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('codelyzer');
+        expect(testTree.readContent(PACKAGE_JSON)).not.toContain('tslint');
       });
 
       it('adds additional scripts in package.json', () => {
@@ -125,24 +125,8 @@ describe('ng-essentials', () => {
         expect(testTree.readContent(ANGULAR_JSON)).toContain('"cypress": false');
       });
 
-      it('updates global tslint.json', () => {
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"tslint:recommended"');
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"tslint-angular"');
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"tslint-config-prettier"');
-
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"codelyzer"');
-
-        expect(testTree.readContent(TSLINT_JSON)).not.toContain('eofline');
-        expect(testTree.readContent(TSLINT_JSON)).not.toContain('whitespace');
-
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"directive-selector"');
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"component-selector"');
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"no-console"');
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"interface-name"');
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"max-classes-per-file"');
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"ordered-imports"');
-
-        expect(testTree.readContent(TSLINT_JSON)).toContain('"app"');
+      it('removes global tslint.json', () => {
+        expect(testTree.files).not.toContain('/tslint.json');
       });
 
       it('adds paths collection to tsconfig.json', () => {
@@ -390,6 +374,7 @@ function createAngularJsonForFirstRun(tree: Tree): Tree {
       "version": 1,
       "projects": {
         "froko-app": {
+          "prefix": "app",
           "architect": {
             "test": {
               "builder": "@angular-devkit/build-angular:dev-server"

@@ -1,13 +1,13 @@
 import { chain, noop, Rule, Tree } from '@angular-devkit/schematics';
 
-import { ANGULAR_JSON, NG_ESSENTIALS, TSCONFIG_JSON, TSLINT_JSON } from '../constants';
+import { ANGULAR_JSON, NG_ESSENTIALS, TSCONFIG_JSON } from '../constants';
 import {
   addEnvProvidersToAppModule,
   addPackageToPackageJson,
   addScriptToPackageJson,
   copyConfigFiles,
+  deleteFile,
   findDefaultProjectNameInAngularJson,
-  findElementPrefixInAngularJson,
   removeArchitectNodeFromAngularJson,
   removeAutomaticUpdateSymbols,
   removeEndToEndTestFiles,
@@ -18,7 +18,7 @@ import {
   updateJson,
   updateProductionEnvironmentFile
 } from '../utils';
-import { essentials, resolutions } from '../versions';
+import { essentials } from '../versions';
 
 import { NgEssentialsOptions } from './schema';
 
@@ -31,15 +31,14 @@ export function addEssentials(options: NgEssentialsOptions): Rule {
     (tree: Tree) => {
       const defaultProjectName = findDefaultProjectNameInAngularJson(tree);
       const hasDefaultApplication = defaultProjectName !== '';
-      const elementPrefix = hasDefaultApplication ? findElementPrefixInAngularJson(tree, defaultProjectName) : 'app';
 
       return chain([
         preparePackageJson(),
         prepareAngularJson(options),
-        prepareTsLint(elementPrefix),
         prepareTsConfig(),
         prepareEnvironments(hasDefaultApplication),
         addConfigFiles(options),
+        removeTsLint(),
         removeEndToEndTestingAssets(hasDefaultApplication, defaultProjectName)
       ]);
     }
@@ -65,13 +64,9 @@ function preparePackageJson(): Rule {
     addPackageToPackageJson('devDependencies', '@angular/compiler-cli', essentials.angularVersion),
     addPackageToPackageJson('devDependencies', '@angular/language-service', essentials.angularVersion),
     addPackageToPackageJson('devDependencies', '@types/node', essentials.nodeVersion),
-    addPackageToPackageJson('devDependencies', 'codelyzer', essentials.codelizerVersion),
     addPackageToPackageJson('devDependencies', 'ts-node', essentials.tsNodeVersion),
-    addPackageToPackageJson('devDependencies', 'tslint', essentials.tsLintVersion),
     addPackageToPackageJson('devDependencies', 'typescript', essentials.typescriptVersion),
     addPackageToPackageJson('devDependencies', 'prettier', essentials.prettierVersion),
-    addPackageToPackageJson('devDependencies', 'tslint-angular', essentials.tsLintAngularRulesVersion),
-    addPackageToPackageJson('devDependencies', 'tslint-config-prettier', essentials.tsLintConfigPrettierVersion),
     addScriptToPackageJson('preinstall', 'npx npm-force-resolutions'),
     addScriptToPackageJson('format', 'prettier --write "./**/*{.ts,.js,.json,.css,.scss}"')
   ]);
@@ -102,60 +97,6 @@ function addNgEssentialsOptionsToAngularJson(options: NgEssentialsOptions): Rule
         }
       }
     };
-  });
-}
-
-function prepareTsLint(elementPrefix: string): Rule {
-  return updateJson(TSLINT_JSON, (json) => {
-    json['extends'] = ['tslint:recommended', 'tslint-angular', 'tslint-config-prettier'];
-    json['rulesDirectory'] = ['codelyzer'];
-    json['rules'] = {
-      'directive-selector': [true, 'attribute', elementPrefix, 'camelCase'],
-      'component-selector': [true, 'element', elementPrefix, 'kebab-case'],
-      'no-console': [true, 'debug', 'info', 'time', 'timeEnd', 'trace'],
-      'interface-name': false,
-      'max-classes-per-file': false,
-      'ordered-imports': [
-        true,
-        {
-          'grouped-imports': true,
-          groups: [
-            {
-              name: 'angular',
-              match: '^@angular',
-              order: 1
-            },
-
-            {
-              name: 'scoped_paths',
-              match: '^@',
-              order: 3
-            },
-            {
-              name: 'node_modules',
-              match: '^[a-zA-Z]',
-              order: 2
-            },
-            {
-              name: 'parent',
-              match: '^../',
-              order: 4
-            },
-            {
-              name: 'silbing',
-              match: '^./',
-              order: 5
-            },
-            {
-              match: null,
-              order: 5
-            }
-          ]
-        }
-      ]
-    };
-
-    return json;
   });
 }
 
@@ -214,6 +155,14 @@ function createLaunchJson(options: NgEssentialsOptions): Rule {
 
     return host;
   };
+}
+
+function removeTsLint(): Rule {
+  return chain([
+    removePackageFromPackageJson('devDependencies', 'codelyzer'),
+    removePackageFromPackageJson('devDependencies', 'tslint'),
+    deleteFile('tslint.json')
+  ]);
 }
 
 function removeEndToEndTestingAssets(hasDefaultApplication: boolean, defaultProjectName: string): Rule {

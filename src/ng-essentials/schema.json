@@ -19,6 +19,12 @@
       "description": "Include husky",
       "default": false
     },
+    "elementPrefix": {
+      "type": "string",
+      "description": "The Angular element prefix",
+      "default": "app",
+      "readOnly": true
+    },
     "firstRun": {
       "type": "boolean",
       "description": "Indicates the first run of this schematic",
