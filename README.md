@@ -19,7 +19,7 @@ The above command does the following:
 
 - Updates all npm packages to their latest stable versions
 - Installs `prettier` for advanced code formatting
-- Improves TsLint rules, especially import statement ordering with different blocks
+- Replaces TsLint by EsLint
 - Adds Angular debugging support for Visual Studio Code
 - Adds formatting and linting support for saved files in Visual Studio Code
 - Adds common Visual Studio Code plugin recommendations
