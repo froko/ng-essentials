@@ -25,6 +25,12 @@
       "default": "app",
       "readOnly": true
     },
+    "hasDefaultApplication": {
+      "type": "boolean",
+      "description": "Indicates that the workspace has a default application",
+      "default": false,
+      "readOnly": true
+    },
     "firstRun": {
       "type": "boolean",
       "description": "Indicates the first run of this schematic",

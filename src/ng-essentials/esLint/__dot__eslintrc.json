@@ -16,6 +16,7 @@
       ],
       "plugins": ["eslint-plugin-import", "prettier"],
       "rules": {
+        <% if (hasDefaultApplication) { %>
         "@angular-eslint/component-selector": [
           "error",
           {
@@ -32,6 +33,7 @@
             "style": "camelCase"
           }
         ],
+        <% } %>
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "import/order": [

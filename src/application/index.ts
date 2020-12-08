@@ -1,9 +1,12 @@
 import { dasherize } from '@angular-devkit/core/src/utils/strings';
 import { chain, externalSchematic, noop, Rule, Tree } from '@angular-devkit/schematics';
 
+import { addEsLintConfig, addEsLintConfigToAngularJson } from '../ng-essentials/eslint';
 import { prepareJest } from '../ng-essentials/jest';
 import {
   addEnvProvidersToAppModule,
+  deleteFile,
+  findElementPrefixInAngularJson,
   findJestOptionInAngularJson,
   findNewProjectRootInAngularJson,
   removeArchitectNodeFromAngularJson,
@@ -25,9 +28,11 @@ export function essentialsApplication(options: AngularApplicationOptionsSchema):
       const dasherizedApplicationName = dasherize(applicationName);
       const applicationPath = `${newProjectRoot}/${dasherizedApplicationName}`;
       const applicationSourcePath = `${applicationPath}/src`;
+      const elementPrefix = findElementPrefixInAngularJson(tree, applicationName);
 
       return chain([
         prepareEnvironments(applicationSourcePath),
+        switchToEsLint(applicationName, applicationPath, elementPrefix),
         hasJest ? prepareJest(applicationName, applicationPath, 'app') : noop(),
         removeEndToEndTestingAssets(applicationName, applicationPath),
         runNpmScript('lint', '--', '--fix'),
@@ -42,6 +47,14 @@ function prepareEnvironments(applicationSourcePath: string): Rule {
     updateDevelopmentEnvironmentFile(applicationSourcePath),
     updateProductionEnvironmentFile(applicationSourcePath),
     addEnvProvidersToAppModule(applicationSourcePath)
+  ]);
+}
+
+function switchToEsLint(applicationName: string, applicationPath: string, elementPrefix: string): Rule {
+  return chain([
+    addEsLintConfig(applicationPath, 'app', elementPrefix),
+    addEsLintConfigToAngularJson(applicationName, applicationPath),
+    deleteFile(`${applicationPath}/tslint.json`)
   ]);
 }
 

@@ -38,7 +38,6 @@ describe('library', () => {
       expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/package.json`);
       expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/tsconfig.lib.json`);
       expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/tsconfig.spec.json`);
-      expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/tslint.json`);
       expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/src/public-api.ts`);
       expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/src/test.ts`);
     });
@@ -51,6 +50,11 @@ describe('library', () => {
 
     it('updates angular packages in package.json', () => {
       expect(testTree.readContent(PACKAGE_JSON)).toContain(`"ng-packagr": "${library.ngPackagrVersion}"`);
+    });
+
+    it('switches from tsLint to esLint', () => {
+      expect(testTree.files).toContain(`/libs/${dasherizedLibraryName}/.eslintrc.json`);
+      expect(testTree.files).not.toContain(`/libs/${dasherizedLibraryName}/tslint.json`);
     });
   });
 

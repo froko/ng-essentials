@@ -35,7 +35,6 @@ describe('application', () => {
       expect(testTree.files).toContain(`/libs/${dasherizedAppName}/karma.conf.js`);
       expect(testTree.files).toContain(`/libs/${dasherizedAppName}/tsconfig.app.json`);
       expect(testTree.files).toContain(`/libs/${dasherizedAppName}/tsconfig.spec.json`);
-      expect(testTree.files).toContain(`/libs/${dasherizedAppName}/tslint.json`);
       expect(testTree.files).toContain(`/libs/${dasherizedAppName}/src/test.ts`);
     });
 
@@ -44,6 +43,11 @@ describe('application', () => {
       expect(testTree.files).not.toContain(`/libs/${dasherizedAppName}/e2e/protractor.conf.js`);
       expect(testTree.files).not.toContain(`/libs/${dasherizedAppName}/e2e/src/app.e2e-spec.ts`);
       expect(testTree.files).not.toContain(`/libs/${dasherizedAppName}/e2e/src/app.po.ts`);
+    });
+
+    it('switches from tsLint to esLint', () => {
+      expect(testTree.files).toContain(`/libs/${dasherizedAppName}/.eslintrc.json`);
+      expect(testTree.files).not.toContain(`/libs/${dasherizedAppName}/tslint.json`);
     });
   });
 
