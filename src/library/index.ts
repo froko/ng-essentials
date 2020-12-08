@@ -47,7 +47,7 @@ function preparePackageJson(): Rule {
 
 function switchToEsLint(libraryName: string, libraryPath: string, elementPrefix: string): Rule {
   return chain([
-    addEsLintConfig(libraryPath, 'app', elementPrefix),
+    addEsLintConfig(libraryPath, 'lib', elementPrefix),
     addEsLintConfigToAngularJson(libraryName, libraryPath),
     deleteFile(`${libraryPath}/tslint.json`)
   ]);

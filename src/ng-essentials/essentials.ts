@@ -11,7 +11,6 @@ import {
   removeArchitectNodeFromAngularJson,
   removeAutomaticUpdateSymbols,
   removeEndToEndTestFiles,
-  removeEndToEndTsConfigNodeFromAngularJson,
   removePackageFromPackageJson,
   removeScriptFromPackageJson,
   updateDevelopmentEnvironmentFile,
@@ -91,7 +90,7 @@ function addNgEssentialsOptionsToAngularJson(options: NgEssentialsOptions): Rule
     return {
       ...json,
       schematics: {
-        NG_ESSENTIALS: {
+        '@froko/ng-essentials': {
           jest: options.jest ? options.jest.valueOf() : false,
           cypress: options.cypress ? options.cypress.valueOf() : false
         }
@@ -170,7 +169,6 @@ function removeEndToEndTestingAssets(hasDefaultApplication: boolean, defaultProj
     removePackageFromPackageJson('devDependencies', '@types/jasminewd2'),
     removePackageFromPackageJson('devDependencies', 'protractor'),
     removeScriptFromPackageJson('e2e'),
-    hasDefaultApplication ? removeEndToEndTsConfigNodeFromAngularJson(defaultProjectName) : noop(),
     hasDefaultApplication ? removeEndToEndTestFiles() : noop(),
     hasDefaultApplication ? removeArchitectNodeFromAngularJson(defaultProjectName, 'e2e') : noop()
   ]);

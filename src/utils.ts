@@ -289,25 +289,6 @@ export function addEnvProvidersToAppModule(sourceDirectory: string): Rule {
   };
 }
 
-export function removeEndToEndTsConfigNodeFromAngularJson(applicationName: string, applicationPath: string = ''): Rule {
-  return updateJson(ANGULAR_JSON, (angularJson) => {
-    if (applicationName) {
-      if (applicationPath && !applicationPath.endsWith('/')) {
-        applicationPath = applicationPath + '/';
-      }
-
-      if (angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig']) {
-        angularJson['projects'][applicationName]['architect']['lint']['options']['tsConfig'] = [
-          `${applicationPath}tsconfig.app.json`,
-          `${applicationPath}tsconfig.spec.json`
-        ];
-      }
-    }
-
-    return angularJson;
-  });
-}
-
 export function removeEndToEndTestFiles(applicationPath: string = ''): Rule {
   if (applicationPath && !applicationPath.endsWith('/')) {
     applicationPath = applicationPath + '/';
