@@ -166,7 +166,6 @@ function removeKarmaAssets(hasDefaultApplication: boolean): Rule {
 export function prepareJest(projectName: string, projectPath: string, context: AppOrLibType): Rule {
   return chain([
     switchToJestBuilderInAngularJson(projectName),
-    patchTsLintOptionsInAngularJson(projectName, projectPath, context),
     deleteFile(`${projectPath}/karma.conf.js`),
     deleteFile(`${projectPath}/src/test.ts`),
     prepareTsAppOrLibConfigForJest(projectPath, context),
@@ -174,17 +173,6 @@ export function prepareJest(projectName: string, projectPath: string, context: A
     prepareGlobalTsSpecConfigForJest(),
     createJestConfig(projectPath)
   ]);
-}
-
-function patchTsLintOptionsInAngularJson(projectName: string, projectPath: string, context: AppOrLibType): Rule {
-  return updateJson(ANGULAR_JSON, (json) => {
-    json['projects'][projectName]['architect']['lint']['options']['tsConfig'] = [
-      `${projectPath}/tsconfig.${context}.json`,
-      'tsconfig.spec.json'
-    ];
-
-    return json;
-  });
 }
 
 function deleteTsSpecConfig(rootPath: string): Rule {
